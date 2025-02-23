@@ -268,11 +268,11 @@ if [ "$1" = "-update" ]; then
     chmod 755 /opt/etc/bot.py
     echo "Обновления загружены, права устновлены"
 
-    #/opt/etc/init.d/S56dnsmasq restart > /dev/null 2>&1
-    #/opt/etc/init.d/S22shadowsocks start > /dev/null 2>&1
-    #/opt/etc/init.d/S24xray start > /dev/null 2>&1
-    #/opt/etc/init.d/S22trojan start > /dev/null 2>&1
-    #/opt/etc/init.d/S35tor start > /dev/null 2>&1
+    #/opt/etc/init.d/S56dnsmasq restart > /dev/null 2>&1 || echo "Ошибка при перезапуске dnsmasq"
+    #/opt/etc/init.d/S22shadowsocks start > /dev/null 2>&1 || echo "S22shadowsocks не запущен, проверьте конфигурацию, пропускаем остановку"
+    #/opt/etc/init.d/S24xray start > /dev/null 2>&1 || echo "S24xray не запущен, проверьте конфигурацию, пропускаем остановку"
+    #/opt/etc/init.d/S22trojan start > /dev/null 2>&1 || echo "S22trojan не запущен, проверьте конфигурацию, пропускаем остановку"
+    #/opt/etc/init.d/S35tor start > /dev/null 2>&1 || echo "S35tor не запущен, проверьте конфигурацию, пропускаем остановку"
 
     bot_old_version=$(grep "ВЕРСИЯ" /opt/etc/bot_config.py | grep -Eo "[0-9].{1,}")
     bot_new_version=$(grep "ВЕРСИЯ" /opt/etc/bot.py | grep -Eo "[0-9].{1,}")
