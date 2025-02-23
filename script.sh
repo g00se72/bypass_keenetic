@@ -264,7 +264,7 @@ if [ "$1" = "-update" ]; then
 
     curl -s -o /opt/etc/bot.py https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/bot.py
     chmod 755 /opt/etc/bot.py
-    echo "Обновления скачены, права настроены"
+    echo "Обновления загружены, права настроены"
 
     #/opt/etc/init.d/S56dnsmasq restart > /dev/null 2>&1
     #/opt/etc/init.d/S22shadowsocks start > /dev/null 2>&1
