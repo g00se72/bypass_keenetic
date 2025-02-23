@@ -1,3 +1,7 @@
+# [1.1.1 - Что нового](https://github.com/g00se72/bypass_keenetic/) - 23 Февраля 2025
+
+- Исправлена обработка кнопки обновления
+
 # [1.1.0 - Что нового](https://github.com/g00se72/bypass_keenetic/releases/tag/1.1.0) - 22 Февраля 2025
 
 - Добавлен сервис xray (vless)
