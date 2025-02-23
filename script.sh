@@ -120,7 +120,7 @@ if [ "$1" = "-install" ]; then
     echo "Установлен скрипт для заполнения множеств unblock IP-адресами заданного списка доменов"
 
     # unblock_dnsmasq.sh
-    curl -o /opt/bin/unblock_dnsmasq.sh https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/unblock.dnsmasq
+    curl -o /opt/bin/unblock_dnsmasq.sh https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/unblock.dnsmasq.sh
     chmod 755 /opt/bin/unblock_dnsmasq.sh || chmod +x /opt/bin/unblock_dnsmasq.sh
     sed -i "s/40500/${dnsovertlsport}/g" /opt/bin/unblock_dnsmasq.sh
     /opt/bin/unblock_dnsmasq.sh
@@ -210,7 +210,7 @@ if [ "$1" = "-update" ]; then
     now=$(date +"%Y.%m.%d.%H-%M")
     mkdir /opt/root/backup-"${now}"
 	
-	#опредлить то, что нужно бекапить
+    #опредлить то, что нужно бекапить
     #mv /opt/bin/unblock_ipset.sh /opt/root/backup-"${now}"/unblock_ipset.sh
     #mv /opt/bin/unblock_dnsmasq.sh /opt/root/backup-"${now}"/unblock_dnsmasq.sh
     #mv /opt/bin/unblock_update.sh /opt/root/backup-"${now}"/unblock_update.sh
@@ -223,7 +223,7 @@ if [ "$1" = "-update" ]; then
     chmod 755 /opt/root/backup-"${now}"/*
     echo "Бэкап создан"
 	
-	#список действий по обновлению
+    #список действий по обновлению
     #touch /opt/etc/hosts || chmod 0755 /opt/etc/hosts
     #curl -s -o /opt/etc/ndm/fs.d/100-ipset.sh https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/100-ipset.sh
     #chmod 755 /opt/etc/ndm/fs.d/100-ipset.sh || chmod +x /opt/etc/ndm/fs.d/100-ipset.sh
@@ -250,7 +250,7 @@ if [ "$1" = "-update" ]; then
     #chmod 755 /opt/etc/ndm/ifstatechanged.d/100-unblock-vpn.sh || chmod +x /opt/etc/ndm/ifstatechanged.d/100-unblock-vpn.sh
 
     #curl -s -o /opt/bin/unblock_ipset.sh https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/unblock_ipset.sh
-    #curl -s -o /opt/bin/unblock_dnsmasq.sh https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/unblock.dnsmasq
+    #curl -s -o /opt/bin/unblock_dnsmasq.sh https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/unblock.dnsmasq.sh
     #curl -s -o /opt/bin/unblock_update.sh https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/unblock_update.sh
     #chmod 755 /opt/bin/unblock_*.sh || chmod +x /opt/bin/unblock_*.sh
     #sed -i "s/40500/${dnsovertlsport}/g" /opt/bin/unblock_ipset.sh
