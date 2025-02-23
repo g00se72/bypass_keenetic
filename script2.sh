@@ -17,7 +17,9 @@ keen_os_short=$(curl -s localhost:79/rci/show/version/title | tr -d \", | cut -b
 
 if [ "$1" = "-remove" ]; then
     echo "Начинаем удаление"
-    opkg remove tor tor-geoip bind-dig cron dnsmasq-full ipset iptables obfs4 shadowsocks-libev-ss-redir shadowsocks-libev-config xray trojan
+    opkg remove --force-removal-of-dependent-packages \
+    tor tor-geoip bind-dig cron dnsmasq-full ipset iptables obfs4 \
+    shadowsocks-libev-ss-redir shadowsocks-libev-config xray trojan
     echo "Пакеты удалены, удаляем папки, файлы и настройки"
 	
     ipset flush testset
@@ -65,8 +67,9 @@ fi
 if [ "$1" = "-install" ]; then
     echo "Начинаем установку"
     echo "Ваша версия KeenOS" "${keen_os_full}"
-    opkg update
-    opkg install curl tor tor-geoip bind-dig cron dnsmasq-full ipset iptables obfs4 shadowsocks-libev-ss-redir shadowsocks-libev-config xray trojan
+    for pkg in curl tor tor-geoip bind-dig cron dnsmasq-full ipset iptables obfs4 shadowsocks-libev-ss-redir shadowsocks-libev-config xray trojan; do
+        opkg list-installed | grep -q "^$pkg" || opkg install "$pkg"
+    done
    
     sleep 3
     echo "Установка пакетов завершена. Продолжаем установку"
@@ -139,12 +142,13 @@ if [ "$1" = "-install" ]; then
     # 100-redirect.sh
     curl -o /opt/etc/ndm/netfilter.d/100-redirect.sh https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/100-redirect.sh
     chmod 755 /opt/etc/ndm/netfilter.d/100-redirect.sh || chmod +x /opt/etc/ndm/netfilter.d/100-redirect.sh
-    sed -i "s/hash:net/${set_type}/g" /opt/etc/ndm/netfilter.d/100-redirect.sh
-    sed -i "s/192.168.1.1/${lanip}/g" /opt/etc/ndm/netfilter.d/100-redirect.sh
-    sed -i "s/1082/${localportsh}/g" /opt/etc/ndm/netfilter.d/100-redirect.sh
-    sed -i "s/9141/${localporttor}/g" /opt/etc/ndm/netfilter.d/100-redirect.sh
-    sed -i "s/10810/${localportvless}/g" /opt/etc/ndm/netfilter.d/100-redirect.sh
-    sed -i "s/10829/${localporttrojan}/g" /opt/etc/ndm/netfilter.d/100-redirect.sh
+    sed -i -e "s/hash:net/${set_type}/g" \
+           -e "s/192.168.1.1/${lanip}/g" \
+           -e "s/1082/${localportsh}/g" \
+           -e "s/9141/${localporttor}/g" \
+           -e "s/10810/${localportvless}/g" \
+           -e "s/10829/${localporttrojan}/g" \
+           /opt/etc/ndm/netfilter.d/100-redirect.sh
     echo "Установлено перенаправление пакетов с адресатами из unblock в Tor, Shadowsocks, VPN, Trojan, xray"
 
     # VPN script
