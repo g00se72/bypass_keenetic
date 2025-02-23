@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-# ВЕРСИЯ СКРИПТА 1.1.0
+# ВЕРСИЯ СКРИПТА 1.1.1
 #  ✅ ❌ ♻️ 📃 📆 🔑 📄 ❗ ️⚠️ ⚙️ 📝 📆 🗑 📄️⚠️ 🔰 ❔ ‼️ 📑
 
 import asyncio
@@ -49,8 +49,15 @@ def start(message):
     bot.send_message(message.chat.id, '✅ Добро пожаловать в меню!', reply_markup=markup)
 
 @bot.callback_query_handler(func=lambda call: call.data == "trigger_update")
-def handle_update_callback(call):
-    bot.send_message(call.message.chat.id, "/update")
+def handle_update(call):
+    bot.send_message(call.message.chat.id, 'Устанавливаются обновления, подождите!') 
+    # Скачиваем и запускаем скрипт
+    os.system("curl -s -o /opt/root/script.sh https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/script.sh")
+    os.chmod(r"/opt/root/script.sh", 0o0755)
+    update = subprocess.Popen(['/opt/root/script.sh', '-update'], stdout=subprocess.PIPE)
+    for line in update.stdout:
+        results_update = line.decode().strip()
+        bot.send_message(call.message.chat.id, results_update)
 
 @bot.message_handler(content_types=['text'])
 def bot_message(message):
@@ -186,16 +193,16 @@ def bot_message(message):
                     )
                 return
 
-            if message.text == '/update':
-                bot.send_message(message.chat.id, 'Устанавливаются обновления, подождите!', reply_markup=service)            
-                os.system("curl -s -o /opt/root/script.sh https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/script.sh")
-                os.chmod(r"/opt/root/script.sh", 0o0755)
+            #if message.text == '/update':
+                #bot.send_message(message.chat.id, 'Устанавливаются обновления, подождите!', reply_markup=service)            
+                #os.system("curl -s -o /opt/root/script.sh https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/script.sh")
+                #os.chmod(r"/opt/root/script.sh", 0o0755)
                 #os.chmod('/opt/root/script.sh', stat.S_IRWXU)
-                update = subprocess.Popen(['/opt/root/script.sh', '-update'], stdout=subprocess.PIPE)
-                for line in update.stdout:
-                    results_update = line.decode().strip()
-                    bot.send_message(message.chat.id, str(results_update), reply_markup=service)
-                return
+                #update = subprocess.Popen(['/opt/root/script.sh', '-update'], stdout=subprocess.PIPE)
+                #for line in update.stdout:
+                #    results_update = line.decode().strip()
+                #    bot.send_message(message.chat.id, str(results_update), reply_markup=service)
+                #return
                 
             if message.text == '🔙 Назад' or message.text == "Назад":
                 bot.send_message(message.chat.id, '✅ Добро пожаловать в меню!', reply_markup=main)
