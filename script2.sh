@@ -204,10 +204,10 @@ if [ "$1" = "-update" ]; then
     echo "Ваша версия KeenOS" "${keen_os_full}"
     #echo "Пакеты обновлены"
 
-    #/opt/etc/init.d/S22shadowsocks stop > /dev/null 2>&1
-    #/opt/etc/init.d/S24xray stop > /dev/null 2>&1
-    #/opt/etc/init.d/S22trojan stop > /dev/null 2>&1
-    #/opt/etc/init.d/S35tor stop > /dev/null 2>&1
+    #/opt/etc/init.d/S22shadowsocks stop > /dev/null 2>&1 || echo "S22shadowsocks не найден, пропускаем остановку"
+    #/opt/etc/init.d/S24xray stop > /dev/null 2>&1 || echo "S24xray не найден, пропускаем остановку"
+    #/opt/etc/init.d/S22trojan stop > /dev/null 2>&1 || echo "S22trojan не найден, пропускаем остановку"
+    #/opt/etc/init.d/S35tor stop > /dev/null 2>&1 || echo "S35tor не найден, пропускаем остановку"
     #echo "Сервисы остановлены"
 
     now=$(date +"%Y.%m.%d.%H-%M")
