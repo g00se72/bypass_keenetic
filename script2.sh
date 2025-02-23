@@ -62,7 +62,7 @@ if [ "$1" = "-remove" ]; then
     # Цикл для обработки каждого файла
     for file in "${files[@]}"; do
         if [ -e "$file" ]; then
-            chmod 777 "$file" || rm -rfv "$file"
+            chmod 777 "$file" && rm -rfv "$file"
         fi
     done
     echo "Созданные папки, файлы и настройки удалены"
