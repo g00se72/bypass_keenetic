@@ -40,16 +40,16 @@ curl -o /opt/etc/bot.py https://raw.githubusercontent.com/g00se72/bypass_keeneti
 curl -o /opt/etc/bot_config.py https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/bot_config.py
 ```
 
+Заполнить ключ api бота и логин из телеграмма через nano или любым другим способом, сохранить файл
+
 ```bash
 nano /opt/etc/bot_config.py
 ```
 
-Заполнить ключ api бота и логин из телеграмма через nano или любым другим способом, сохранить файл
-
 Запустите бота
 
 ```bash
-python3 /opt/etc/bot.py
+python3 /opt/etc/bot.py &
 ```
 
 Зайти в свой телеграм-бот, если необходимо нажать `/start`
