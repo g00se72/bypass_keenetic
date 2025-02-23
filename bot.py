@@ -192,18 +192,7 @@ def bot_message(message):
                         parse_mode='Markdown'
                     )
                 return
-
-            #if message.text == '/update':
-                #bot.send_message(message.chat.id, 'Устанавливаются обновления, подождите!', reply_markup=service)            
-                #os.system("curl -s -o /opt/root/script.sh https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/script.sh")
-                #os.chmod(r"/opt/root/script.sh", 0o0755)
-                #os.chmod('/opt/root/script.sh', stat.S_IRWXU)
-                #update = subprocess.Popen(['/opt/root/script.sh', '-update'], stdout=subprocess.PIPE)
-                #for line in update.stdout:
-                #    results_update = line.decode().strip()
-                #    bot.send_message(message.chat.id, str(results_update), reply_markup=service)
-                #return
-                
+              
             if message.text == '🔙 Назад' or message.text == "Назад":
                 bot.send_message(message.chat.id, '✅ Добро пожаловать в меню!', reply_markup=main)
                 level = 0
