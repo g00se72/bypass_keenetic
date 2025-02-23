@@ -36,7 +36,7 @@ if [ "$1" = "-remove" ]; then
      done
     fi
 
-    chmod 777 /opt/root/get-pip.py || rm -Rfv /opt/root/get-pip.py
+    #chmod 777 /opt/root/get-pip.py || rm -Rfv /opt/root/get-pip.py
     chmod 777 /opt/etc/crontab || rm -Rfv /opt/etc/crontab
     chmod 777 /opt/etc/init.d/S22shadowsocks || rm -Rfv /opt/etc/init.d/S22shadowsocks
     chmod 777 /opt/etc/init.d/S22trojan || rm -Rfv /opt/etc/init.d/S22trojan
