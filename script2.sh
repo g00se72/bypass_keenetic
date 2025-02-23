@@ -170,9 +170,7 @@ if [ "$1" = "-install" ]; then
     chmod 777 /opt/etc/dnsmasq.conf || rm -rfv /opt/etc/dnsmasq.conf
     curl -o /opt/etc/dnsmasq.conf https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/dnsmasq.conf || exit 1
     chmod 755 /opt/etc/dnsmasq.conf
-    sed -i "s/192.168.1.1/${lanip}/g" /opt/etc/dnsmasq.conf
-    sed -i "s/40500/${dnsovertlsport}/g" /opt/etc/dnsmasq.conf
-    sed -i "s/40508/${dnsoverhttpsport}/g" /opt/etc/dnsmasq.conf
+    sed -i -e "s/192.168.1.1/${lanip}/g" -e "s/40500/${dnsovertlsport}/g" -e "s/40508/${dnsoverhttpsport}/g" /opt/etc/dnsmasq.conf
     echo "Установлена настройка dnsmasq и подключение дополнительного конфигурационного файла к dnsmasq"
 
     # cron file
@@ -213,33 +211,34 @@ if [ "$1" = "-update" ]; then
     #echo "Сервисы остановлены"
 
     now=$(date +"%Y.%m.%d.%H-%M")
-    mkdir /opt/root/backup-"${now}"
-	
-    #опредлить то, что нужно бекапить
-    #mv /opt/bin/unblock_ipset.sh /opt/root/backup-"${now}"/unblock_ipset.sh
-    #mv /opt/bin/unblock_dnsmasq.sh /opt/root/backup-"${now}"/unblock_dnsmasq.sh
-    #mv /opt/bin/unblock_update.sh /opt/root/backup-"${now}"/unblock_update.sh
-    #mv /opt/etc/dnsmasq.conf /opt/root/backup-"${now}"/dnsmasq.conf
-    #mv /opt/etc/ndm/fs.d/100-ipset.sh /opt/root/backup-"${now}"/100-ipset.sh
-    #mv /opt/etc/ndm/ifstatechanged.d/100-unblock-vpn.sh /opt/root/backup-"${now}"/100-unblock-vpn.sh
-    #mv /opt/etc/ndm/netfilter.d/100-redirect.sh /opt/root/backup-"${now}"/100-redirect.sh
-    mv /opt/etc/bot.py /opt/root/backup-"${now}"/bot.py
-    #rm -R /opt/etc/ndm/ifstatechanged.d/100-unblock-vpn > /dev/null 2>&1
-    chmod 755 /opt/root/backup-"${now}"/*
+    backup_dir="/opt/root/backup-${now}"
+    mkdir -p "${backup_dir}"
+    # Массив с путями к файлам, которые нужно бекапить
+    files=(
+        "/opt/etc/bot.py"
+    )
+    # Перемещение файлов в бэкап
+    for file in "${files[@]}"; do
+        if [ -e "$file" ]; then
+            mv "$file" "${backup_dir}/$(basename "$file")"
+        fi
+    done
+    # Применение прав доступа к файлам в бэкапе
+    chmod 755 "${backup_dir}"/*
     echo "Бэкап создан"
 	
-    #список действий по обновлению
-    #touch /opt/etc/hosts || chmod 0755 /opt/etc/hosts
+    #что нужно обновить
     #curl -s -o /opt/etc/ndm/fs.d/100-ipset.sh https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/100-ipset.sh || exit 1
     #chmod 755 /opt/etc/ndm/fs.d/100-ipset.sh || chmod +x /opt/etc/ndm/fs.d/100-ipset.sh
     #curl -s -o /opt/etc/ndm/netfilter.d/100-redirect.sh https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/100-redirect.sh || exit 1
     #chmod 755 /opt/etc/ndm/netfilter.d/100-redirect.sh || chmod +x /opt/etc/ndm/netfilter.d/100-redirect.sh
-    #sed -i "s/hash:net/${set_type}/g" /opt/etc/ndm/netfilter.d/100-redirect.sh
-    #sed -i "s/192.168.1.1/${lanip}/g" /opt/etc/ndm/netfilter.d/100-redirect.sh
-    #sed -i "s/1082/${localportsh}/g" /opt/etc/ndm/netfilter.d/100-redirect.sh
-    #sed -i "s/9141/${localporttor}/g" /opt/etc/ndm/netfilter.d/100-redirect.sh
-    #sed -i "s/10810/${localportvless}/g" /opt/etc/ndm/netfilter.d/100-redirect.sh
-    #sed -i "s/10829/${localporttrojan}/g" /opt/etc/ndm/netfilter.d/100-redirect.sh
+    #sed -i -e "s/hash:net/${set_type}/g" \
+    #       -e "s/192.168.1.1/${lanip}/g" \
+    #       -e "s/1082/${localportsh}/g" \
+    #       -e "s/9141/${localporttor}/g" \
+    #       -e "s/10810/${localportvless}/g" \
+    #       -e "s/10829/${localporttrojan}/g" \
+    #       /opt/etc/ndm/netfilter.d/100-redirect.sh
     #sed -i 's|ARGS="-confdir /opt/etc/xray"|ARGS="run -c /opt/etc/xray/config.json"|g' /opt/etc/init.d/S24xray > /dev/null 2>&1
 
     #if [ "${keen_os_short}" = "4" ]; then
@@ -263,13 +262,11 @@ if [ "$1" = "-update" ]; then
 
     #curl -s -o /opt/etc/dnsmasq.conf https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/dnsmasq.conf || exit 1
     #chmod 755 /opt/etc/dnsmasq.conf
-    #sed -i "s/192.168.1.1/${lanip}/g" /opt/etc/dnsmasq.conf
-    #sed -i "s/40500/${dnsovertlsport}/g" /opt/etc/dnsmasq.conf
-    #sed -i "s/40508/${dnsoverhttpsport}/g" /opt/etc/dnsmasq.conf
+    sed -i -e "s/192.168.1.1/${lanip}/g" -e "s/40500/${dnsovertlsport}/g" -e "s/40508/${dnsoverhttpsport}/g" /opt/etc/dnsmasq.conf
 
     curl -s -o /opt/etc/bot.py https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/bot.py || exit 1
     chmod 755 /opt/etc/bot.py
-    echo "Обновления загружены, права настроены"
+    echo "Обновления загружены, права устновлены"
 
     #/opt/etc/init.d/S56dnsmasq restart > /dev/null 2>&1
     #/opt/etc/init.d/S22shadowsocks start > /dev/null 2>&1
