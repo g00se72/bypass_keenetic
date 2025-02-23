@@ -49,7 +49,7 @@ nano /opt/etc/bot_config.py
 Запустите бота
 
 ```bash
-python3 /opt/etc/bot.py &
+python3 /opt/etc/bot.py
 ```
 
 Зайти в свой телеграм-бот, если необходимо нажать `/start`
