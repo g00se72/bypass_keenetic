@@ -68,7 +68,7 @@ if [ "$1" = "-install" ]; then
     opkg update
     opkg install curl tor tor-geoip bind-dig cron dnsmasq-full ipset iptables obfs4 shadowsocks-libev-ss-redir shadowsocks-libev-config xray trojan
    
-	sleep 3
+    sleep 3
     echo "Установка пакетов завершена. Продолжаем установку"
 
     # есть поддержка множества hash:net или нет, если нет, то при этом вы потеряете возможность разблокировки по диапазону и CIDR
