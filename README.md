@@ -44,7 +44,7 @@ curl -o /opt/etc/bot_config.py https://raw.githubusercontent.com/g00se72/bypass_
 nano /opt/etc/bot_config.py
 ```
 
-Заполнить ключ api бота и логин из телеграмма, сохранить файл
+Заполнить ключ api бота и логин из телеграмма через nano или любым другим способом, сохранить файл
 
 Запустите бота
 
