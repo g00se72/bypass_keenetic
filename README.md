@@ -78,7 +78,7 @@ xray run -c /opt/etc/xray/config.json
 /opt/etc/init.d/S24xray status
 ```
 
-Проверить запущен ли бот
+Проверить запущен ли бот и узнать <ID_Процесса>
 
 ```bash
 ps | grep bot
