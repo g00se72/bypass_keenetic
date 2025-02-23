@@ -197,15 +197,15 @@ fi
 
 if [ "$1" = "-update" ]; then
     echo "Начинаем обновление"
-    opkg update > /dev/null 2>&1
+    #opkg update > /dev/null 2>&1
     echo "Ваша версия KeenOS" "${keen_os_full}"
-    echo "Пакеты обновлены"
+    #echo "Пакеты обновлены"
 
-    /opt/etc/init.d/S22shadowsocks stop > /dev/null 2>&1
-    /opt/etc/init.d/S24xray stop > /dev/null 2>&1
-    /opt/etc/init.d/S22trojan stop > /dev/null 2>&1
-    /opt/etc/init.d/S35tor stop > /dev/null 2>&1
-    echo "Сервисы остановлены"
+    #/opt/etc/init.d/S22shadowsocks stop > /dev/null 2>&1
+    #/opt/etc/init.d/S24xray stop > /dev/null 2>&1
+    #/opt/etc/init.d/S22trojan stop > /dev/null 2>&1
+    #/opt/etc/init.d/S35tor stop > /dev/null 2>&1
+    #echo "Сервисы остановлены"
 
     now=$(date +"%Y.%m.%d.%H-%M")
     mkdir /opt/root/backup-"${now}"
@@ -218,7 +218,7 @@ if [ "$1" = "-update" ]; then
     #mv /opt/etc/ndm/fs.d/100-ipset.sh /opt/root/backup-"${now}"/100-ipset.sh
     #mv /opt/etc/ndm/ifstatechanged.d/100-unblock-vpn.sh /opt/root/backup-"${now}"/100-unblock-vpn.sh
     #mv /opt/etc/ndm/netfilter.d/100-redirect.sh /opt/root/backup-"${now}"/100-redirect.sh
-    #mv /opt/etc/bot.py /opt/root/backup-"${now}"/bot.py
+    mv /opt/etc/bot.py /opt/root/backup-"${now}"/bot.py
     #rm -R /opt/etc/ndm/ifstatechanged.d/100-unblock-vpn > /dev/null 2>&1
     chmod 755 /opt/root/backup-"${now}"/*
     echo "Бэкап создан"
@@ -266,11 +266,11 @@ if [ "$1" = "-update" ]; then
     chmod 755 /opt/etc/bot.py
     echo "Обновления скачены, права настроены"
 
-    /opt/etc/init.d/S56dnsmasq restart > /dev/null 2>&1
-    /opt/etc/init.d/S22shadowsocks start > /dev/null 2>&1
-    /opt/etc/init.d/S24xray start > /dev/null 2>&1
-    /opt/etc/init.d/S22trojan start > /dev/null 2>&1
-    /opt/etc/init.d/S35tor start > /dev/null 2>&1
+    #/opt/etc/init.d/S56dnsmasq restart > /dev/null 2>&1
+    #/opt/etc/init.d/S22shadowsocks start > /dev/null 2>&1
+    #/opt/etc/init.d/S24xray start > /dev/null 2>&1
+    #/opt/etc/init.d/S22trojan start > /dev/null 2>&1
+    #/opt/etc/init.d/S35tor start > /dev/null 2>&1
 
     bot_old_version=$(grep "ВЕРСИЯ" /opt/etc/bot_config.py | grep -Eo "[0-9].{1,}")
     bot_new_version=$(grep "ВЕРСИЯ" /opt/etc/bot.py | grep -Eo "[0-9].{1,}")
