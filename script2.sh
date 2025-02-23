@@ -18,8 +18,7 @@ keen_os_short=$(curl -s localhost:79/rci/show/version/title | tr -d \", | cut -b
 if [ "$1" = "-remove" ]; then
     echo "Начинаем удаление"
     opkg remove --force-removal-of-dependent-packages \
-    tor tor-geoip bind-dig cron dnsmasq-full ipset iptables obfs4 \
-    shadowsocks-libev-ss-redir shadowsocks-libev-config xray trojan
+    tor tor-geoip bind-dig cron dnsmasq-full ipset iptables obfs4 shadowsocks-libev-ss-redir shadowsocks-libev-config xray trojan
     echo "Пакеты удалены, удаляем папки, файлы и настройки"
 	
     ipset flush testset
@@ -82,12 +81,7 @@ if [ "$1" = "-install" ]; then
     echo "Установка пакетов завершена. Продолжаем установку"
 
     # есть поддержка множества hash:net или нет, если нет, то при этом вы потеряете возможность разблокировки по диапазону и CIDR
-    set_type="hash:net"
-    ipset create testset hash:net -exist > /dev/null 2>&1
-    retVal=$?
-    if [ $retVal -ne 0 ]; then
-        set_type="hash:ip"
-    fi
+    set_type=$(ipset --help 2>/dev/null | grep -q "hash:net" && echo "hash:net" || echo "hash:ip")
 
     echo "Переменные роутера найдены"
     # создания множеств IP-адресов unblock 
