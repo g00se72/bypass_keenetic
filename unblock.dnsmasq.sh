@@ -2,7 +2,6 @@
 
 cat /dev/null > /opt/etc/unblock.dnsmasq
 
-#=======================================================================================
 while read -r line || [ -n "$line" ]; do
   [ -z "$line" ] && continue
   [ "${line#?}" = "#" ] && continue
@@ -21,15 +20,6 @@ while read -r line || [ -n "$line" ]; do
     echo "server=/$line/127.0.0.1#40500" >> /opt/etc/unblock.dnsmasq
   fi
 done < /opt/etc/unblock/shadowsocks.txt
-#=======================================================================================
-
-#while read line || [ -n "$line" ]; do
-#  [ -z "$line" ] && continue
-#  [ "${line:0:1}" = "#" ] && continue
-#  echo $line | grep -Eq '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' && continue
-#  echo "ipset=/$line/unblocksh" >> /opt/etc/unblock.dnsmasq
-#  echo "server=/$line/127.0.0.1#40500" >> /opt/etc/unblock.dnsmasq
-#done < /opt/etc/unblock/shadowsocks.txt
 
 
 while read -r line || [ -n "$line" ]; do
@@ -72,13 +62,6 @@ for vpn_file_names in /opt/etc/unblock/vpn-*; do
 done
 fi
 
-#while read line || [ -n "$line" ]; do
-#  [ -z "$line" ] && continue
-#  [ "${line:0:1}" = "#" ] && continue
-#  echo $line | grep -Eq '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' && continue
-#  echo "ipset=/$line/unblockvpn" >> /opt/etc/unblock.dnsmasq
-#  echo "server=/$line/127.0.0.1#40500" >> /opt/etc/unblock.dnsmasq
-#done < /opt/etc/unblock/vpn.txt
 
 #script0
 #script1
