@@ -181,19 +181,18 @@ if [ "$1" = "-install" ]; then
     exit 0
 fi
 
-if [ "$1" = "-reinstall" ]; then
-    curl -s -o /opt/root/script.sh https://raw.githubusercontent.com/ziwork/bypass_keenetic/main/script.sh
-    chmod 755 /opt/root/script.sh || chmod +x /opt/root/script.sh
-    echo "Начинаем переустановку"
-    echo "Удаляем установленные пакеты и созданные файлы"
-    /bin/sh /opt/root/script.sh -remove
-    echo "Удаление завершено"
-    echo "Выполняем установку"
-    /bin/sh /opt/root/script.sh -install
-    echo "Установка выполнена."
-    exit 0
-fi
-
+#if [ "$1" = "-reinstall" ]; then
+#    curl -s -o /opt/root/script.sh https://raw.githubusercontent.com/ziwork/bypass_keenetic/main/script.sh
+#    chmod 755 /opt/root/script.sh || chmod +x /opt/root/script.sh
+#    echo "Начинаем переустановку"
+#    echo "Удаляем установленные пакеты и созданные файлы"
+#    /bin/sh /opt/root/script.sh -remove
+#    echo "Удаление завершено"
+#    echo "Выполняем установку"
+#    /bin/sh /opt/root/script.sh -install
+#    echo "Установка выполнена."
+#    exit 0
+#fi
 
 if [ "$1" = "-update" ]; then
     echo "Начинаем обновление"
