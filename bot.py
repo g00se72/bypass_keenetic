@@ -422,7 +422,7 @@ def bot_message(message):
 
             if message.text == '🔰 Установка и удаление':
                 markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-                item1 = types.KeyboardButton("♻️ Установка & переустановка")
+                item1 = types.KeyboardButton("♻️ Установка")
                 item2 = types.KeyboardButton("⚠️ Удаление")
                 back = types.KeyboardButton("🔙 Назад")
                 markup.row(item1, item2)
@@ -430,7 +430,7 @@ def bot_message(message):
                 bot.send_message(message.chat.id, '🔰 Установка и удаление', reply_markup=markup)
                 return
 
-            if message.text == '♻️ Установка & переустановка':
+            if message.text == '♻️ Установка':
                 url = "https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/script.sh"
                 os.system("curl -s -o /opt/root/script.sh " + url)
                 os.chmod(r"/opt/root/script.sh", 0o0755)
