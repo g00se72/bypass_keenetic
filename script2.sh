@@ -154,14 +154,11 @@ if [ "$1" = "-install" ]; then
 
     # VPN script
     if [ "${keen_os_short}" = "4" ]; then
-      echo "VPN для KeenOS 4+";
-      curl -s -o /opt/etc/ndm/ifstatechanged.d/100-unblock-vpn.sh https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/100-unblock-vpn-v4.sh || exit 1
-    elif [ "${keen_os_short}" = "3" ]; then
-      echo "VPN для KeenOS 3+";
-      curl -s -o /opt/etc/ndm/ifstatechanged.d/100-unblock-vpn.sh https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/100-unblock-vpn.sh || exit 1
+          echo "VPN для KeenOS 4+";
+          curl -s -o /opt/etc/ndm/ifstatechanged.d/100-unblock-vpn.sh https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/100-unblock-vpn-v4.sh || exit 1
     else
-      echo "Версия KeenOS неопределена, будет установлен скрипт для KeenOS 3+";
-      curl -s -o /opt/etc/ndm/ifstatechanged.d/100-unblock-vpn.sh https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/100-unblock-vpn.sh || exit 1
+          echo "VPN для KeenOS 3";
+          curl -s -o /opt/etc/ndm/ifstatechanged.d/100-unblock-vpn.sh https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/100-unblock-vpn.sh || exit 1
     fi
     chmod 755 /opt/etc/ndm/ifstatechanged.d/100-unblock-vpn.sh || chmod +x /opt/etc/ndm/ifstatechanged.d/100-unblock-vpn.sh
     echo "Установлен скрипт проверки подключения и остановки VPN"
@@ -242,14 +239,11 @@ if [ "$1" = "-update" ]; then
     #sed -i 's|ARGS="-confdir /opt/etc/xray"|ARGS="run -c /opt/etc/xray/config.json"|g' /opt/etc/init.d/S24xray > /dev/null 2>&1
 
     #if [ "${keen_os_short}" = "4" ]; then
-    #  echo "KeenOS 4+";
-    #  curl -s -o /opt/etc/ndm/ifstatechanged.d/100-unblock-vpn.sh https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/100-unblock-vpn-v4.sh || exit 1
-    #elif [ "${keen_os_short}" = "3" ]; then
-    #  echo "KeenOS 3+";
-    #  curl -s -o /opt/etc/ndm/ifstatechanged.d/100-unblock-vpn.sh https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/100-unblock-vpn.sh || exit 1
+    #      echo "VPN для KeenOS 4+";
+    #      curl -s -o /opt/etc/ndm/ifstatechanged.d/100-unblock-vpn.sh https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/100-unblock-vpn-v4.sh || exit 1
     #else
-    #  echo "Версия KeenOS неопределена, будет установлен скрипт для KeenOS 3+";
-    #  curl -s -o /opt/etc/ndm/ifstatechanged.d/100-unblock-vpn.sh https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/100-unblock-vpn.sh || exit 1
+    #      echo "VPN для KeenOS 3";
+    #      curl -s -o /opt/etc/ndm/ifstatechanged.d/100-unblock-vpn.sh https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/100-unblock-vpn.sh || exit 1
     #fi
     #chmod 755 /opt/etc/ndm/ifstatechanged.d/100-unblock-vpn.sh || chmod +x /opt/etc/ndm/ifstatechanged.d/100-unblock-vpn.sh
 
