@@ -38,27 +38,34 @@ if [ "$1" = "-remove" ]; then
      done
     fi
 
-    #chmod 777 /opt/root/get-pip.py || rm -Rfv /opt/root/get-pip.py
-    chmod 777 /opt/etc/crontab || rm -Rfv /opt/etc/crontab
-    chmod 777 /opt/etc/init.d/S22shadowsocks || rm -Rfv /opt/etc/init.d/S22shadowsocks
-    chmod 777 /opt/etc/init.d/S22trojan || rm -Rfv /opt/etc/init.d/S22trojan
-    chmod 777 /opt/etc/init.d/S24xray || rm -Rfv /opt/etc/init.d/S24xray
-    chmod 777 /opt/etc/init.d/S35tor || rm -Rfv /opt/etc/init.d/S35tor
-    chmod 777 /opt/etc/init.d/S56dnsmasq || rm -Rfv /opt/etc/init.d/S56dnsmasq
-    chmod 777 /opt/etc/init.d/S99unblock || rm -Rfv /opt/etc/init.d/S99unblock
-    chmod 777 /opt/etc/ndm/netfilter.d/100-redirect.sh || rm -rfv /opt/etc/ndm/netfilter.d/100-redirect.sh
-    chmod 777 /opt/etc/ndm/ifstatechanged.d/100-unblock-vpn.sh || rm -rfv /opt/etc/ndm/ifstatechanged.d/100-unblock-vpn.sh
-    chmod 777 /opt/etc/nmd/fs.d/100-ipset.sh || rm -rfv /opt/etc/nmd/fs.d/100-ipset.sh
-    chmod 777 /opt/bin/unblock_dnsmasq.sh || rm -rfv /opt/bin/unblock_dnsmasq.sh
-    chmod 777 /opt/bin/unblock_update.sh || rm -rfv /opt/bin/unblock_update.sh
-    chmod 777 /opt/bin/unblock_ipset.sh || rm -rfv /opt/bin/unblock_ipset.sh
-    chmod 777 /opt/etc/unblock.dnsmasq || rm -rfv /opt/etc/unblock.dnsmasq
-    chmod 777 /opt/etc/dnsmasq.conf || rm -rfv /opt/etc/dnsmasq.conf
-    chmod 777 /opt/tmp/tor || rm -Rfv /opt/tmp/tor
-    #chmod 777 /opt/etc/unblock || rm -Rfv /opt/etc/unblock
-    chmod 777 /opt/etc/tor || rm -Rfv /opt/etc/tor
-    chmod 777 /opt/etc/xray || rm -Rfv /opt/etc/xray
-    chmod 777 /opt/etc/trojan || rm -Rfv /opt/etc/trojan
+    # Список путей для изменения прав и удаления
+    files=(
+        "/opt/etc/crontab"
+        "/opt/etc/init.d/S22shadowsocks"
+        "/opt/etc/init.d/S22trojan"
+        "/opt/etc/init.d/S24xray"
+        "/opt/etc/init.d/S35tor"
+        "/opt/etc/init.d/S56dnsmasq"
+        "/opt/etc/init.d/S99unblock"
+        "/opt/etc/ndm/netfilter.d/100-redirect.sh"
+        "/opt/etc/ndm/ifstatechanged.d/100-unblock-vpn.sh"
+        "/opt/etc/nmd/fs.d/100-ipset.sh"
+        "/opt/bin/unblock_dnsmasq.sh"
+        "/opt/bin/unblock_update.sh"
+        "/opt/bin/unblock_ipset.sh"
+        "/opt/etc/unblock.dnsmasq"
+        "/opt/etc/dnsmasq.conf"
+        "/opt/tmp/tor"
+        "/opt/etc/tor"
+        "/opt/etc/xray"
+        "/opt/etc/trojan"
+    )
+    # Цикл для обработки каждого файла
+    for file in "${files[@]}"; do
+        if [ -e "$file" ]; then
+            chmod 777 "$file" || rm -rfv "$file"
+        fi
+    done
     echo "Созданные папки, файлы и настройки удалены"
     echo "Если вы хотите полностью отключить DNS Override, перейдите в меню Сервис -> DNS Override -> DNS Override ВЫКЛ. После чего включится встроенный (штатный) DNS и роутер перезагрузится"
     exit 0
