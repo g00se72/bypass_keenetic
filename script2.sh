@@ -82,7 +82,7 @@ if [ "$1" = "-install" ]; then
 
     # есть поддержка множества hash:net или нет, если нет, то при этом вы потеряете возможность разблокировки по диапазону и CIDR
     set_type=$(ipset --help 2>/dev/null | grep -q "hash:net" && echo "hash:net" || echo "hash:ip")
-    echo "Переменные роутера найдены - " "{set_type}"
+    echo "Переменные роутера найдены, поддержка множества ${set_type}"
     
     # создание множеств IP-адресов unblock 
     curl -o /opt/etc/ndm/fs.d/100-ipset.sh https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/100-ipset.sh || exit 1
