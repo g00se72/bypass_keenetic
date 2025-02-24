@@ -37,7 +37,7 @@ if [ "$1" = "-remove" ]; then
      done
     fi
 
-    # Список путей для изменения прав и удаления
+    # Список для удаления
     files=(
         "/opt/etc/crontab"
         "/opt/etc/init.d/S22shadowsocks"
@@ -59,7 +59,6 @@ if [ "$1" = "-remove" ]; then
         "/opt/etc/xray"
         "/opt/etc/trojan"
     )
-    # Цикл для обработки каждого файла
     for file in "${files[@]}"; do
         if [ -e "$file" ]; then
             chmod 777 "$file" && rm -rfv "$file"
@@ -83,8 +82,8 @@ if [ "$1" = "-install" ]; then
 
     # есть поддержка множества hash:net или нет, если нет, то при этом вы потеряете возможность разблокировки по диапазону и CIDR
     set_type=$(ipset --help 2>/dev/null | grep -q "hash:net" && echo "hash:net" || echo "hash:ip")
-
     echo "Переменные роутера найдены"
+    
     # создание множеств IP-адресов unblock 
     curl -o /opt/etc/ndm/fs.d/100-ipset.sh https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/100-ipset.sh || exit 1
     chmod 755 /opt/etc/ndm/fs.d/100-ipset.sh || chmod +x /opt/etc/ndm/fs.d/100-ipset.sh
@@ -108,7 +107,7 @@ if [ "$1" = "-install" ]; then
     chmod 755 /opt/etc/init.d/S24xray || chmod +x /opt/etc/init.d/S24xray
     sed -i 's|ARGS="-confdir /opt/etc/xray"|ARGS="run -c /opt/etc/xray/config.json"' /opt/etc/init.d/S24xray > /dev/null 2>&1
 
-    # создание unblock папки и файлов
+    # создание unblock папки и файлов под домены и ip-адреса
     mkdir -p /opt/etc/unblock
     files=(
         "/opt/etc/hosts"
@@ -121,7 +120,7 @@ if [ "$1" = "-install" ]; then
     for file in "${files[@]}"; do
         touch "$file" && chmod 0755 "$file"
     done
-    echo "Созданы файлы под сайты и ip-адреса для обхода блокировок для SS, Tor, Trojan и xray, VPN"
+    echo "Созданы файлы под домены и ip-адреса"
 
     # unblock_ipset.sh
     curl -o /opt/bin/unblock_ipset.sh https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/unblock_ipset.sh || exit 1
