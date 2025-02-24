@@ -21,7 +21,6 @@ if [ "$1" = "-remove" ]; then
     tor tor-geoip bind-dig cron dnsmasq-full ipset iptables obfs4 shadowsocks-libev-ss-redir shadowsocks-libev-config xray trojan
     echo "Пакеты удалены, удаляем папки, файлы и настройки"
 	
-    ipset flush testset
     ipset flush unblocktor
     ipset flush unblocksh
     ipset flush unblockvless
