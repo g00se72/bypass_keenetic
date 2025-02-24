@@ -17,7 +17,7 @@ keen_os_short=$(echo "$keen_os_full" | cut -b 1)
 
 if [ "$1" = "-remove" ]; then
     echo "Начинаем удаление"
-    opkg remove --force-removal-of-dependent-packages \
+    opkg remove \ #--force-removal-of-dependent-packages \
     tor tor-geoip bind-dig cron dnsmasq-full ipset iptables obfs4 shadowsocks-libev-ss-redir shadowsocks-libev-config xray trojan
     echo "Пакеты удалены, удаляем папки, файлы и настройки"
 	
@@ -193,7 +193,6 @@ fi
 #    echo "Установка выполнена."
 #    exit 0
 #fi
-
 
 if [ "$1" = "-update" ]; then
     echo "Начинаем обновление"
