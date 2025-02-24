@@ -93,19 +93,20 @@ if [ "$1" = "-install" ]; then
     mkdir -p /opt/tmp/tor
     curl -o /opt/etc/tor/torrc https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/torrc || exit 1
     sed -i "s/hash:net/${set_type}/g" /opt/etc/tor/torrc
-    echo "Установлены настройки Tor"
+    echo "Установлены базовые настройки Tor"
 
     curl -o /opt/etc/shadowsocks.json https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/shadowsocks.json || exit 1
-    echo "Установлены настройки Shadowsocks"
     sed -i "s/ss-local/${ssredir}/g" /opt/etc/init.d/S22shadowsocks
     chmod 0755 /opt/etc/shadowsocks.json || chmod 755 /opt/etc/init.d/S22shadowsocks || chmod +x /opt/etc/init.d/S22shadowsocks
-    echo "Установлен параметр ss-redir для Shadowsocks"
-
-    curl -o /opt/etc/xray/config.json https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/vlessconfig.json || exit 1
+    echo "Установлены базовые настройки Shadowsocks"
 
     curl -o /opt/etc/trojan/config.json https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/trojanconfig.json || exit 1
+    echo "Установлены базовые настройки Trojan"
+    
+    curl -o /opt/etc/xray/config.json https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/vlessconfig.json || exit 1  
     chmod 755 /opt/etc/init.d/S24xray || chmod +x /opt/etc/init.d/S24xray
     sed -i 's|ARGS="-confdir /opt/etc/xray"|ARGS="run -c /opt/etc/xray/config.json"' /opt/etc/init.d/S24xray > /dev/null 2>&1
+    echo "Установлены базовые настройки Xray"
 
     # создание unblock папки и файлов под домены и ip-адреса
     mkdir -p /opt/etc/unblock
@@ -154,7 +155,7 @@ if [ "$1" = "-install" ]; then
            -e "s/10810/${localportvless}/g" \
            -e "s/10829/${localporttrojan}/g" \
            /opt/etc/ndm/netfilter.d/100-redirect.sh
-    echo "Установлено перенаправление пакетов с адресатами из unblock в Tor, Shadowsocks, VPN, Trojan, xray"
+    echo "Установлено перенаправление пакетов с адресатами из unblock в Tor, Shadowsocks, VPN, Trojan, Xray"
 
     # VPN script
     if [ "${keen_os_short}" = "4" ]; then
