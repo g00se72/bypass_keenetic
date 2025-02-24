@@ -283,16 +283,12 @@ if [ "$1" = "-update" ]; then
     echo "Обновление выполнено. Сервисы перезапущены. Сейчас будет перезапущен бот (~15-30 сек)"
     sleep 7
 
-    bot_pid=$(ps aux | grep "[p]ython3 /opt/etc/bot.py" | awk '{print $1}')
+    bot_pid=$(ps | grep "[p]ython3 /opt/etc/bot.py" | awk '{print $1}')
     [ -n "$bot_pid" ] && echo "Останавливаем бота..." && kill "$bot_pid" && sleep 5
     
     python3 /opt/etc/bot.py &
-    check_running=$(ps aux | grep "[p]ython3 /opt/etc/bot.py")
-    if [ -n "$check_running" ]; then
-        echo "Бот запущен. Нажмите на /start"
-    else
-        echo "Ошибка: бот не запустился"
-    fi
+    check_running=$(ps | grep "[p]ython3 /opt/etc/bot.py")
+    [ -n "$(ps | grep '[p]ython3 /opt/etc/bot.py')" ] && echo "Бот запущен. Нажмите на /start" || echo "Ошибка: бот не запустился"
 
     exit 0
 fi
