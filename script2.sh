@@ -18,9 +18,13 @@ keen_os_short=$(echo "$keen_os_full" | cut -b 1)
 
 if [ "$1" = "-remove" ]; then
     echo "Начинаем удаление"
-    #--force-removal-of-dependent-packages \
-    opkg remove \
-    tor tor-geoip bind-dig cron dnsmasq-full ipset iptables obfs4 shadowsocks-libev-ss-redir shadowsocks-libev-config xray trojan
+    for pkg in tor tor-geoip bind-dig cron dnsmasq-full ipset iptables obfs4 shadowsocks-libev-ss-redir shadowsocks-libev-config xray trojan; do
+    if opkg list-installed | grep -q "^$pkg "; then
+        opkg remove "$pkg" #--force-removal-of-dependent-packages
+    else
+        echo "Пакет $pkg не установлен, пропускаем..."
+    fi
+    done
     echo "Пакеты удалены, удаляем папки, файлы и настройки"
 	
     ipset flush unblocktor
