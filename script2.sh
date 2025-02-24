@@ -95,8 +95,9 @@ if [ "$1" = "-install" ]; then
     echo "Установлены базовые настройки Tor"
 
     curl -o /opt/etc/shadowsocks.json https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/shadowsocks.json || exit 1
+    chmod 644 /opt/etc/shadowsocks.json
     sed -i "s/ss-local/${ssredir}/g" /opt/etc/init.d/S22shadowsocks
-    chmod 0755 /opt/etc/shadowsocks.json || chmod 755 /opt/etc/init.d/S22shadowsocks || chmod +x /opt/etc/init.d/S22shadowsocks
+    chmod 755 /opt/etc/init.d/S22shadowsocks || chmod +x /opt/etc/init.d/S22shadowsocks
     echo "Установлены базовые настройки Shadowsocks"
 
     curl -o /opt/etc/trojan/config.json https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/trojanconfig.json || exit 1
