@@ -244,16 +244,6 @@ if [ "$1" = "-update" ]; then
 fi
 
 
-if [ "$1" = "-reboot" ]; then
-    ndmc -c 'opkg dns-override'
-    sleep 3
-    ndmc -c 'system configuration save'
-    sleep 3
-    echo "Перезагрузка роутера"
-    ndmc -c 'system reboot'
-fi
-
-
 if [ "$1" = "-version" ]; then
     echo "Ваша версия KeenOS" "${keen_os_full}"
 fi
