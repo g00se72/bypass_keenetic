@@ -41,7 +41,7 @@ if [ "$1" = "-remove" ]; then
     fi
 
     # Список для удаления
-	for file in \
+    for file in \
         "/opt/etc/crontab" \
         "/opt/etc/init.d/S22shadowsocks" \
         "/opt/etc/init.d/S22trojan" \
@@ -62,9 +62,7 @@ if [ "$1" = "-remove" ]; then
         "/opt/etc/xray" \
         "/opt/etc/trojan"
     do
-        if [ -e "$file" ]; then
-            chmod 666 "$file" && rm -rfv "$file"
-        fi
+        [ -e "$file" ] && rm -rf "$file"
     done
     echo "Созданные папки, файлы и настройки удалены"
     echo "Если вы хотите полностью отключить DNS Override, перейдите в меню Сервис -> DNS Override -> DNS Override ВЫКЛ. После чего включится встроенный (штатный) DNS и роутер перезагрузится"
@@ -105,7 +103,6 @@ if [ "$1" = "-install" ]; then
     echo "Установлены базовые настройки Tor"
 
     curl -o /opt/etc/shadowsocks.json https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/shadowsocks.json || exit 1
-    chmod 644 /opt/etc/shadowsocks.json
     sed -i "s/ss-local/ss-redir/g" /opt/etc/init.d/S22shadowsocks
     chmod 755 /opt/etc/init.d/S22shadowsocks || chmod +x /opt/etc/init.d/S22shadowsocks
     echo "Установлены базовые настройки Shadowsocks"
@@ -179,16 +176,16 @@ if [ "$1" = "-install" ]; then
     echo "Установлен скрипт проверки подключения и остановки VPN"
 
     # dnsmasq.conf
-    chmod 666 /opt/etc/dnsmasq.conf || rm -rfv /opt/etc/dnsmasq.conf
+    rm -f /opt/etc/dnsmasq.conf
     curl -o /opt/etc/dnsmasq.conf https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/dnsmasq.conf || exit 1
-    chmod 755 /opt/etc/dnsmasq.conf
+    chmod 644 /opt/etc/dnsmasq.conf
     sed -i -e "s/192.168.1.1/${lanip}/g" -e "s/40500/${dnsovertlsport}/g" -e "s/40508/${dnsoverhttpsport}/g" /opt/etc/dnsmasq.conf
     echo "Установлена настройка dnsmasq и подключение дополнительного конфигурационного файла к dnsmasq"
 
     # cron file
-    chmod 666 /opt/etc/crontab || rm -Rfv /opt/etc/crontab
+    rm -f /opt/etc/crontab
     curl -o /opt/etc/crontab https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/crontab || exit 1
-    chmod 755 /opt/etc/crontab
+    chmod 644 /opt/etc/crontab
     echo "Установлено добавление задачи в cron для периодического обновления содержимого множества"
     /opt/bin/unblock_update.sh
     echo "Установлены все изначальные скрипты и скрипты разблокировок, выполнена основная настройка бота"
@@ -221,7 +218,7 @@ if [ "$1" = "-update" ]; then
         fi
     done
     # Применение прав доступа к файлам в бэкапе
-    #chmod 755 "${backup_dir}"/*
+    #chmod 644 "${backup_dir}"/*
     echo "Бэкап создан"
 	
     #что нужно обновить
