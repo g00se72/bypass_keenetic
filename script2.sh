@@ -60,7 +60,7 @@ if [ "$1" = "-remove" ]; then
         "/opt/etc/trojan"
     do
         if [ -e "$file" ]; then
-            chmod 777 "$file" && rm -rfv "$file"
+            chmod 666 "$file" && rm -rfv "$file"
         fi
     done
     echo "Созданные папки, файлы и настройки удалены"
@@ -118,7 +118,7 @@ if [ "$1" = "-install" ]; then
         "/opt/etc/unblock/vless.txt" \
         "/opt/etc/unblock/vpn.txt"
     do
-	touch "$file" && chmod 0755 "$file"
+	touch "$file" && chmod 644 "$file"
     done
     echo "Созданы файлы под домены и ip-адреса"
 
@@ -169,14 +169,14 @@ if [ "$1" = "-install" ]; then
     echo "Установлен скрипт проверки подключения и остановки VPN"
 
     # dnsmasq.conf
-    chmod 777 /opt/etc/dnsmasq.conf || rm -rfv /opt/etc/dnsmasq.conf
+    chmod 666 /opt/etc/dnsmasq.conf || rm -rfv /opt/etc/dnsmasq.conf
     curl -o /opt/etc/dnsmasq.conf https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/dnsmasq.conf || exit 1
     chmod 755 /opt/etc/dnsmasq.conf
     sed -i -e "s/192.168.1.1/${lanip}/g" -e "s/40500/${dnsovertlsport}/g" -e "s/40508/${dnsoverhttpsport}/g" /opt/etc/dnsmasq.conf
     echo "Установлена настройка dnsmasq и подключение дополнительного конфигурационного файла к dnsmasq"
 
     # cron file
-    chmod 777 /opt/etc/crontab || rm -Rfv /opt/etc/crontab
+    chmod 666 /opt/etc/crontab || rm -Rfv /opt/etc/crontab
     curl -o /opt/etc/crontab https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/crontab || exit 1
     chmod 755 /opt/etc/crontab
     echo "Установлено добавление задачи в cron для периодического обновления содержимого множества"
@@ -211,7 +211,7 @@ if [ "$1" = "-update" ]; then
         fi
     done
     # Применение прав доступа к файлам в бэкапе
-    chmod 755 "${backup_dir}"/*
+    #chmod 755 "${backup_dir}"/*
     echo "Бэкап создан"
 	
     #что нужно обновить
