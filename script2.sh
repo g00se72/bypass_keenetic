@@ -104,7 +104,7 @@ if [ "$1" = "-install" ]; then
 
     curl -o /opt/etc/trojan/config.json https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/trojanconfig.json || exit 1
     chmod 755 /opt/etc/init.d/S24xray || chmod +x /opt/etc/init.d/S24xray
-    sed -i 's|ARGS="-confdir /opt/etc/xray"|ARGS="run -c /opt/etc/xray/config.json"|g' /opt/etc/init.d/S24xray > /dev/null 2>&1
+    sed -i 's|ARGS="-confdir /opt/etc/xray"|ARGS="run -c /opt/etc/xray/config.json"' /opt/etc/init.d/S24xray > /dev/null 2>&1
 
     # unblock folder and files
     mkdir -p /opt/etc/unblock
@@ -234,7 +234,7 @@ if [ "$1" = "-update" ]; then
     #       -e "s/10810/${localportvless}/g" \
     #       -e "s/10829/${localporttrojan}/g" \
     #       /opt/etc/ndm/netfilter.d/100-redirect.sh
-    #sed -i 's|ARGS="-confdir /opt/etc/xray"|ARGS="run -c /opt/etc/xray/config.json"|g' /opt/etc/init.d/S24xray > /dev/null 2>&1
+    #sed -i 's|ARGS="-confdir /opt/etc/xray"|ARGS="run -c /opt/etc/xray/config.json"' /opt/etc/init.d/S24xray > /dev/null 2>&1
 
     #if [ "${keen_os_short}" = "4" ]; then
     #      echo "VPN для KeenOS 4+";
