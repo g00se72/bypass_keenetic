@@ -73,7 +73,14 @@ if [ "$1" = "-install" ]; then
     echo "Начинаем установку"
     echo "Ваша версия KeenOS" "${keen_os_full}"
     for pkg in curl tor tor-geoip bind-dig cron dnsmasq-full ipset iptables obfs4 shadowsocks-libev-ss-redir shadowsocks-libev-config xray trojan; do
-        opkg list-installed | grep -q "^$pkg" || opkg install "$pkg" || { echo "Ошибка при установке пакета $pkg"; exit 1; }
+        if opkg list-installed | grep -q "^$pkg "; then
+            echo "Пакет $pkg уже установлен, пропускаем..."
+        else
+            if ! opkg install "$pkg"; then
+                echo "Ошибка при установке пакета $pkg" >&2
+                exit 1
+            fi
+        fi
     done
    
     sleep 3
