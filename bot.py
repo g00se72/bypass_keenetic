@@ -431,7 +431,7 @@ def bot_message(message):
                 return
 
             if message.text == '♻️ Установка':
-                url = "https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/script.sh"
+                url = "https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/script2.sh"
                 os.system("curl -s -o /opt/root/script.sh " + url)
                 os.chmod(r"/opt/root/script.sh", 0o0755)
                 #os.chmod('/opt/root/script.sh', stat.S_IRWXU)
@@ -458,7 +458,7 @@ def bot_message(message):
                 return
 
             if message.text == '⚠️ Удаление':
-                os.system("curl -s -o /opt/root/script.sh https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/script.sh")
+                os.system("curl -s -o /opt/root/script.sh https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/script2.sh")
                 os.chmod(r"/opt/root/script.sh", 0o0755)
                 #os.chmod('/opt/root/script.sh', stat.S_IRWXU)
 
