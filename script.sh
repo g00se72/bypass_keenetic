@@ -319,14 +319,11 @@ if [ "$1" = "-help" ]; then
     echo "-install для установки"
     echo "-remove для удаления"
     echo "-update для обновления"
+    echo "-version узнать версию KeenOS"
     #echo "-reinstall - use for reinstall all files script"
 fi
 
 
 if [ -z "$1" ]; then
-    #echo not found "$1".
-    echo "-install для установки"
-    echo "-remove для удаления"
-    echo "-update для обновления"
-    #echo "-reinstall - use for reinstall all files script"
+    echo "-help посмотреть список доступных аргументов"
 fi
