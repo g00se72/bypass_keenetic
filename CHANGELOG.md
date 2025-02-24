@@ -1,4 +1,4 @@
-# [1.1.1 - Что нового](https://github.com/g00se72/bypass_keenetic/) - 23 Февраля 2025
+# [1.1.1 - Что нового](https://github.com/g00se72/bypass_keenetic/releases/tag/1.1.1) - 24 Февраля 2025
 
 - Добавлена тестовая версия script2.sh
 
