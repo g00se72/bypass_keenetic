@@ -85,7 +85,7 @@ if [ "$1" = "-install" ]; then
     set_type=$(ipset --help 2>/dev/null | grep -q "hash:net" && echo "hash:net" || echo "hash:ip")
 
     echo "Переменные роутера найдены"
-    # создания множеств IP-адресов unblock 
+    # создание множеств IP-адресов unblock 
     curl -o /opt/etc/ndm/fs.d/100-ipset.sh https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/100-ipset.sh || exit 1
     chmod 755 /opt/etc/ndm/fs.d/100-ipset.sh || chmod +x /opt/etc/ndm/fs.d/100-ipset.sh
     sed -i "s/hash:net/${set_type}/g" /opt/etc/ndm/fs.d/100-ipset.sh
@@ -108,14 +108,19 @@ if [ "$1" = "-install" ]; then
     chmod 755 /opt/etc/init.d/S24xray || chmod +x /opt/etc/init.d/S24xray
     sed -i 's|ARGS="-confdir /opt/etc/xray"|ARGS="run -c /opt/etc/xray/config.json"' /opt/etc/init.d/S24xray > /dev/null 2>&1
 
-    # unblock folder and files
+    # создание unblock папки и файлов
     mkdir -p /opt/etc/unblock
-    touch /opt/etc/hosts || chmod 0755 /opt/etc/hosts
-    touch /opt/etc/unblock/shadowsocks.txt || chmod 0755 /opt/etc/unblock/shadowsocks.txt
-    touch /opt/etc/unblock/tor.txt || chmod 0755 /opt/etc/unblock/tor.txt
-    touch /opt/etc/unblock/trojan.txt || chmod 0755 /opt/etc/unblock/trojan.txt
-    touch /opt/etc/unblock/vless.txt || chmod 0755 /opt/etc/unblock/vless.txt
-    touch /opt/etc/unblock/vpn.txt || chmod 0755 /opt/etc/unblock/vpn.txt
+    files=(
+        "/opt/etc/hosts"
+        "/opt/etc/unblock/shadowsocks.txt"
+        "/opt/etc/unblock/tor.txt"
+        "/opt/etc/unblock/trojan.txt"
+        "/opt/etc/unblock/vless.txt"
+        "/opt/etc/unblock/vpn.txt"
+    )
+    for file in "${files[@]}"; do
+        touch "$file" && chmod 0755 "$file"
+    done
     echo "Созданы файлы под сайты и ip-адреса для обхода блокировок для SS, Tor, Trojan и xray, VPN"
 
     # unblock_ipset.sh
