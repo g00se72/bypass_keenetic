@@ -308,7 +308,7 @@ if [ "$1" = "-help" ]; then
     echo "-install - use for install all needs for work"
     echo "-remove - use for remove all files script"
     echo "-update - use for get update files"
-    echo "-reinstall - use for reinstall all files script"
+    #echo "-reinstall - use for reinstall all files script"
 fi
 
 if [ -z "$1" ]; then
@@ -316,5 +316,5 @@ if [ -z "$1" ]; then
     echo "-install - use for install all needs for work"
     echo "-remove - use for remove all files script"
     echo "-update - use for get update files"
-    echo "-reinstall - use for reinstall all files script"
+    #echo "-reinstall - use for reinstall all files script"
 fi
