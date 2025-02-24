@@ -94,17 +94,16 @@ if [ "$1" = "-install" ]; then
     echo "Установлены настройки Tor"
 
     curl -o /opt/etc/shadowsocks.json https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/shadowsocks.json
-    echo "Установлены настройки Shadowsocks"
     sed -i "s/ss-local/${ssredir}/g" /opt/etc/init.d/S22shadowsocks
     chmod 0755 /opt/etc/shadowsocks.json || chmod 755 /opt/etc/init.d/S22shadowsocks || chmod +x /opt/etc/init.d/S22shadowsocks
-    echo "Установлен параметр ss-redir для Shadowsocks"
-
-    curl -o /opt/etc/xray/config.json https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/vlessconfig.json
-
+    echo "Установлены настройки Shadowsocks"
     curl -o /opt/etc/trojan/config.json https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/trojanconfig.json
+    echo "Установлены настройки Trojan"
+    curl -o /opt/etc/xray/config.json https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/vlessconfig.json
     chmod 755 /opt/etc/init.d/S24xray || chmod +x /opt/etc/init.d/S24xray
     sed -i 's|ARGS="-confdir /opt/etc/xray"|ARGS="run -c /opt/etc/xray/config.json"|g' /opt/etc/init.d/S24xray > /dev/null 2>&1
-
+    echo "Установлены настройки Xray"
+    
     # unblock folder and files
     mkdir -p /opt/etc/unblock
     touch /opt/etc/hosts || chmod 0755 /opt/etc/hosts
