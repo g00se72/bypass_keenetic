@@ -232,19 +232,13 @@ if [ "$1" = "-update" ]; then
     sed -i "s/${bot_old_version}/${bot_new_version}/g" /opt/etc/bot_config.py
     echo "Обновление выполнено. Сервисы перезапущены. Сейчас будет перезапущен бот (~15-30 сек)"
     sleep 7
-    # shellcheck disable=SC2009
-    bot_pid=$(ps | grep bot.py | awk '{print $1}')
-    for bot in ${bot_pid}; do kill "${bot}"; done
-    sleep 5
+
+    bot_pid=$(ps | grep "[p]ython3 /opt/etc/bot.py" | awk '{print $1}')
+    [ -n "$bot_pid" ] && echo "Останавливаем бота..." && kill "$bot_pid" && sleep 5
+    
     python3 /opt/etc/bot.py &
-    check_running=$(pidof python3 /opt/etc/bot.py)
-    if [ -z "${check_running}" ]; then
-      for bot in ${bot_pid}; do kill "${bot}"; done
-      sleep 3
-      python3 /opt/etc/bot.py &
-    else
-      echo "Бот запущен. Нажмите на /start";
-    fi
+    check_running=$(ps | grep "[p]ython3 /opt/etc/bot.py")
+    [ -n "$(ps | grep '[p]ython3 /opt/etc/bot.py')" ] && echo "Бот запущен. Нажмите на /start" || echo "Ошибка: бот не запустился"
 
     exit 0
 fi
