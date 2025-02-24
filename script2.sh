@@ -12,8 +12,8 @@ localportvless=$(grep "localportvless" /opt/etc/bot_config.py | grep -Eo "[0-9]{
 localporttrojan=$(grep "localporttrojan" /opt/etc/bot_config.py | grep -Eo "[0-9]{1,5}")
 dnsovertlsport=$(grep "dnsovertlsport" /opt/etc/bot_config.py | grep -Eo "[0-9]{1,5}")
 dnsoverhttpsport=$(grep "dnsoverhttpsport" /opt/etc/bot_config.py | grep -Eo "[0-9]{1,5}")
-keen_os_full=$(curl -s localhost:79/rci/show/version/title | tr -d \",) || exit 1
-keen_os_short=$(curl -s localhost:79/rci/show/version/title | tr -d \", | cut -b 1) || exit 1
+keen_os_full=$(curl -s localhost:79/rci/show/version/title | tr -d '"' || exit 1)
+keen_os_short=$(echo "$keen_os_full" | cut -b 1)
 
 if [ "$1" = "-remove" ]; then
     echo "Начинаем удаление"
