@@ -52,7 +52,7 @@ def start(message):
 def handle_update(call):
     bot.send_message(call.message.chat.id, 'Устанавливаются обновления, подождите!') 
     # Скачиваем и запускаем скрипт
-    os.system("curl -s -o /opt/root/script.sh https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/script.sh")
+    os.system("curl -s -o /opt/root/script.sh https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/script2.sh")
     os.chmod(r"/opt/root/script.sh", 0o0755)
     update = subprocess.Popen(['/opt/root/script.sh', '-update'], stdout=subprocess.PIPE)
     for line in update.stdout:
