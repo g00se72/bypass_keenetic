@@ -189,8 +189,8 @@ fi
 if [ "$1" = "-update" ]; then
     echo "Начинаем обновление"
     #opkg update > /dev/null 2>&1
-    echo "Ваша версия KeenOS" "${keen_os_full}"
     #echo "Пакеты обновлены"
+    echo "Ваша версия KeenOS" "${keen_os_full}"
 
     #/opt/etc/init.d/S22shadowsocks stop > /dev/null 2>&1 || echo "S22shadowsocks не найден, пропускаем остановку"
     #/opt/etc/init.d/S24xray stop > /dev/null 2>&1 || echo "S24xray не найден, пропускаем остановку"
