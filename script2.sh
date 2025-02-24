@@ -117,6 +117,9 @@ if [ "$1" = "-install" ]; then
 
     # создание unblock папки и файлов под домены и ip-адреса
     mkdir -p /opt/etc/unblock
+    # если не нужны списки с git строки можно закоментиовать, если нужны - оставить, команда touch не изменит их содержимое, только метку времени
+    curl -o /opt/etc/unblock/vless.txt https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/unblockvless.txt || exit 1
+    curl -o /opt/etc/unblock/tor.txt https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/unblocktor.txt || exit 1
     for file in \
         "/opt/etc/hosts" \
         "/opt/etc/unblock/shadowsocks.txt" \
