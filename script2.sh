@@ -273,6 +273,5 @@ fi
 
 
 if [ -z "$1" ]; then
-    #echo not found "$1".
     echo "-help посмотреть список доступных аргументов"
 fi
