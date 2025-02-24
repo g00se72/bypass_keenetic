@@ -38,28 +38,27 @@ if [ "$1" = "-remove" ]; then
     fi
 
     # Список для удаления
-    files=(
-        "/opt/etc/crontab"
-        "/opt/etc/init.d/S22shadowsocks"
-        "/opt/etc/init.d/S22trojan"
-        "/opt/etc/init.d/S24xray"
-        "/opt/etc/init.d/S35tor"
-        "/opt/etc/init.d/S56dnsmasq"
-        "/opt/etc/init.d/S99unblock"
-        "/opt/etc/ndm/netfilter.d/100-redirect.sh"
-        "/opt/etc/ndm/ifstatechanged.d/100-unblock-vpn.sh"
-        "/opt/etc/nmd/fs.d/100-ipset.sh"
-        "/opt/bin/unblock_dnsmasq.sh"
-        "/opt/bin/unblock_update.sh"
-        "/opt/bin/unblock_ipset.sh"
-        "/opt/etc/unblock.dnsmasq"
-        "/opt/etc/dnsmasq.conf"
-        "/opt/tmp/tor"
-        "/opt/etc/tor"
-        "/opt/etc/xray"
+	for file in \
+        "/opt/etc/crontab" \
+        "/opt/etc/init.d/S22shadowsocks" \
+        "/opt/etc/init.d/S22trojan" \
+        "/opt/etc/init.d/S24xray" \
+        "/opt/etc/init.d/S35tor" \
+        "/opt/etc/init.d/S56dnsmasq" \
+        "/opt/etc/init.d/S99unblock" \
+        "/opt/etc/ndm/netfilter.d/100-redirect.sh" \
+        "/opt/etc/ndm/ifstatechanged.d/100-unblock-vpn.sh" \
+        "/opt/etc/nmd/fs.d/100-ipset.sh" \
+        "/opt/bin/unblock_dnsmasq.sh" \
+        "/opt/bin/unblock_update.sh" \
+        "/opt/bin/unblock_ipset.sh" \
+        "/opt/etc/unblock.dnsmasq" \
+        "/opt/etc/dnsmasq.conf" \
+        "/opt/tmp/tor" \
+        "/opt/etc/tor" \
+        "/opt/etc/xray" \
         "/opt/etc/trojan"
-    )
-    for file in "${files[@]}"; do
+    do
         if [ -e "$file" ]; then
             chmod 777 "$file" && rm -rfv "$file"
         fi
@@ -109,16 +108,15 @@ if [ "$1" = "-install" ]; then
 
     # создание unblock папки и файлов под домены и ip-адреса
     mkdir -p /opt/etc/unblock
-    files=(
-        "/opt/etc/hosts"
-        "/opt/etc/unblock/shadowsocks.txt"
-        "/opt/etc/unblock/tor.txt"
-        "/opt/etc/unblock/trojan.txt"
-        "/opt/etc/unblock/vless.txt"
+    for file in \
+        "/opt/etc/hosts" \
+        "/opt/etc/unblock/shadowsocks.txt" \
+        "/opt/etc/unblock/tor.txt" \
+        "/opt/etc/unblock/trojan.txt" \
+        "/opt/etc/unblock/vless.txt" \
         "/opt/etc/unblock/vpn.txt"
-    )
-    for file in "${files[@]}"; do
-        touch "$file" && chmod 0755 "$file"
+    do
+	touch "$file" && chmod 0755 "$file"
     done
     echo "Созданы файлы под домены и ip-адреса"
 
@@ -203,11 +201,9 @@ if [ "$1" = "-update" ]; then
     backup_dir="/opt/root/backup-${now}"
     mkdir -p "${backup_dir}"
     # Массив с путями к файлам, которые будут обновлены
-    files=(
+    for file in \
         "/opt/etc/bot.py"
-    )
-    # Перемещение файлов в бэкап
-    for file in "${files[@]}"; do
+    do
         if [ -e "$file" ]; then
             mv "$file" "${backup_dir}/$(basename "$file")"
         fi
@@ -272,6 +268,7 @@ if [ "$1" = "-help" ]; then
     echo "-install для установки"
     echo "-remove для удаления"
     echo "-update для обновления"
+    echo "-version узнать версию KeenOS"
 fi
 
 
