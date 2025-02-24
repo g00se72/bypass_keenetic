@@ -4,7 +4,6 @@ repo="g00se72"
 
 # ip роутера
 lanip=$(ip addr show br0 | grep -Po "(?<=inet ).*(?=/)" | awk '{print $1}')
-ssredir="ss-redir"
 localportsh=$(grep "localportsh" /opt/etc/bot_config.py | grep -Eo "[0-9]{1,5}")
 #dnsporttor=$(grep "dnsporttor" /opt/etc/bot_config.py | grep -Eo "[0-9]{1,5}")
 localporttor=$(grep "localporttor" /opt/etc/bot_config.py | grep -Eo "[0-9]{1,5}")
@@ -107,7 +106,7 @@ if [ "$1" = "-install" ]; then
 
     curl -o /opt/etc/shadowsocks.json https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/shadowsocks.json || exit 1
     chmod 644 /opt/etc/shadowsocks.json
-    sed -i "s/ss-local/${ssredir}/g" /opt/etc/init.d/S22shadowsocks
+    sed -i "s/ss-local/ss-redir/g" /opt/etc/init.d/S22shadowsocks
     chmod 755 /opt/etc/init.d/S22shadowsocks || chmod +x /opt/etc/init.d/S22shadowsocks
     echo "Установлены базовые настройки Shadowsocks"
 
