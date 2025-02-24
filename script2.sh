@@ -15,6 +15,7 @@ dnsoverhttpsport=$(grep "dnsoverhttpsport" /opt/etc/bot_config.py | grep -Eo "[0
 keen_os_full=$(curl -s localhost:79/rci/show/version/title | tr -d \", || exit 1)
 keen_os_short=$(echo "$keen_os_full" | cut -b 1)
 
+
 if [ "$1" = "-remove" ]; then
     echo "Начинаем удаление"
     opkg remove \ #--force-removal-of-dependent-packages \
@@ -68,6 +69,7 @@ if [ "$1" = "-remove" ]; then
     echo "Если вы хотите полностью отключить DNS Override, перейдите в меню Сервис -> DNS Override -> DNS Override ВЫКЛ. После чего включится встроенный (штатный) DNS и роутер перезагрузится"
     exit 0
 fi
+
 
 if [ "$1" = "-install" ]; then
     echo "Начинаем установку"
@@ -180,18 +182,6 @@ if [ "$1" = "-install" ]; then
     exit 0
 fi
 
-#if [ "$1" = "-reinstall" ]; then
-#    curl -s -o /opt/root/script.sh https://raw.githubusercontent.com/ziwork/bypass_keenetic/main/script.sh || exit 1
-#    chmod 755 /opt/root/script.sh || chmod +x /opt/root/script.sh
-#    echo "Начинаем переустановку"
-#    echo "Удаляем установленные пакеты и созданные файлы"
-#    /bin/sh /opt/root/script.sh -remove
-#    echo "Удаление завершено"
-#    echo "Выполняем установку"
-#    /bin/sh /opt/root/script.sh -install
-#    echo "Установка выполнена."
-#    exit 0
-#fi
 
 if [ "$1" = "-update" ]; then
     echo "Начинаем обновление"
@@ -208,7 +198,7 @@ if [ "$1" = "-update" ]; then
     now=$(date +"%Y.%m.%d.%H-%M")
     backup_dir="/opt/root/backup-${now}"
     mkdir -p "${backup_dir}"
-    # Массив с путями к файлам, которые нужно бекапить
+    # Массив с путями к файлам, которые будут обновлены
     files=(
         "/opt/etc/bot.py"
     )
@@ -223,39 +213,6 @@ if [ "$1" = "-update" ]; then
     echo "Бэкап создан"
 	
     #что нужно обновить
-    #curl -s -o /opt/etc/ndm/fs.d/100-ipset.sh https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/100-ipset.sh || exit 1
-    #chmod 755 /opt/etc/ndm/fs.d/100-ipset.sh || chmod +x /opt/etc/ndm/fs.d/100-ipset.sh
-    #curl -s -o /opt/etc/ndm/netfilter.d/100-redirect.sh https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/100-redirect.sh || exit 1
-    #chmod 755 /opt/etc/ndm/netfilter.d/100-redirect.sh || chmod +x /opt/etc/ndm/netfilter.d/100-redirect.sh
-    #sed -i -e "s/hash:net/${set_type}/g" \
-    #       -e "s/192.168.1.1/${lanip}/g" \
-    #       -e "s/1082/${localportsh}/g" \
-    #       -e "s/9141/${localporttor}/g" \
-    #       -e "s/10810/${localportvless}/g" \
-    #       -e "s/10829/${localporttrojan}/g" \
-    #       /opt/etc/ndm/netfilter.d/100-redirect.sh
-    #sed -i 's|ARGS="-confdir /opt/etc/xray"|ARGS="run -c /opt/etc/xray/config.json"' /opt/etc/init.d/S24xray > /dev/null 2>&1
-
-    #if [ "${keen_os_short}" = "4" ]; then
-    #      echo "VPN для KeenOS 4+";
-    #      curl -s -o /opt/etc/ndm/ifstatechanged.d/100-unblock-vpn.sh https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/100-unblock-vpn-v4.sh || exit 1
-    #else
-    #      echo "VPN для KeenOS 3";
-    #      curl -s -o /opt/etc/ndm/ifstatechanged.d/100-unblock-vpn.sh https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/100-unblock-vpn.sh || exit 1
-    #fi
-    #chmod 755 /opt/etc/ndm/ifstatechanged.d/100-unblock-vpn.sh || chmod +x /opt/etc/ndm/ifstatechanged.d/100-unblock-vpn.sh
-
-    #curl -s -o /opt/bin/unblock_ipset.sh https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/unblock_ipset.sh || exit 1
-    #curl -s -o /opt/bin/unblock_dnsmasq.sh https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/unblock.dnsmasq.sh || exit 1
-    #curl -s -o /opt/bin/unblock_update.sh https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/unblock_update.sh || exit 1
-    #chmod 755 /opt/bin/unblock_*.sh || chmod +x /opt/bin/unblock_*.sh
-    #sed -i "s/40500/${dnsovertlsport}/g" /opt/bin/unblock_ipset.sh
-    #sed -i "s/40500/${dnsovertlsport}/g" /opt/bin/unblock_dnsmasq.sh
-
-    #curl -s -o /opt/etc/dnsmasq.conf https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/dnsmasq.conf || exit 1
-    #chmod 755 /opt/etc/dnsmasq.conf
-    sed -i -e "s/192.168.1.1/${lanip}/g" -e "s/40500/${dnsovertlsport}/g" -e "s/40508/${dnsoverhttpsport}/g" /opt/etc/dnsmasq.conf
-
     curl -s -o /opt/etc/bot.py https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/bot.py || exit 1
     chmod 755 /opt/etc/bot.py
     echo "Обновления загружены, права устновлены"
@@ -291,6 +248,7 @@ if [ "$1" = "-update" ]; then
     exit 0
 fi
 
+
 if [ "$1" = "-reboot" ]; then
     ndmc -c 'opkg dns-override'
     sleep 3
@@ -300,21 +258,22 @@ if [ "$1" = "-reboot" ]; then
     ndmc -c 'system reboot'
 fi
 
+
 if [ "$1" = "-version" ]; then
     echo "Ваша версия KeenOS" "${keen_os_full}"
 fi
 
+
 if [ "$1" = "-help" ]; then
-    echo "-install - use for install all needs for work"
-    echo "-remove - use for remove all files script"
-    echo "-update - use for get update files"
-    #echo "-reinstall - use for reinstall all files script"
+    echo "-install для установки"
+    echo "-remove для удаления"
+    echo "-update для обновления"
 fi
+
 
 if [ -z "$1" ]; then
     #echo not found "$1".
-    echo "-install - use for install all needs for work"
-    echo "-remove - use for remove all files script"
-    echo "-update - use for get update files"
-    #echo "-reinstall - use for reinstall all files script"
+    echo "-install для установки"
+    echo "-remove для удаления"
+    echo "-update для обновления"
 fi
