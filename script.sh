@@ -15,6 +15,7 @@ dnsoverhttpsport=$(grep "dnsoverhttpsport" /opt/etc/bot_config.py | grep -Eo "[0
 keen_os_full=$(curl -s localhost:79/rci/show/version/title | tr -d \",)
 keen_os_short=$(curl -s localhost:79/rci/show/version/title | tr -d \", | cut -b 1)
 
+
 if [ "$1" = "-remove" ]; then
     echo "Начинаем удаление"
     opkg remove tor tor-geoip bind-dig cron dnsmasq-full ipset iptables obfs4 shadowsocks-libev-ss-redir shadowsocks-libev-config xray trojan
@@ -61,6 +62,7 @@ if [ "$1" = "-remove" ]; then
     echo "Если вы хотите полностью отключить DNS Override, перейдите в меню Сервис -> DNS Override -> DNS Override ВЫКЛ. После чего включится встроенный (штатный) DNS и роутер перезагрузится"
     exit 0
 fi
+
 
 if [ "$1" = "-install" ]; then
     echo "Начинаем установку"
@@ -194,6 +196,7 @@ fi
 #    exit 0
 #fi
 
+
 if [ "$1" = "-update" ]; then
     echo "Начинаем обновление"
     #opkg update > /dev/null 2>&1
@@ -296,6 +299,7 @@ if [ "$1" = "-update" ]; then
     exit 0
 fi
 
+
 if [ "$1" = "-reboot" ]; then
     ndmc -c 'opkg dns-override'
     sleep 3
@@ -305,21 +309,24 @@ if [ "$1" = "-reboot" ]; then
     ndmc -c 'system reboot'
 fi
 
+
 if [ "$1" = "-version" ]; then
     echo "Ваша версия KeenOS" "${keen_os_full}"
 fi
 
+
 if [ "$1" = "-help" ]; then
-    echo "-install - use for install all needs for work"
-    echo "-remove - use for remove all files script"
-    echo "-update - use for get update files"
-    echo "-reinstall - use for reinstall all files script"
+    echo "-install для установки"
+    echo "-remove для удаления"
+    echo "-update для обновления"
+    #echo "-reinstall - use for reinstall all files script"
 fi
+
 
 if [ -z "$1" ]; then
     #echo not found "$1".
-    echo "-install - use for install all needs for work"
-    echo "-remove - use for remove all files script"
-    echo "-update - use for get update files"
-    echo "-reinstall - use for reinstall all files script"
+    echo "-install для установки"
+    echo "-remove для удаления"
+    echo "-update для обновления"
+    #echo "-reinstall - use for reinstall all files script"
 fi
