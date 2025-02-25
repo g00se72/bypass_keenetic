@@ -2,7 +2,7 @@
 
 repo="g00se72"
 
-# ip роутера
+# читаем переменные
 lanip=$(ip addr show br0 | grep -Po "(?<=inet ).*(?=/)" | awk '{print $1}')
 localportsh=$(grep "localportsh" /opt/etc/bot_config.py | grep -Eo "[0-9]{1,5}")
 #dnsporttor=$(grep "dnsporttor" /opt/etc/bot_config.py | grep -Eo "[0-9]{1,5}")
@@ -19,12 +19,13 @@ if [ "$1" = "-remove" ]; then
     echo "Начинаем удаление"
     for pkg in tor tor-geoip bind-dig cron dnsmasq-full ipset iptables obfs4 shadowsocks-libev-ss-redir shadowsocks-libev-config xray trojan; do
     if opkg list-installed | grep -q "^$pkg "; then
+        #echo "Удаляем пакет: $pkg"
         opkg remove "$pkg" #--force-removal-of-dependent-packages
     else
         echo "Пакет $pkg не установлен, пропускаем..."
     fi
     done
-    echo "Пакеты удалены, удаляем папки, файлы и настройки"
+    echo "Все пакеты удалены. Начинаем удаление папок, файлов и настроек"
 	
     ipset flush unblocktor
     ipset flush unblocksh
@@ -83,43 +84,42 @@ if [ "$1" = "-install" ]; then
             fi
         fi
     done
-   
     sleep 3
     echo "Установка пакетов завершена. Продолжаем установку"
 
     # есть поддержка множества hash:net или нет, если нет, то при этом вы потеряете возможность разблокировки по диапазону и CIDR
     set_type=$(ipset --help 2>/dev/null | grep -q "hash:net" && echo "hash:net" || echo "hash:ip")
-    echo "Переменные роутера найдены, поддержка множества" "${set_type}"
+    [ "$set_type" = "hash:net" ] && echo "Поддержка множества типа hash:net есть" || echo "Поддержка множества типа hash:net отсутствует"
     
     # создание множеств IP-адресов unblock 
     curl -o /opt/etc/ndm/fs.d/100-ipset.sh https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/100-ipset.sh || exit 1
     chmod 755 /opt/etc/ndm/fs.d/100-ipset.sh || chmod +x /opt/etc/ndm/fs.d/100-ipset.sh
-    sed -i "s/hash:net/${set_type}/g" /opt/etc/ndm/fs.d/100-ipset.sh
+    sed -i "s/hash:net/${set_type}/g" /opt/etc/ndm/fs.d/100-ipset.sh && \
     echo "Созданы файлы под множества"
 
     mkdir -p /opt/tmp/tor
-    curl -o /opt/etc/tor/torrc https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/torrc || exit 1
-    sed -i "s/hash:net/${set_type}/g" /opt/etc/tor/torrc
+    curl -o /opt/etc/tor/torrc https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/torrc
+    sed -i "s/hash:net/${set_type}/g" /opt/etc/tor/torrc && \
     echo "Установлены базовые настройки Tor"
 
-    curl -o /opt/etc/shadowsocks.json https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/shadowsocks.json || exit 1
-    sed -i "s/ss-local/ss-redir/g" /opt/etc/init.d/S22shadowsocks
+    curl -o /opt/etc/shadowsocks.json https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/shadowsocks.json
     chmod 755 /opt/etc/init.d/S22shadowsocks || chmod +x /opt/etc/init.d/S22shadowsocks
+    sed -i "s/ss-local/ss-redir/g" /opt/etc/init.d/S22shadowsocks && \
     echo "Установлены базовые настройки Shadowsocks"
 
-    curl -o /opt/etc/trojan/config.json https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/trojanconfig.json || exit 1
+    curl -o /opt/etc/trojan/config.json https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/trojanconfig.json
     echo "Установлены базовые настройки Trojan"
     
-    curl -o /opt/etc/xray/config.json https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/vlessconfig.json || exit 1  
+    curl -o /opt/etc/xray/config.json https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/vlessconfig.json  
     chmod 755 /opt/etc/init.d/S24xray || chmod +x /opt/etc/init.d/S24xray
-    sed -i 's|ARGS="-confdir /opt/etc/xray"|ARGS="run -c /opt/etc/xray/config.json"' /opt/etc/init.d/S24xray > /dev/null 2>&1
+    sed -i 's|ARGS="-confdir /opt/etc/xray"|ARGS="run -c /opt/etc/xray/config.json"|' /opt/etc/init.d/S24xray > /dev/null && \
     echo "Установлены базовые настройки Xray"
 
     # создание unblock папки и файлов под домены и ip-адреса
     mkdir -p /opt/etc/unblock
     # если не нужны списки с git строки можно закоментиовать, если нужны - оставить, команда touch не изменит их содержимое, только метку времени
-    curl -o /opt/etc/unblock/vless.txt https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/unblockvless.txt || exit 1
-    curl -o /opt/etc/unblock/tor.txt https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/unblocktor.txt || exit 1
+    curl -o /opt/etc/unblock/vless.txt https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/unblockvless.txt
+    curl -o /opt/etc/unblock/tor.txt https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/unblocktor.txt
     for file in \
         "/opt/etc/hosts" \
         "/opt/etc/unblock/shadowsocks.txt" \
@@ -135,15 +135,15 @@ if [ "$1" = "-install" ]; then
     # unblock_ipset.sh
     curl -o /opt/bin/unblock_ipset.sh https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/unblock_ipset.sh || exit 1
     chmod 755 /opt/bin/unblock_ipset.sh || chmod +x /opt/bin/unblock_ipset.sh
-    sed -i "s/40500/${dnsovertlsport}/g" /opt/bin/unblock_ipset.sh
+    sed -i "s/40500/${dnsovertlsport}/g" /opt/bin/unblock_ipset.sh && \
     echo "Установлен скрипт для заполнения множеств unblock IP-адресами заданного списка доменов"
 
     # unblock_dnsmasq.sh
     curl -o /opt/bin/unblock_dnsmasq.sh https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/unblock.dnsmasq.sh || exit 1
     chmod 755 /opt/bin/unblock_dnsmasq.sh || chmod +x /opt/bin/unblock_dnsmasq.sh
-    sed -i "s/40500/${dnsovertlsport}/g" /opt/bin/unblock_dnsmasq.sh
-    /opt/bin/unblock_dnsmasq.sh
+    sed -i "s/40500/${dnsovertlsport}/g" /opt/bin/unblock_dnsmasq.sh && \
     echo "Установлен скрипт для формирования дополнительного конфигурационного файла dnsmasq из заданного списка доменов и его запуск"
+    /opt/bin/unblock_dnsmasq.sh
 
     # unblock_update.sh
     curl -o /opt/bin/unblock_update.sh https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/unblock_update.sh || exit 1
@@ -164,7 +164,7 @@ if [ "$1" = "-install" ]; then
            -e "s/9141/${localporttor}/g" \
            -e "s/10810/${localportvless}/g" \
            -e "s/10829/${localporttrojan}/g" \
-           /opt/etc/ndm/netfilter.d/100-redirect.sh
+           /opt/etc/ndm/netfilter.d/100-redirect.sh && \
     echo "Установлено перенаправление пакетов с адресатами из unblock в Tor, Shadowsocks, VPN, Trojan, Xray"
 
     # VPN script
@@ -182,14 +182,14 @@ if [ "$1" = "-install" ]; then
     rm -f /opt/etc/dnsmasq.conf
     curl -o /opt/etc/dnsmasq.conf https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/dnsmasq.conf || exit 1
     chmod 644 /opt/etc/dnsmasq.conf
-    sed -i -e "s/192.168.1.1/${lanip}/g" -e "s/40500/${dnsovertlsport}/g" -e "s/40508/${dnsoverhttpsport}/g" /opt/etc/dnsmasq.conf
+    sed -i -e "s/192.168.1.1/${lanip}/g" -e "s/40500/${dnsovertlsport}/g" -e "s/40508/${dnsoverhttpsport}/g" /opt/etc/dnsmasq.conf && \
     echo "Установлена настройка dnsmasq и подключение дополнительного конфигурационного файла к dnsmasq"
 
     # cron file
     rm -f /opt/etc/crontab
     curl -o /opt/etc/crontab https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/crontab || exit 1
     chmod 644 /opt/etc/crontab
-    echo "Установлено добавление задачи в cron для периодического обновления содержимого множества"
+    echo "Добавлены задачи в cron для периодического обновления содержимого множества"
     /opt/bin/unblock_update.sh
     echo "Установлены все изначальные скрипты и скрипты разблокировок, выполнена основная настройка бота"
     
@@ -199,8 +199,7 @@ fi
 
 if [ "$1" = "-update" ]; then
     echo "Начинаем обновление"
-    #opkg update > /dev/null 2>&1
-    #echo "Пакеты обновлены"
+    #opkg update > /dev/null 2>&1 && echo "Пакеты обновлены"
     echo "Ваша версия KeenOS" "${keen_os_full}"
 
     #/opt/etc/init.d/S22shadowsocks stop > /dev/null 2>&1 || echo "S22shadowsocks не найден, пропускаем остановку"
