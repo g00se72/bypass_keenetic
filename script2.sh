@@ -93,9 +93,9 @@ if [ "$1" = "-install" ]; then
     
     # создание множеств IP-адресов unblock 
     curl -o /opt/etc/ndm/fs.d/100-ipset.sh https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/100-ipset.sh || exit 1
-    chmod 755 /opt/etc/ndm/fs.d/100-ipset.sh || chmod +x /opt/etc/ndm/fs.d/100-ipset.sh
     sed -i "s/hash:net/${set_type}/g" /opt/etc/ndm/fs.d/100-ipset.sh && \
     echo "Созданы файлы под множества"
+    chmod 755 /opt/etc/ndm/fs.d/100-ipset.sh || chmod +x /opt/etc/ndm/fs.d/100-ipset.sh
 
     mkdir -p /opt/tmp/tor
     curl -o /opt/etc/tor/torrc https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/torrc && \
@@ -219,8 +219,6 @@ if [ "$1" = "-update" ]; then
             mv "$file" "${backup_dir}/$(basename "$file")"
         fi
     done
-    # Применение прав доступа к файлам в бэкапе
-    #chmod 644 "${backup_dir}"/*
     echo "Бэкап создан"
 	
     #что нужно обновить
