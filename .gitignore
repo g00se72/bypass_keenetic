@@ -23,4 +23,6 @@ bot_*.py
 logs/
 
 # Документация
-.md
+*.md
+README.md
+CHANGELOG.md
