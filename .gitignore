@@ -1,23 +1,26 @@
-# Virtual environments
+# Виртуальные окружения
 venv/
 .venv/
 
 # IDE
 .idea/
 
-# Python cache
+# Кеш Python и скомпилированные файлы
 __pycache__/
+*.py[cod]
+*.pyo
+*.pyd
 
-# Environment variables
+# Файлы переменных окружения
 .env
 .env.*
 
-# Versioned bot files
+# Версионируемые файлы бота
 bot_*.py
 
 # Logs
 *.log
 logs/
 
-# readme, changelog, info
+# Документация
 .md
