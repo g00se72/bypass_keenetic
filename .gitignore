@@ -18,3 +18,6 @@ bot_*.py
 # Logs
 *.log
 logs/
+
+# readme, changelog, info
+.md
