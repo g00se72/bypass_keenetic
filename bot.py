@@ -92,7 +92,7 @@ def bot_message(message):
                 bot.send_message(message.chat.id, '⚙️ Сервисное меню!', reply_markup=service)
                 return
 
-            if message.text == '🚦 Перезагрузить сервисы' or message.text == 'Перезагрузить сервисы':
+            if message.text in ('🚦 Перезагрузить сервисы','Перезагрузить сервисы'):
                 bot.send_message(message.chat.id, '⏳ Выполняется перезагрузка сервисов!', reply_markup=service)
                 os.system('/opt/etc/init.d/S22shadowsocks restart')
                 os.system('/opt/etc/init.d/S22trojan restart')
@@ -101,18 +101,18 @@ def bot_message(message):
                 bot.send_message(message.chat.id, '✅ Сервисы перезагружены!', reply_markup=service)
                 return
 
-            if message.text == '⛔ Перезагрузить роутер' or message.text == 'Перезагрузить роутер':
+            if message.text in ('⛔ Перезагрузить роутер','Перезагрузить роутер'):
                 os.system("ndmc -c system reboot")
                 service_router_reboot = "⏳ Роутер перезагружается!\nЭто займет около 2 минут"
                 bot.send_message(message.chat.id, service_router_reboot, reply_markup=service)
                 return
 
-            if message.text == '🤖 Перезапустить бота' or message.text == 'Перезапустить бота':
+            if message.text in ('🤖 Перезапустить бота','Перезапустить бота'):
                 bot.send_message(message.chat.id, "⏳ Бот будет перезапущен", reply_markup=service)
                 subprocess.Popen(['/opt/root/script.sh', '-restart'])
                 return
             
-            if message.text == '⁉️ DNS Override' or message.text == 'DNS Override':
+            if message.text in ('⁉️ DNS Override','DNS Override'):
                 service = types.ReplyKeyboardMarkup(resize_keyboard=True)
                 m1 = types.KeyboardButton("✅ DNS Override ВКЛ")
                 m2 = types.KeyboardButton("❌ DNS Override ВЫКЛ")
@@ -122,7 +122,7 @@ def bot_message(message):
                 bot.send_message(message.chat.id, '⁉️ DNS Override!', reply_markup=service)
                 return
 
-            if message.text == "✅ DNS Override ВКЛ" or message.text == "❌ DNS Override ВЫКЛ":
+            if message.text in ("✅ DNS Override ВКЛ","❌ DNS Override ВЫКЛ"):
                 if message.text == "✅ DNS Override ВКЛ":
                     os.system("ndmc -c 'opkg dns-override'")
                     time.sleep(2)
@@ -160,7 +160,7 @@ def bot_message(message):
                 except ValueError:
                     return (0, 0, 0)  # Если версия невалидна, возвращаем (0,0,0)
 
-            if message.text == '🔄 Обновления' or message.text == '/check_update':
+            if message.text in ('🔄 Обновления','/check_update'):
                 # Получение последней версии
                 url = "https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/version.md"
                 response = requests.get(url)
@@ -199,7 +199,7 @@ def bot_message(message):
                     )
                 return
               
-            if message.text == '🔙 Назад' or message.text == "Назад":
+            if message.text in ('🔙 Назад',"Назад"):
                 bot.send_message(message.chat.id, '🤖 Добро пожаловать в меню!', reply_markup=main)
                 level = 0
                 bypass = -1
