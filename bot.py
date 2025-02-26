@@ -200,7 +200,7 @@ def bot_message(message):
                 return
               
             if message.text == '🔙 Назад' or message.text == "Назад":
-                bot.send_message(message.chat.id, '✅ Добро пожаловать в меню!', reply_markup=main)
+                bot.send_message(message.chat.id, '🤖 Добро пожаловать в меню!', reply_markup=main)
                 level = 0
                 bypass = -1
                 return
@@ -373,7 +373,7 @@ def bot_message(message):
                     markup.add(item1, item2)
                     back = types.KeyboardButton("🔙 Назад")
                     markup.add(back)
-                    bot.send_message(message.chat.id, '✅ Добро пожаловать в меню Tor!', reply_markup=markup)
+                    bot.send_message(message.chat.id, '🤖 Добро пожаловать в меню Tor!', reply_markup=markup)
 
                 if message.text == 'Shadowsocks':
                     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
