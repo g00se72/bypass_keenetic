@@ -15,6 +15,16 @@ keen_os_full=$(curl -s localhost:79/rci/show/version/title | tr -d \",)
 keen_os_short=$(echo "$keen_os_full" | cut -b 1)
 
 
+if [ "$1" = "-restart" ]; then
+    bot_pid=$(ps | grep "[p]ython3 /opt/etc/bot.py" | awk '{print $1}')
+    [ -n "$bot_pid" ] && echo "Останавливаем бота..." && kill "$bot_pid" && sleep 5
+    
+    python3 /opt/etc/bot.py &
+    check_running=$(ps | grep "[p]ython3 /opt/etc/bot.py")
+    [ -n "$(ps | grep '[p]ython3 /opt/etc/bot.py')" ] && echo "Бот запущен. Нажмите на /start" || echo "Ошибка: бот не запустился"
+fi
+
+
 if [ "$1" = "-remove" ]; then
     echo "Начинаем удаление"
     for pkg in tor tor-geoip bind-dig cron dnsmasq-full ipset iptables obfs4 shadowsocks-libev-ss-redir shadowsocks-libev-config xray trojan; do
@@ -239,14 +249,8 @@ if [ "$1" = "-update" ]; then
     sleep 2
     sed -i "s/${bot_old_version}/${bot_new_version}/g" /opt/etc/bot_config.py
     echo "Обновление выполнено. Сервисы перезапущены. Сейчас будет перезапущен бот (~15-30 сек)"
-    sleep 7
-
-    bot_pid=$(ps | grep "[p]ython3 /opt/etc/bot.py" | awk '{print $1}')
-    [ -n "$bot_pid" ] && echo "Останавливаем бота..." && kill "$bot_pid" && sleep 5
-    
-    python3 /opt/etc/bot.py &
-    check_running=$(ps | grep "[p]ython3 /opt/etc/bot.py")
-    [ -n "$(ps | grep '[p]ython3 /opt/etc/bot.py')" ] && echo "Бот запущен. Нажмите на /start" || echo "Ошибка: бот не запустился"
+    sleep 2
+    /bin/sh /opt/root/script.sh -restart
 
     exit 0
 fi
