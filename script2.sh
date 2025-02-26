@@ -20,7 +20,6 @@ if [ "$1" = "-restart" ]; then
     [ -n "$bot_pid" ] && echo "Останавливаем бота..." && kill "$bot_pid" && sleep 5
     
     (python3 /opt/etc/bot.py &)
-    disown  # Отвязываем процесс от терминала
     check_running=$(ps | grep "[p]ython3 /opt/etc/bot.py")
     if [ -n "$check_running" ]; then
         echo "Бот запущен. Нажмите на /start"
