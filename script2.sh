@@ -19,7 +19,7 @@ if [ "$1" = "-restart" ]; then
     bot_pid=$(ps | grep "[p]ython3 /opt/etc/bot.py" | awk '{print $1}')
     [ -n "$bot_pid" ] && echo "Останавливаем бота..." && kill "$bot_pid" && sleep 5
     
-    python3 /opt/etc/bot.py &
+    (python3 /opt/etc/bot.py &)
     disown  # Отвязываем процесс от терминала
     check_running=$(ps | grep "[p]ython3 /opt/etc/bot.py")
     if [ -n "$check_running" ]; then
