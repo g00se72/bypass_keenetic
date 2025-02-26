@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 # ВЕРСИЯ СКРИПТА 1.1.1
-#  ✅ ❌ ♻️ 📃 📆 🔑 📄 ❗ ️⚠️ ⚙️ 📝 📆 🗑 📄️ ⚠️ ❔ ‼️ 📑 🤖 🚨 🚦 📲 ⏳ 🛠 💡 📑 📄 🗒 ✂ ️✏️ ⁉️ 🔁 ➕ ➖
+#  ✅ ❌ ♻️ 📃 📆 🔑 📄 ❗ ️⚠️ ⚙️ 📝 📆 📄️ ⚠️ ❔ ‼️ 📑 🤖 🚨 🚦 📲 ⏳ 🛠 💡 📑 📄 🗒 ✂ ️✏️ ⁉️ 🔁 ➕ ➖
 
 import asyncio
 import subprocess
@@ -66,7 +66,7 @@ def bot_message(message):
         m1 = types.KeyboardButton("📲 Установка и удаление")
         m2 = types.KeyboardButton("🔑 Ключи и мосты")
         m3 = types.KeyboardButton("📝 Списки обхода")
-        m4 = types.KeyboardButton("📄 Информация")
+        m4 = types.KeyboardButton("💡 Информация")
         m5 = types.KeyboardButton("⚙️ Сервис")
         main.add(m1, m2, m3)
         main.add(m4, m5)
@@ -147,7 +147,7 @@ def bot_message(message):
                 bot.send_message(message.chat.id, service_router_reboot, reply_markup=service)
                 return
 
-            if message.text == '📄 Информация':
+            if message.text == '💡 Информация':
                 url = "https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/info.md"
                 info_bot = requests.get(url).text
                 bot.send_message(message.chat.id, info_bot, parse_mode='Markdown', disable_web_page_preview=True,
@@ -214,8 +214,8 @@ def bot_message(message):
                     if fln == message.text + '.txt':
                         markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
                         item1 = types.KeyboardButton("📑 Показать список")
-                        item2 = types.KeyboardButton("📝 Добавить в список")
-                        item3 = types.KeyboardButton("🗑 Удалить из списка")
+                        item2 = types.KeyboardButton("➕ Добавить в список")
+                        item3 = types.KeyboardButton("➖ Удалить из списка")
                         back = types.KeyboardButton("🔙 Назад")
                         markup.row(item1, item2, item3)
                         markup.row(back)
@@ -256,15 +256,15 @@ def bot_message(message):
                     
                 markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
                 item1 = types.KeyboardButton("📑 Показать список")
-                item2 = types.KeyboardButton("📝 Добавить в список")
-                item3 = types.KeyboardButton("🗑 Удалить из списка")
+                item2 = types.KeyboardButton("➕ Добавить в список")
+                item3 = types.KeyboardButton("➖ Удалить из списка")
                 back = types.KeyboardButton("🔙 Назад")
                 markup.row(item1, item2, item3)
                 markup.row(back)
                 bot.send_message(message.chat.id, "Меню " + bypass, reply_markup=markup)
                 return
 
-            if level == 2 and message.text == "📝 Добавить в список":
+            if level == 2 and message.text == "➕ Добавить в список":
                 bot.send_message(message.chat.id,
                                  "Введите имя сайта или домена для разблокировки, "
                                  "либо воспользуйтесь меню для других действий")
@@ -275,7 +275,7 @@ def bot_message(message):
                 bot.send_message(message.chat.id, "Меню " + bypass, reply_markup=markup)
                 return
 
-            if level == 2 and message.text == "🗑 Удалить из списка":
+            if level == 2 and message.text == "➖ Удалить из списка":
                 bot.send_message(message.chat.id,
                                  "Введите имя сайта или домена для удаления из листа разблокировки,"
                                  "либо возвратитесь в главное меню")
@@ -312,8 +312,8 @@ def bot_message(message):
                     bot.send_message(message.chat.id, "Было добавлено ранее")
                 markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
                 item1 = types.KeyboardButton("📑 Показать список")
-                item2 = types.KeyboardButton("📝 Добавить в список")
-                item3 = types.KeyboardButton("🗑 Удалить из списка")
+                item2 = types.KeyboardButton("➕ Добавить в список")
+                item3 = types.KeyboardButton("➖ Удалить из списка")
                 back = types.KeyboardButton("🔙 Назад")
                 markup.row(item1, item2, item3)
                 markup.row(back)
@@ -342,8 +342,8 @@ def bot_message(message):
                     bot.send_message(message.chat.id, "Не найдено в списке")
                 markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
                 item1 = types.KeyboardButton("📑 Показать список")
-                item2 = types.KeyboardButton("📝 Добавить в список")
-                item3 = types.KeyboardButton("🗑 Удалить из списка")
+                item2 = types.KeyboardButton("➕ Добавить в список")
+                item3 = types.KeyboardButton("➖ Удалить из списка")
                 back = types.KeyboardButton("🔙 Назад")
                 markup.row(item1, item2, item3)
                 markup.row(back)
