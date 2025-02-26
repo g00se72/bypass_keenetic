@@ -22,6 +22,7 @@ if [ "$1" = "-restart" ]; then
     python3 /opt/etc/bot.py &
     check_running=$(ps | grep "[p]ython3 /opt/etc/bot.py")
     [ -n "$(ps | grep '[p]ython3 /opt/etc/bot.py')" ] && echo "Бот запущен. Нажмите на /start" || echo "Ошибка: бот не запустился"
+    exit 0
 fi
 
 
