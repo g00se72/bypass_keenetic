@@ -21,8 +21,13 @@ if [ "$1" = "-restart" ]; then
     
     python3 /opt/etc/bot.py &
     check_running=$(ps | grep "[p]ython3 /opt/etc/bot.py")
-    [ -n "$(ps | grep '[p]ython3 /opt/etc/bot.py')" ] && echo "Бот запущен. Нажмите на /start" || echo "Ошибка: бот не запустился"
-    exit 0
+    if [ -n "$check_running" ]; then
+        echo "Бот запущен. Нажмите на /start"
+        exit 0  # Успешное завершение
+    else
+        echo "Ошибка: бот не запустился"
+        exit 1  # Ошибка
+    fi
 fi
 
 
@@ -251,7 +256,7 @@ if [ "$1" = "-update" ]; then
     sed -i "s/${bot_old_version}/${bot_new_version}/g" /opt/etc/bot_config.py
     echo "Обновление выполнено. Сервисы перезапущены. Сейчас будет перезапущен бот (~15-30 сек)"
     sleep 2
-    /bin/sh /opt/root/script.sh -restart
+    /bin/sh /opt/root/script.sh -restart || exit 1
 
     exit 0
 fi
