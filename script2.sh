@@ -266,6 +266,7 @@ if [ "$1" = "-help" ]; then
     echo "-remove для удаления"
     echo "-update для обновления"
     echo "-version узнать версию KeenOS"
+    echo "-restart перезапустить бота"
 fi
 
 
