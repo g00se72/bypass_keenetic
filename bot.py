@@ -109,7 +109,7 @@ def bot_message(message):
 
             if message.text in ('🤖 Перезапустить бота','Перезапустить бота'):
                 bot.send_message(message.chat.id, "⏳ Бот будет перезапущен", reply_markup=service)
-                subprocess.Popen(['/opt/root/script.sh', '-restart'])
+                subprocess.Popen(['/opt/root/script.sh', '-restart'], close_fds=True)
                 return
             
             if message.text in ('⁉️ DNS Override','DNS Override'):
