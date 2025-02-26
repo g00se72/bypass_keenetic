@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 # ВЕРСИЯ СКРИПТА 1.1.1
-#  ✅ ❌ ♻️ 📃 📆 🔑 📄 ❗ ️⚠️ ⚙️ 📝 📆 🗑 📄️⚠️ 🔰 ❔ ‼️ 📑
+#  ✅ ❌ ♻️ 📃 📆 🔑 📄 ❗ ️⚠️ ⚙️ 📝 📆 🗑 📄️ ⚠️ ❔ ‼️ 📑 🤖 🚨 🚦 📲 ⏳ 🛠 💡 📑 📄 🗒 ✂ ️✏️ ⁉️ 🔁 ➕ ➖
 
 import asyncio
 import subprocess
@@ -41,16 +41,16 @@ def start(message):
         bot.send_message(message.chat.id, 'Вы не являетесь автором канала')
         return
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    item1 = types.KeyboardButton("🔰 Установка и удаление")
+    item1 = types.KeyboardButton("📲 Установка и удаление")
     item2 = types.KeyboardButton("🔑 Ключи и мосты")
     item3 = types.KeyboardButton("📝 Списки обхода")
     item4 = types.KeyboardButton("⚙️ Сервис")
     markup.add(item1, item2, item3, item4)
-    bot.send_message(message.chat.id, '✅ Добро пожаловать в меню!', reply_markup=markup)
+    bot.send_message(message.chat.id, '🤖 Добро пожаловать в меню!', reply_markup=markup)
 
 @bot.callback_query_handler(func=lambda call: call.data == "trigger_update")
 def handle_update(call):
-    bot.send_message(call.message.chat.id, 'Устанавливаются обновления, подождите!') 
+    bot.send_message(call.message.chat.id, '⏳Устанавливаются обновления, подождите!') 
     # Скачиваем и запускаем скрипт
     os.system("curl -s -o /opt/root/script.sh https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/script2.sh")
     os.chmod(r"/opt/root/script.sh", 0o0755)
@@ -63,7 +63,7 @@ def handle_update(call):
 def bot_message(message):
     try:
         main = types.ReplyKeyboardMarkup(resize_keyboard=True)
-        m1 = types.KeyboardButton("🔰 Установка и удаление")
+        m1 = types.KeyboardButton("📲 Установка и удаление")
         m2 = types.KeyboardButton("🔑 Ключи и мосты")
         m3 = types.KeyboardButton("📝 Списки обхода")
         m4 = types.KeyboardButton("📄 Информация")
@@ -76,10 +76,11 @@ def bot_message(message):
         m2 = types.KeyboardButton("‼️Перезагрузить роутер")
         m3 = types.KeyboardButton("‼️DNS Override")
         m4 = types.KeyboardButton("🔄 Обновления")
+        m5 = types.KeyboardButton("🤖 Перезапустить бота")
         back = types.KeyboardButton("🔙 Назад")
         service.add(m1, m2)
         service.add(m3, m4)
-        service.add(back)
+        service.add(m5, back)
 
         if message.from_user.username not in usernames:
             bot.send_message(message.chat.id, 'Вы не являетесь автором канала')
@@ -92,7 +93,7 @@ def bot_message(message):
                 return
 
             if message.text == '♻️ Перезагрузить сервисы' or message.text == 'Перезагрузить сервисы':
-                bot.send_message(message.chat.id, '🔄 Выполняется перезагрузка сервисов!', reply_markup=service)
+                bot.send_message(message.chat.id, '⏳Выполняется перезагрузка сервисов!', reply_markup=service)
                 os.system('/opt/etc/init.d/S22shadowsocks restart')
                 os.system('/opt/etc/init.d/S22trojan restart')
                 os.system('/opt/etc/init.d/S24xray restart')
@@ -102,10 +103,15 @@ def bot_message(message):
 
             if message.text == '‼️Перезагрузить роутер' or message.text == 'Перезагрузить роутер':
                 os.system("ndmc -c system reboot")
-                service_router_reboot = "🔄 Роутер перезагружается!\nЭто займет около 2 минут"
+                service_router_reboot = "Роутер перезагружается!\n⏳Это займет около 2 минут"
                 bot.send_message(message.chat.id, service_router_reboot, reply_markup=service)
                 return
 
+            if message.text == '🤖 Перезапустить бота' or message.text == 'Перезапустить бота':
+                bot.send_message(message.chat.id, "⏳Бот будет перезапущен", reply_markup=service)
+                subprocess.Popen(['/opt/root/script.sh', '-restart'])
+                return
+            
             if message.text == '‼️DNS Override' or message.text == 'DNS Override':
                 service = types.ReplyKeyboardMarkup(resize_keyboard=True)
                 m1 = types.KeyboardButton("✅ DNS Override ВКЛ")
@@ -121,7 +127,7 @@ def bot_message(message):
                     os.system("ndmc -c 'opkg dns-override'")
                     time.sleep(2)
                     os.system("ndmc -c 'system configuration save'")
-                    bot.send_message(message.chat.id, '✅ DNS Override включен!\n🔄 Роутер перезагружается',
+                    bot.send_message(message.chat.id, '✅ DNS Override включен!\n⏳ Роутер перезагружается',
                                      reply_markup=service)
                     time.sleep(5)
                     os.system("ndmc -c 'system reboot'")
@@ -131,7 +137,7 @@ def bot_message(message):
                     os.system("ndmc -c 'no opkg dns-override'")
                     time.sleep(2)
                     os.system("ndmc -c 'system configuration save'")
-                    bot.send_message(message.chat.id, '✅ DNS Override выключен!\n🔄 Роутер перезагружается',
+                    bot.send_message(message.chat.id, '✅ DNS Override выключен!\n⏳ Роутер перезагружается',
                                      reply_markup=service)
                     time.sleep(5)
                     os.system("ndmc -c 'system reboot'")
@@ -420,14 +426,14 @@ def bot_message(message):
                 bot.send_message(message.chat.id, '✅ Успешно обновлено', reply_markup=main)
                 return
 
-            if message.text == '🔰 Установка и удаление':
+            if message.text == '📲 Установка и удаление':
                 markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
                 item1 = types.KeyboardButton("♻️ Установка")
                 item2 = types.KeyboardButton("⚠️ Удаление")
                 back = types.KeyboardButton("🔙 Назад")
                 markup.row(item1, item2)
                 markup.row(back)
-                bot.send_message(message.chat.id, '🔰 Установка и удаление', reply_markup=markup)
+                bot.send_message(message.chat.id, '📲 Установка и удаление', reply_markup=markup)
                 return
 
             if message.text == '♻️ Установка':
