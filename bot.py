@@ -119,7 +119,7 @@ def bot_message(message):
                 back = types.KeyboardButton("🔙 Назад")
                 service.add(m1, m2)
                 service.add(back)
-                bot.send_message(message.chat.id, '⁉️ DNS Override!', reply_markup=service)
+                bot.send_message(message.chat.id, '⁉️ DNS Override', reply_markup=service)
                 return
 
             if message.text in ("✅ DNS Override ВКЛ","❌ DNS Override ВЫКЛ"):
