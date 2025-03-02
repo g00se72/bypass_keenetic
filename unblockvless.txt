@@ -435,6 +435,7 @@ radarr.video
 ratatype.com
 readdle.com
 recraft.ai
+reddit.com
 redis.com
 redis.io
 redislabs.com
