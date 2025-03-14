@@ -238,7 +238,7 @@ grafana.com
 grammarly.com
 graylog.org
 grazie.ai
-groq.com
+grok.com
 groupon.com
 grouponcdn.com
 gstatic.com
@@ -596,6 +596,7 @@ wpengine.com
 wunderground.com
 wustat.windows.com
 www.instagram.com
+x.ai
 x.com
 xerox.com
 yle.fi
