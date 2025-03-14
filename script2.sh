@@ -127,7 +127,7 @@ if [ "$1" = "-install" ]; then
     echo "Установлены базовые настройки Trojan"
     
     curl -o /opt/etc/xray/config.json https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/vlessconfig.json && \
-    sed -i 's|ARGS="-confdir /opt/etc/xray"|ARGS="run -c /opt/etc/xray/config.json"|' /opt/etc/init.d/S24xray > /dev/null && \
+    sed -i 's|ARGS="run -confdir /opt/etc/xray"|ARGS="run -c /opt/etc/xray/config.json"|' /opt/etc/init.d/S24xray > /dev/null && \
     echo "Установлены базовые настройки Xray"
     chmod 755 /opt/etc/init.d/S24xray || chmod +x /opt/etc/init.d/S24xray
 
