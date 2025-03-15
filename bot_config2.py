@@ -1,15 +1,25 @@
-token = "YOUR_BOT_TOKEN"
-appapiid = YOUR_APP_API_ID
-appapihash = "YOUR_APP_API_HASH"
-usernames = ["YOUR_USERNAME"]
-routerip = "YOUR_ROUTER_IP"
-localportsh = 1080
-localporttor = 9040
-localporttrojan = 1081
-localportvless = 1082
-dnsporttor = 9053
-dnsovertlsport = 853
-dnsoverhttpsport = 443
+# ВЕРСИЯ СКРИПТА 2.0.0
+
+token = 'MyBotFatherToken'  # Ключ api бота
+usernames = ['MySuperLogin']  # Ваш логин в телеграмме без @, не бота. Логин именно Вашей учетной записи в ТГ.
+
+# Заполняются с сайта https://my.telegram.org/apps
+# вместо вас запрос будет посылать бот, оттуда и будут запрашиваться ключи
+appapiid = 'myapiid'
+appapihash = 'myiphash'
+routerip = '192.168.1.1'  # ip роутера
+
+# Список vpn для выборочной маршрутизации
+vpn_allowed="IKE|SSTP|OpenVPN|Wireguard|L2TP"
+
+# Следующие настройки могут быть оставлены по умолчанию, но можно будет что-то поменять
+localportsh = '1082'  # локальный порт для shadowsocks
+dnsporttor = '9053'  # чтобы onion сайты открывался через любой браузер - любой открытый порт
+localporttor = '9141'  # локальный порт для тор
+localportvless = '10810'  # локальный порт для vless
+localporttrojan = '10829'  # локальный порт для trojan
+dnsovertlsport = '40500'  # можно посмотреть номер порта командой "cat /tmp/ndnproxymain.stat"
+dnsoverhttpsport = '40508'  # можно посмотреть номер порта командой "cat /tmp/ndnproxymain.stat"
 
 # Пути к конфигурационным файлам и директориям
 paths = {
