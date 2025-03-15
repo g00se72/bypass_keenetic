@@ -330,11 +330,17 @@ def vless(key):
     with open(config.paths["vless_config"], 'w') as f:
         sh = (
             f'{{"log":{{"access":"/opt/etc/xray/access.log","error":"/opt/etc/xray/error.log","loglevel":"none"}},'
-            f'"inbounds":[{{"port":{config.localportvless},"listen":"::","protocol":"dokodemo-door","settings":{{"network":"tcp","followRedirect":true}},"sniffing":{{"enabled":true,"destOverride":["http","tls"]}}}}],'
-            f'"outbounds":[{{"tag":"vless-reality","protocol":"vless","settings":{{"vnext":[{{"address":"{address}","port":{port},"users":[{{"id":"{id}","flow":"{flow}","encryption":"{encryption}","level":0}}}]}},"streamSettings":{{"network":"tcp","security":"{security}","realitySettings":{{"publicKey":"{pbk}","fingerprint":"{fp}","serverName":"{sni}","shortId":"{sid}","spiderX":"{spx}"}}}}}},'
+            f'"inbounds":[{{"port":{config.localportvless},"listen":"::","protocol":"dokodemo-door",'
+            f'"settings":{{"network":"tcp","followRedirect":true}},'
+            f'"sniffing":{{"enabled":true,"destOverride":["http","tls"]}}}}],'
+            f'"outbounds":[{{"tag":"vless-reality","protocol":"vless","settings":{{"vnext":[{{"address":"{address}","port":{port},'
+            f'"users":[{{"id":"{id}","flow":"{flow}","encryption":"{encryption}","level":0}}]}}]}},'
+            f'"streamSettings":{{"network":"tcp","security":"{security}",'
+            f'"realitySettings":{{"publicKey":"{pbk}","fingerprint":"{fp}","serverName":"{sni}",'
+            f'"shortId":"{sid}","spiderX":"{spx}"}}}}}},'
             f'{{"tag":"direct","protocol":"freedom"}},'
             f'{{"tag":"block","protocol":"blackhole","settings":{{"response":{{"type":"http"}}}}}}],'
-            f'"routing":{{"domainStrategy":"IPIfNonMatch","rules":[{{"type":"field","port":"0-65535","outboundTag":"proxy","enabled":true}]}}'
+            f'"routing":{{"domainStrategy":"IPIfNonMatch","rules":[{{"type":"field","port":"0-65535","outboundTag":"vless-reality","enabled":true}}]}}'
             f'}}'
         )
         f.write(sh)
