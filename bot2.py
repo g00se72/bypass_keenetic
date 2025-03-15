@@ -411,17 +411,14 @@ def tormanually(bridges):
         f.write(sh)
 
 async def get_tor_bridges():
-    print(f" - Имя сессии: 'TorBridgeFetcher'")
     client = TelegramClient('TorBridgeFetcher', config.appapiid, config.appapihash)
     try:
-        print("Попытка авторизации по номеру телефона...")
         await client.start(phone=config.phonenumber)
         await client.send_message('GetBridgesBot', '/bridges')
         async for msg in client.iter_messages('GetBridgesBot', limit=1, wait_time=10):
             if msg.text and "Your bridges:" in msg.text:
                 return msg.text.replace("Your bridges:\n", "").replace("obfs4", "Bridge obfs4")
     except Exception as e:
-        print(f"Ошибка при авторизации: {e}")
         return None
     finally:
         await client.disconnect()
