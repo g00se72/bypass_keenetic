@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-# ВЕРСИЯ СКРИПТА 1.1.2
+# ВЕРСИЯ СКРИПТА 2.0.0
 #  ✅ ❌ 🔑 ❗ ⚙️ ‼️ 🤖 🚦 📲 🗑 ⏳ 💡 📑 📄 ⁉️ ➕ ➖ ⛔ 🔄
 
 import asyncio
@@ -31,6 +31,7 @@ dnsoverhttpsport = config.dnsoverhttpsport
 bot = telebot.TeleBot(token)
 level = 0
 bypass = -1
+selected_file = ""
 
 # Функции для создания меню
 def create_main_menu():
@@ -136,7 +137,7 @@ def bot_message(message):
             bot.send_message(message.chat.id, '🤖 Вы не являетесь автором канала')
             return
         if message.chat.type == 'private':
-            global level, bypass
+            global level, bypass, selected_file
 
             if message.text == '⚙️ Сервис':
                 bot.send_message(message.chat.id, '⚙️ Сервисное меню!', reply_markup=create_service_menu())
@@ -226,6 +227,7 @@ def bot_message(message):
                 bot.send_message(message.chat.id, '🤖 Добро пожаловать в меню!', reply_markup=create_main_menu())
                 level = 0
                 bypass = -1
+                selected_file = ""
                 return
 
             if level == 1:
@@ -234,33 +236,35 @@ def bot_message(message):
                 for fln in dirfiles:
                     if fln == message.text + '.txt':
                         level = 2
-                        bypass = message.text
-                        bot.send_message(message.chat.id, "Меню " + bypass, reply_markup=create_bypass_list_menu())
+                        bypass = 1
+                        selected_file = message.text
+                        bot.send_message(message.chat.id, "Меню " + selected_file, reply_markup=create_bypass_list_menu())
                         return
                 bot.send_message(message.chat.id, "Не найден", reply_markup=create_back_menu())
                 return
 
             if level == 2 and message.text == "📄 Показать список":
-                with open('/opt/etc/unblock/' + bypass + '.txt') as file:
+                with open('/opt/etc/unblock/' + selected_file + '.txt') as file:
                     sites = sorted(line.strip() for line in file if line.strip())
                 text = "Список пуст" if not sites else "\n".join(sites)
                 send_long_message(message.chat.id, text)
-                bot.send_message(message.chat.id, "Меню " + bypass, reply_markup=create_bypass_list_menu())
+                bot.send_message(message.chat.id, "Меню " + selected_file, reply_markup=create_bypass_list_menu())
+                return
 
             if level == 2 and message.text == "➕ Добавить в список":
                 bot.send_message(message.chat.id, "Введите имя сайта или домена для разблокировки, либо воспользуйтесь меню для других действий")
                 level = 3
-                bot.send_message(message.chat.id, "Меню " + bypass, reply_markup=create_back_menu())
+                bot.send_message(message.chat.id, "Меню " + selected_file, reply_markup=create_back_menu())
                 return
 
             if level == 2 and message.text == "➖ Удалить из списка":
                 bot.send_message(message.chat.id, "Введите имя сайта или домена для удаления из листа разблокировки, либо возвратитесь в главное меню")
                 level = 4
-                bot.send_message(message.chat.id, "Меню " + bypass, reply_markup=create_back_menu())
+                bot.send_message(message.chat.id, "Меню " + selected_file, reply_markup=create_back_menu())
                 return
 
             if level == 3:
-                f = open('/opt/etc/unblock/' + bypass + '.txt')
+                f = open('/opt/etc/unblock/' + selected_file + '.txt')
                 mylist = set()
                 for line in f:
                     mylist.add(line.replace('\n', ''))
@@ -274,7 +278,7 @@ def bot_message(message):
                 for line in mylist:
                     sortlist.append(line)
                 sortlist.sort()
-                f = open('/opt/etc/unblock/' + bypass + '.txt', 'w')
+                f = open('/opt/etc/unblock/' + selected_file + '.txt', 'w')
                 for line in sortlist:
                     f.write(line + '\n')
                 f.close()
@@ -284,11 +288,11 @@ def bot_message(message):
                 else:
                     bot.send_message(message.chat.id, "Было добавлено ранее")
                 level = 2
-                bot.send_message(message.chat.id, "Меню " + bypass, reply_markup=create_bypass_list_menu())
+                bot.send_message(message.chat.id, "Меню " + selected_file, reply_markup=create_bypass_list_menu())
                 return
 
             if level == 4:
-                f = open('/opt/etc/unblock/' + bypass + '.txt')
+                f = open('/opt/etc/unblock/' + selected_file + '.txt')
                 mylist = set()
                 for line in f:
                     mylist.add(line.replace('\n', ''))
@@ -297,7 +301,7 @@ def bot_message(message):
                 mas = message.text.split('\n')
                 for site in mas:
                     mylist.discard(site)
-                f = open('/opt/etc/unblock/' + bypass + '.txt', 'w')
+                f = open('/opt/etc/unblock/' + selected_file + '.txt', 'w')
                 for line in mylist:
                     f.write(line + '\n')
                 f.close()
@@ -307,7 +311,7 @@ def bot_message(message):
                 else:
                     bot.send_message(message.chat.id, "Не найдено в списке")
                 level = 2
-                bot.send_message(message.chat.id, "Меню " + bypass, reply_markup=create_bypass_list_menu())
+                bot.send_message(message.chat.id, "Меню " + selected_file, reply_markup=create_bypass_list_menu())
                 return
 
             if level == 5:
@@ -388,6 +392,7 @@ def bot_message(message):
 
             if message.text == "📑 Списки обхода":
                 level = 1
+                bypass = 0
                 bot.send_message(message.chat.id, "📑 Списки обхода", reply_markup=create_bypass_files_menu())
                 return
 
