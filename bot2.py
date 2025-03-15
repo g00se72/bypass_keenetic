@@ -270,18 +270,18 @@ def bot_message(message):
     menu_commands = {
         '💡 Информация': lambda: bot.send_message(message.chat.id, requests.get(config.download_urls["info_md"]).text, reply_markup=create_main_menu(), parse_mode='Markdown', disable_web_page_preview=True),
         '⚙️ Сервис': lambda: bot.send_message(message.chat.id, '⚙️ Сервисное меню!', reply_markup=create_service_menu()),
-        '🤖 Перезапустить бота': lambda: bot.send_message(message.chat.id, "⏳ Бот будет перезапущен", reply_markup=create_service_menu()) or subprocess.Popen([config.paths['script_sh'], '-restart'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, close_fds=True),
-        '⛔ Перезагрузить роутер': lambda: os.system(config.services["router_reboot"]) or bot.send_message(message.chat.id, "⏳ Роутер перезагружается!\nЭто займет около 2 минут", reply_markup=create_service_menu()),
+        '🤖 Перезапустить бота': lambda: (bot.send_message(message.chat.id, "⏳ Бот будет перезапущен", reply_markup=create_service_menu()), subprocess.Popen([config.paths['script_sh'], '-restart'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, close_fds=True)),
+        '⛔ Перезагрузить роутер': lambda: (os.system(config.services["router_reboot"]), bot.send_message(message.chat.id, "⏳ Роутер перезагружается!\nЭто займет около 2 минут", reply_markup=create_service_menu())),
         '⁉️ DNS Override': lambda: bot.send_message(message.chat.id, '⁉️ DNS Override', reply_markup=create_dns_override_menu()),
-        '✅ DNS Override ВКЛ': lambda: os.system(config.services["dns_override_on"]) or time.sleep(2) and os.system(config.services["save_config"]) or bot.send_message(message.chat.id, '✅ DNS Override включен!\nРоутер перезагружается...', reply_markup=create_service_menu()) or time.sleep(5) and os.system(config.services["router_reboot"]),
-        '❌ DNS Override ВЫКЛ': lambda: os.system(config.services["dns_override_off"]) or time.sleep(2) and os.system(config.services["save_config"]) or bot.send_message(message.chat.id, '❌ DNS Override выключен!\nРоутер перезагружается...', reply_markup=create_service_menu()) or time.sleep(5) and os.system(config.services["router_reboot"]),
-        '🚦 Перезагрузить сервисы': lambda: bot.send_message(message.chat.id, '⏳ Перезагрузка сервисов...') or [os.system(srv) for srv in [config.services["shadowsocks_restart"], config.services["trojan_restart"], config.services["vless_restart"], config.services["tor_restart"]]] and bot.send_message(message.chat.id, '✅ Сервисы перезагружены!', reply_markup=create_service_menu()),
-        '🔄 Обновления': handle_updates,
+        '✅ DNS Override ВКЛ': lambda: (os.system(config.services["dns_override_on"]), time.sleep(2), os.system(config.services["save_config"]), bot.send_message(message.chat.id, '✅ DNS Override включен!\nРоутер перезагружается...', reply_markup=create_service_menu()), time.sleep(5), os.system(config.services["router_reboot"])),
+        '❌ DNS Override ВЫКЛ': lambda: (os.system(config.services["dns_override_off"]), time.sleep(2), os.system(config.services["save_config"]), bot.send_message(message.chat.id, '❌ DNS Override выключен!\nРоутер перезагружается...', reply_markup=create_service_menu()), time.sleep(5), os.system(config.services["router_reboot"])),
+        '🚦 Перезагрузить сервисы': lambda: (bot.send_message(message.chat.id, '⏳ Перезагрузка сервисов...'), [os.system(srv) for srv in [config.services["shadowsocks_restart"], config.services["trojan_restart"], config.services["vless_restart"], config.services["tor_restart"]]], bot.send_message(message.chat.id, '✅ Сервисы перезагружены!', reply_markup=create_service_menu())),
+        '🔄 Обновления': lambda: handle_updates(message),
         '📑 Списки обхода': lambda: set_level_and_reply(message.chat.id, 1, "📑 Списки обхода", create_bypass_files_menu()),
         '🔑 Ключи и мосты': lambda: set_level_and_reply(message.chat.id, 5, "🔑 Ключи и мосты", create_keys_bridges_menu()),
         '📲 Установка и удаление': lambda: bot.send_message(message.chat.id, '📲 Установка и удаление', reply_markup=create_install_remove_menu()),
-        '📲 Установка': handle_install,
-        '🗑 Удаление': handle_remove,
+        '📲 Установка': lambda: handle_install(message),
+        '🗑 Удаление': lambda: handle_remove(message),
     }
 
     if message.text in menu_commands:
@@ -289,7 +289,7 @@ def bot_message(message):
     elif level in level_handlers:
         level_handlers[level](message)
 
-def handle_updates():
+def handle_updates(message):
     response = requests.get(config.download_urls["version_md"])
     bot_new_version = response.text if response.status_code == 200 else "N/A"
     with open(__file__, encoding='utf-8') as file:
@@ -302,7 +302,7 @@ def handle_updates():
     else:
         bot.send_message(message.chat.id, f"{service_update_info}\n\nУ вас уже установлена последняя версия", parse_mode='Markdown')
 
-def handle_install():
+def handle_install(message):
     download_script()
     install = subprocess.Popen([config.paths['script_sh'], '-install'], stdout=subprocess.PIPE)
     results = "\n".join(line.decode().strip() for line in install.stdout)
@@ -310,7 +310,7 @@ def handle_install():
     bot.send_message(message.chat.id, full_message, reply_markup=create_main_menu())
     os.system(config.services["unblock_update"])
 
-def handle_remove():
+def handle_remove(message):
     download_script()
     remove = subprocess.Popen([config.paths['script_sh'], '-remove'], stdout=subprocess.PIPE)
     results = "\n".join(line.decode().strip() for line in remove.stdout)
