@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-# ВЕРСИЯ СКРИПТА 2.0.0
+# ВЕРСИЯ СКРИПТА 1.1.2
 #  ✅ ❌ 🔑 ❗ ⚙️ ‼️ 🤖 🚦 📲 🗑 ⏳ 💡 📑 📄 ⁉️ ➕ ➖ ⛔ 🔄
 
 import asyncio
@@ -29,8 +29,7 @@ dnsoverhttpsport = config.dnsoverhttpsport
 
 # Начало работы программы
 bot = telebot.TeleBot(token)
-level = 0
-           
+level = 0           
 selected_file = ""
 
 # Функции для создания меню
@@ -157,13 +156,11 @@ def bot_message(message):
                         level = 6
                         bot.send_message(message.chat.id, "🤖 Добро пожаловать в меню Tor!", reply_markup=create_tor_menu())
                 elif level in (1, 5):  # Возврат в главное меню из "Ключи и мосты" и "Списки обхода"
-                    level = 0
-                               
+                    level = 0            
                     selected_file = ""
                     bot.send_message(message.chat.id, '🤖 Добро пожаловать в меню!', reply_markup=create_main_menu())
                 else:  # Возврат в главное меню
-                    level = 0
-                               
+                    level = 0  
                     selected_file = ""
                     bot.send_message(message.chat.id, '🤖 Добро пожаловать в меню!', reply_markup=create_main_menu())
                 return
@@ -321,7 +318,7 @@ def bot_message(message):
                     os.system("/opt/bin/unblock_update.sh")
                 else:
                     bot.send_message(message.chat.id, "Было добавлено ранее")
-                level = 2
+                level = 0
                 bot.send_message(message.chat.id, "Меню " + selected_file, reply_markup=create_bypass_list_menu())
                 return
 
@@ -344,7 +341,7 @@ def bot_message(message):
                     os.system("/opt/bin/unblock_update.sh")
                 else:
                     bot.send_message(message.chat.id, "Не найдено в списке")
-                level = 2
+                level = 0
                 bot.send_message(message.chat.id, "Меню " + selected_file, reply_markup=create_bypass_list_menu())
                 return
 
