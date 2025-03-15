@@ -194,38 +194,38 @@ def bot_message(message):
                 bot.send_message(message.chat.id, info_bot, reply_markup=create_main_menu(), parse_mode='Markdown', disable_web_page_preview=True)
                 return
 
-            def parse_version(version):
-                try:
-                    return tuple(map(int, version.strip().split(".")))
-                except ValueError:
-                    return (0, 0, 0)
 
-            if message.text in ('🔄 Обновления', '/check_update'):
-                url = "https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/version.md"
-                response = requests.get(url)
-                bot_new_version = response.text if response.status_code == 200 else "N/A"
-                with open('/opt/etc/bot.py', encoding='utf-8') as file:
-                    bot_version = next((line.replace('# ВЕРСИЯ СКРИПТА', '').strip() for line in file if line.startswith('# ВЕРСИЯ СКРИПТА')), "N/A")
-                service_update_info = (
-                    f"*Установленная версия:* {bot_version}\n"
-                    f"*Доступная на git версия:* {bot_new_version}"
-                )
-                if bot_version != "N/A" and bot_new_version != "N/A":
-                    if parse_version(bot_version) < parse_version(bot_new_version):
-                        markup = types.InlineKeyboardMarkup()
-                        markup.add(types.InlineKeyboardButton("Обновить", callback_data="trigger_update"))
-                        bot.send_message(message.chat.id, f"{service_update_info}\nЕсли хотите обновить, нажмите кнопку ниже", reply_markup=markup, parse_mode='Markdown')
-                    else:
-                        bot.send_message(message.chat.id, f"{service_update_info}\n\nУ вас уже установлена последняя версия", parse_mode='Markdown')
-                else:
-                    bot.send_message(message.chat.id, "Ошибка: не удалось определить версии ботов", parse_mode='Markdown')
+            if message.text == '🔙 Назад':
+                if level in (3, 4):  # Возврат с добавления/удаления на меню файла
+                    level = 2
+                    bot.send_message(message.chat.id, "Меню " + selected_file, reply_markup=create_bypass_list_menu())
+                elif level == 2:  # Возврат с меню файла на список файлов
+                    level = 1
+                    bypass = 0
+                    bot.send_message(message.chat.id, "📑 Списки обхода", reply_markup=create_bypass_files_menu())
+                elif level in (5, 9, 10):  # Возврат с ввода ключей на "Ключи и мосты"
+                    level = 8
+                    bot.send_message(message.chat.id, "🔑 Ключи и мосты", reply_markup=create_keys_bridges_menu())
+                elif level in (6, 11):  # Возврат с "Tor вручную" или "Tor через Telegram" на меню "Tor"
+                    level = 7
+                    bot.send_message(message.chat.id, "🤖 Добро пожаловать в меню Tor!", reply_markup=create_tor_menu())
+                elif level in (1, 7, 8):  # Возврат с подменю в главное меню
+                    level = 0
+                    bypass = -1
+                    selected_file = ""
+                    bot.send_message(message.chat.id, '🤖 Добро пожаловать в меню!', reply_markup=create_main_menu())
+                else:  # На level = 0 или других уровнях
+                    level = 0
+                    bypass = -1
+                    selected_file = ""
+                    bot.send_message(message.chat.id, '🤖 Добро пожаловать в меню!', reply_markup=create_main_menu())
                 return
 
-            if message.text in ('🔙 Назад', "Назад"):
-                bot.send_message(message.chat.id, '🤖 Добро пожаловать в меню!', reply_markup=create_main_menu())
-                level = 0
-                bypass = -1
-                selected_file = ""
+ 
+            if message.text == "📑 Списки обхода":
+                level = 1
+                bypass = 0
+                bot.send_message(message.chat.id, "📑 Списки обхода", reply_markup=create_bypass_files_menu())
                 return
 
             if level == 1:
@@ -312,21 +312,15 @@ def bot_message(message):
                 bot.send_message(message.chat.id, "Меню " + selected_file, reply_markup=create_bypass_list_menu())
                 return
 
-            if level == 5:
-                shadowsocks(message.text)
-                time.sleep(2)
-                os.system('/opt/etc/init.d/S22shadowsocks restart')
-                level = 0
-                bot.send_message(message.chat.id, '✅ Успешно обновлено', reply_markup=create_main_menu())
 
-            if level == 6:
-                tormanually(message.text)
-                os.system('/opt/etc/init.d/S35tor restart')
-                level = 0
-                bot.send_message(message.chat.id, '✅ Успешно обновлено', reply_markup=create_main_menu())
-
+            if message.text == "🔑 Ключи и мосты":
+                level = 8
+                bot.send_message(message.chat.id, "🔑 Ключи и мосты", reply_markup=create_keys_bridges_menu())
+                return
+            
             if level == 8:
                 if message.text == 'Tor':
+                    level = 7
                     bot.send_message(message.chat.id, '🤖 Добро пожаловать в меню Tor!', reply_markup=create_tor_menu())
                 if message.text == 'Shadowsocks':
                     level = 5
@@ -341,6 +335,39 @@ def bot_message(message):
                     bot.send_message(message.chat.id, "🔑 Скопируйте ключ сюда", reply_markup=create_back_menu())
                     return
 
+            if level == 7:
+                if message.text == 'Tor вручную':
+                    level = 6
+                    bot.send_message(message.chat.id, "🔑 Скопируйте ключ сюда", reply_markup=create_back_menu())
+                    return
+                elif message.text == 'Tor через telegram':
+                    level = 11
+                    bot.send_message(message.chat.id, "Нажмите 'Запросить' для получения мостов через Telegram", 
+                                   reply_markup=types.ReplyKeyboardMarkup(resize_keyboard=True)
+                                   .row(types.KeyboardButton("Запросить"), types.KeyboardButton("🔙 Назад")))
+                    return
+            
+            if level == 5:
+                shadowsocks(message.text)
+                time.sleep(2)
+                os.system('/opt/etc/init.d/S22shadowsocks restart')
+                level = 0
+                bot.send_message(message.chat.id, '✅ Успешно обновлено', reply_markup=create_main_menu())
+
+            if level == 6:
+                tormanually(message.text)
+                os.system('/opt/etc/init.d/S35tor restart')
+                level = 0
+                bot.send_message(message.chat.id, '✅ Успешно обновлено', reply_markup=create_main_menu())
+
+            if level == 11:
+                if message.text == "Запросить":
+                    tor(message.chat.id)
+                    os.system('/opt/etc/init.d/S35tor restart')
+                    level = 0
+                    bot.send_message(message.chat.id, '✅ Успешно обновлено', reply_markup=create_main_menu())
+                return
+
             if level == 9:
                 vless(message.text)
                 os.system('/opt/etc/init.d/S24xray restart')
@@ -353,18 +380,7 @@ def bot_message(message):
                 level = 0
                 bot.send_message(message.chat.id, '✅ Успешно обновлено', reply_markup=create_main_menu())
 
-            if message.text == 'Tor вручную':
-                level = 6
-                bot.send_message(message.chat.id, "🔑 Скопируйте ключ сюда", reply_markup=create_back_menu())
-                return
-
-            if message.text == 'Tor через telegram':
-                tor(message.chat.id)
-                os.system('/opt/etc/init.d/S35tor restart')
-                level = 0
-                bot.send_message(message.chat.id, '✅ Успешно обновлено', reply_markup=create_main_menu())
-                return
-
+                
             if message.text == '📲 Установка и удаление':
                 bot.send_message(message.chat.id, '📲 Установка и удаление', reply_markup=create_install_remove_menu())
                 return
@@ -388,15 +404,31 @@ def bot_message(message):
                     bot.send_message(message.chat.id, str(results_remove), reply_markup=create_service_menu())
                 return
 
-            if message.text == "📑 Списки обхода":
-                level = 1
-                bypass = 0
-                bot.send_message(message.chat.id, "📑 Списки обхода", reply_markup=create_bypass_files_menu())
-                return
+            def parse_version(version):
+                try:
+                    return tuple(map(int, version.strip().split(".")))
+                except ValueError:
+                    return (0, 0, 0)
 
-            if message.text == "🔑 Ключи и мосты":
-                level = 8
-                bot.send_message(message.chat.id, "🔑 Ключи и мосты", reply_markup=create_keys_bridges_menu())
+            if message.text in ('🔄 Обновления', '/check_update'):
+                url = "https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/version.md"
+                response = requests.get(url)
+                bot_new_version = response.text if response.status_code == 200 else "N/A"
+                with open('/opt/etc/bot.py', encoding='utf-8') as file:
+                    bot_version = next((line.replace('# ВЕРСИЯ СКРИПТА', '').strip() for line in file if line.startswith('# ВЕРСИЯ СКРИПТА')), "N/A")
+                service_update_info = (
+                    f"*Установленная версия:* {bot_version}\n"
+                    f"*Доступная на git версия:* {bot_new_version}"
+                )
+                if bot_version != "N/A" and bot_new_version != "N/A":
+                    if parse_version(bot_version) < parse_version(bot_new_version):
+                        markup = types.InlineKeyboardMarkup()
+                        markup.add(types.InlineKeyboardButton("Обновить", callback_data="trigger_update"))
+                        bot.send_message(message.chat.id, f"{service_update_info}\nЕсли хотите обновить, нажмите кнопку ниже", reply_markup=markup, parse_mode='Markdown')
+                    else:
+                        bot.send_message(message.chat.id, f"{service_update_info}\n\nУ вас уже установлена последняя версия", parse_mode='Markdown')
+                else:
+                    bot.send_message(message.chat.id, "Ошибка: не удалось определить версии ботов", parse_mode='Markdown')
                 return
 
     except Exception as error:
