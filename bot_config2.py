@@ -4,9 +4,10 @@ token = 'MyBotFatherToken'  # Ключ api бота
 usernames = ['MySuperLogin']  # Ваш логин в телеграмме без @, не бота. Логин именно Вашей учетной записи в ТГ.
 
 # Заполняются с сайта https://my.telegram.org/apps
-# вместо вас запрос будет посылать бот, оттуда и будут запрашиваться ключи
+# запрос на получение ключей от вашего имени будет посылать бот
 appapiid = 'myapiid'
 appapihash = 'myiphash'
+phonenumber = 'myphone'
 routerip = '192.168.1.1'  # ip роутера
 
 # Список vpn для выборочной маршрутизации
