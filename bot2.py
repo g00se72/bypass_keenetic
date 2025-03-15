@@ -30,7 +30,7 @@ dnsoverhttpsport = config.dnsoverhttpsport
 # Начало работы программы
 bot = telebot.TeleBot(token)
 level = 0
-bypass = -1
+           
 selected_file = ""
 
 # Функции для создания меню
@@ -134,7 +134,7 @@ def bot_message(message):
             bot.send_message(message.chat.id, '🤖 Вы не являетесь автором канала')
             return
         if message.chat.type == 'private':
-            global level, bypass, selected_file
+            global level, selected_file
 
 
 
@@ -144,7 +144,7 @@ def bot_message(message):
                     bot.send_message(message.chat.id, "Меню " + selected_file, reply_markup=create_bypass_list_menu())
                 elif level == 2:  # Возврат с подменю на "Списки обхода"
                     level = 1
-                    bypass = 0
+                              
                     bot.send_message(message.chat.id, "📑 Списки обхода", reply_markup=create_bypass_files_menu())
                 elif level in (9, 10, 11):  # Возврат с ввода ключей Shadowsocks/Vless/Trojan на "Ключи и мосты"
                     level = 5
@@ -158,12 +158,12 @@ def bot_message(message):
                         bot.send_message(message.chat.id, "🤖 Добро пожаловать в меню Tor!", reply_markup=create_tor_menu())
                 elif level in (1, 5):  # Возврат в главное меню из "Ключи и мосты" и "Списки обхода"
                     level = 0
-                    bypass = -1
+                               
                     selected_file = ""
                     bot.send_message(message.chat.id, '🤖 Добро пожаловать в меню!', reply_markup=create_main_menu())
                 else:  # Возврат в главное меню
                     level = 0
-                    bypass = -1
+                               
                     selected_file = ""
                     bot.send_message(message.chat.id, '🤖 Добро пожаловать в меню!', reply_markup=create_main_menu())
                 return
@@ -260,7 +260,7 @@ def bot_message(message):
  
             if message.text == "📑 Списки обхода":
                 level = 1
-                bypass = 0
+                          
                 bot.send_message(message.chat.id, "📑 Списки обхода", reply_markup=create_bypass_files_menu())
                 return
 
@@ -270,7 +270,7 @@ def bot_message(message):
                 for fln in dirfiles:
                     if fln == message.text + '.txt':
                         level = 2
-                        bypass = 1
+                                  
                         selected_file = message.text
                         bot.send_message(message.chat.id, "Меню " + selected_file, reply_markup=create_bypass_list_menu())
                         return
