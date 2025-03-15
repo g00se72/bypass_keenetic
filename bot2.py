@@ -36,11 +36,9 @@ selected_file = ""
 # Функции для создания меню
 def create_main_menu():
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    markup.add(types.KeyboardButton("📲 Установка и удаление"))
-    markup.add(types.KeyboardButton("🔑 Ключи и мосты"))
-    markup.add(types.KeyboardButton("📑 Списки обхода"))
+    markup.add(types.KeyboardButton("🔑 Ключи и мосты"), types.KeyboardButton("📑 Списки обхода"))
+    markup.add(types.KeyboardButton("📲 Установка и удаление"), types.KeyboardButton("⚙️ Сервис"))
     markup.add(types.KeyboardButton("💡 Информация"))
-    markup.add(types.KeyboardButton("⚙️ Сервис"))
     return markup
 
 def create_service_menu():
