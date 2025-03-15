@@ -411,19 +411,48 @@ def tormanually(bridges):
         f.write(sh)
 
 async def get_tor_bridges():
-    async with TelegramClient('GetBridgesBot', config.appapiid, config.appapihash) as client:
-        await client.start()
+    print(f" - Имя сессии: 'TorBridgeFetcher'")
+    client = TelegramClient('TorBridgeFetcher', config.appapiid, config.appapihash)
+    try:
+        print("Попытка авторизации по номеру телефона...")
+        await client.start(phone=config.phonenumber)
         await client.send_message('GetBridgesBot', '/bridges')
         async for msg in client.iter_messages('GetBridgesBot', limit=1, wait_time=10):
             if msg.text and "Your bridges:" in msg.text:
                 return msg.text.replace("Your bridges:\n", "").replace("obfs4", "Bridge obfs4")
+    except Exception as e:
+        print(f"Ошибка при авторизации: {e}")
+        return None
+    finally:
+        await client.disconnect()
     return None
+
+import asyncio
 
 def tor(chat_id):
     bridges = asyncio.run(get_tor_bridges())
     if bridges:
         with open(config.paths["tor_config"], 'w') as f:
-            f.write(f'User root\nPidFile /opt/var/run/tor.pid\nExcludeExitNodes {{RU}},{{UA}},{{AM}},{{KG}},{{BY}}\nStrictNodes 1\nTransPort 0.0.0.0:{config.localporttor}\nExitRelay 0\nExitPolicy reject *:*\nExitPolicy reject6 *:*\nGeoIPFile /opt/share/tor/geoip\nGeoIPv6File /opt/share/tor/geoip6\nDataDirectory /opt/tmp/tor\nVirtualAddrNetwork 10.254.0.0/16\nDNSPort 127.0.0.1:{config.dnsporttor}\nAutomapHostsOnResolve 1\nUseBridges 1\nClientTransportPlugin obfs4 exec /opt/sbin/obfs4proxy managed\n{bridges}')
+            sh = (
+                f'User root\n'
+                f'PidFile /opt/var/run/tor.pid\n'
+                f'ExcludeExitNodes {{RU}},{{UA}},{{AM}},{{KG}},{{BY}}\n'
+                f'StrictNodes 1\n'
+                f'TransPort 0.0.0.0:{config.localporttor}\n'
+                f'ExitRelay 0\n'
+                f'ExitPolicy reject *:*\n'
+                f'ExitPolicy reject6 *:*\n'
+                f'GeoIPFile /opt/share/tor/geoip\n'
+                f'GeoIPv6File /opt/share/tor/geoip6\n'
+                f'DataDirectory /opt/tmp/tor\n'
+                f'VirtualAddrNetwork 10.254.0.0/16\n'
+                f'DNSPort 127.0.0.1:{config.dnsporttor}\n'
+                f'AutomapHostsOnResolve 1\n'
+                f'UseBridges 1\n'
+                f'ClientTransportPlugin obfs4 exec /opt/sbin/obfs4proxy managed\n'
+                f'{bridges.replace("obfs4", "Bridge obfs4")}\n'
+            )
+            f.write(sh)
     else:
         bot.send_message(chat_id, '❌ Не удалось получить мосты Tor')
         raise Exception("Failed to fetch Tor bridges")
