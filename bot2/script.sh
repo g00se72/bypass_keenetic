@@ -237,7 +237,7 @@ if [ "$1" = "-update" ]; then
     #что нужно обновить
     curl -s -o /opt/etc/bot.py https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/bot2/bot.py || exit 1
     echo "Обновления загружены"
-    chmod 755 /opt/etc/bot.py
+    chmod 644 /opt/etc/bot.py
 
     #/opt/etc/init.d/S56dnsmasq restart > /dev/null 2>&1 || echo "Ошибка при перезапуске dnsmasq"
     #/opt/etc/init.d/S22shadowsocks start > /dev/null 2>&1 || echo "S22shadowsocks не запущен, проверьте конфигурацию, пропускаем остановку"
