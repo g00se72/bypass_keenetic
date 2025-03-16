@@ -291,7 +291,6 @@ def handle_install(message):
     results = "\n".join(line.decode().strip() for line in install.stdout)
     full_message = f"{results}\n\nУстановка завершена. Теперь нужно настроить роутер и перейти к спискам для разблокировок. Ключи устанавливаются вручную - Ключи и Мосты -> Tor, Vless, Shadowsocks, Trojan.\n\nДля завершения настройки зайдите в меню Сервис -> DNS Override -> ВКЛ. Роутер перезагрузится, это займёт около 2 минут."
     bot.send_message(message.chat.id, full_message, reply_markup=create_main_menu())
-    os.system(config.services["unblock_update"])
 
 def handle_remove(message):
     download_script()
