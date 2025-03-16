@@ -1,7 +1,5 @@
 #!/bin/sh
 
-repo="g00se72"
-
 # читаем переменные
 lanip=$(ip addr show br0 | grep -Po "(?<=inet ).*(?=/)" | awk '{print $1}')
 localportsh=$(grep "localportsh" /opt/etc/bot_config.py | grep -Eo "[0-9]{1,5}")
@@ -108,25 +106,25 @@ if [ "$1" = "-install" ]; then
     [ "$set_type" = "hash:net" ] && echo "Поддержка множества типа hash:net есть" || echo "Поддержка множества типа hash:net отсутствует"
     
     # создание множеств IP-адресов unblock 
-    curl -o /opt/etc/ndm/fs.d/100-ipset.sh https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/100-ipset.sh || exit 1
+    curl -o /opt/etc/ndm/fs.d/100-ipset.sh https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/100-ipset.sh || exit 1
     sed -i "s/hash:net/${set_type}/g" /opt/etc/ndm/fs.d/100-ipset.sh && \
     echo "Созданы файлы под множества"
     chmod 755 /opt/etc/ndm/fs.d/100-ipset.sh || chmod +x /opt/etc/ndm/fs.d/100-ipset.sh
 
     mkdir -p /opt/tmp/tor
-    curl -o /opt/etc/tor/torrc https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/torrc && \
+    curl -o /opt/etc/tor/torrc https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/torrc && \
     sed -i "s/hash:net/${set_type}/g" /opt/etc/tor/torrc && \
     echo "Установлены базовые настройки Tor"
 
-    curl -o /opt/etc/shadowsocks.json https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/shadowsocks.json && \
+    curl -o /opt/etc/shadowsocks.json https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/shadowsocks.json && \
     sed -i "s/ss-local/ss-redir/g" /opt/etc/init.d/S22shadowsocks && \
     echo "Установлены базовые настройки Shadowsocks"
     chmod 755 /opt/etc/init.d/S22shadowsocks || chmod +x /opt/etc/init.d/S22shadowsocks
 
-    curl -o /opt/etc/trojan/config.json https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/trojanconfig.json && \
+    curl -o /opt/etc/trojan/config.json https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/trojanconfig.json && \
     echo "Установлены базовые настройки Trojan"
     
-    curl -o /opt/etc/xray/config.json https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/vlessconfig.json && \
+    curl -o /opt/etc/xray/config.json https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/vlessconfig.json && \
     sed -i 's|ARGS="run -confdir /opt/etc/xray"|ARGS="run -c /opt/etc/xray/config.json"|' /opt/etc/init.d/S24xray > /dev/null && \
     echo "Установлены базовые настройки Xray"
     chmod 755 /opt/etc/init.d/S24xray || chmod +x /opt/etc/init.d/S24xray
@@ -134,8 +132,8 @@ if [ "$1" = "-install" ]; then
     # создание unblock папки и файлов под домены и ip-адреса
     mkdir -p /opt/etc/unblock
     # если не нужны списки с git строки можно закоментиовать, если нужны - оставить, команда touch не изменит их содержимое, только метку времени
-    curl -o /opt/etc/unblock/vless.txt https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/unblockvless.txt
-    curl -o /opt/etc/unblock/tor.txt https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/unblocktor.txt
+    curl -o /opt/etc/unblock/vless.txt https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/unblockvless.txt
+    curl -o /opt/etc/unblock/tor.txt https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/unblocktor.txt
     for file in \
         "/opt/etc/hosts" \
         "/opt/etc/unblock/shadowsocks.txt" \
@@ -149,30 +147,30 @@ if [ "$1" = "-install" ]; then
     echo "Созданы файлы под домены и ip-адреса"
 
     # unblock_ipset.sh
-    curl -o /opt/bin/unblock_ipset.sh https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/unblock_ipset.sh || exit 1
+    curl -o /opt/bin/unblock_ipset.sh https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/unblock_ipset.sh || exit 1
     sed -i "s/40500/${dnsovertlsport}/g" /opt/bin/unblock_ipset.sh && \
     echo "Установлен скрипт для заполнения множеств unblock IP-адресами заданного списка доменов"
     chmod 755 /opt/bin/unblock_ipset.sh || chmod +x /opt/bin/unblock_ipset.sh
 
     # unblock_dnsmasq.sh
-    curl -o /opt/bin/unblock_dnsmasq.sh https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/unblock.dnsmasq.sh || exit 1
+    curl -o /opt/bin/unblock_dnsmasq.sh https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/unblock.dnsmasq.sh || exit 1
     sed -i "s/40500/${dnsovertlsport}/g" /opt/bin/unblock_dnsmasq.sh && \
     echo "Установлен скрипт для формирования дополнительного конфигурационного файла dnsmasq из заданного списка доменов и его запуск"
     chmod 755 /opt/bin/unblock_dnsmasq.sh || chmod +x /opt/bin/unblock_dnsmasq.sh
     /opt/bin/unblock_dnsmasq.sh
 
     # unblock_update.sh
-    curl -o /opt/bin/unblock_update.sh https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/unblock_update.sh || exit 1
+    curl -o /opt/bin/unblock_update.sh https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/unblock_update.sh || exit 1
     echo "Установлен скрипт ручного принудительного обновления системы после редактирования списка доменов"
     chmod 755 /opt/bin/unblock_update.sh || chmod +x /opt/bin/unblock_update.sh
 
     # s99unblock
-    curl -o /opt/etc/init.d/S99unblock https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/bot3/S99unblock || exit 1
+    curl -o /opt/etc/init.d/S99unblock https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/bot3/S99unblock || exit 1
     echo "Установлен cкрипт автоматического заполнения множества unblock при загрузке маршрутизатора"
     chmod 755 /opt/etc/init.d/S99unblock || chmod +x /opt/etc/init.d/S99unblock
 
     # 100-redirect.sh
-    curl -o /opt/etc/ndm/netfilter.d/100-redirect.sh https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/100-redirect.sh || exit 1
+    curl -o /opt/etc/ndm/netfilter.d/100-redirect.sh https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/100-redirect.sh || exit 1
     sed -i -e "s/hash:net/${set_type}/g" \
            -e "s/192.168.1.1/${lanip}/g" \
            -e "s/1082/${localportsh}/g" \
@@ -186,24 +184,24 @@ if [ "$1" = "-install" ]; then
     # VPN script
     if [ "${keen_os_short}" = "4" ]; then
           echo "VPN для KeenOS 4+";
-          curl -s -o /opt/etc/ndm/ifstatechanged.d/100-unblock-vpn.sh https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/100-unblock-vpn-v4.sh || exit 1
+          curl -s -o /opt/etc/ndm/ifstatechanged.d/100-unblock-vpn.sh https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/100-unblock-vpn-v4.sh || exit 1
     else
           echo "VPN для KeenOS 3";
-          curl -s -o /opt/etc/ndm/ifstatechanged.d/100-unblock-vpn.sh https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/100-unblock-vpn.sh || exit 1
+          curl -s -o /opt/etc/ndm/ifstatechanged.d/100-unblock-vpn.sh https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/100-unblock-vpn.sh || exit 1
     fi
     echo "Установлен скрипт проверки подключения и остановки VPN"
     chmod 755 /opt/etc/ndm/ifstatechanged.d/100-unblock-vpn.sh || chmod +x /opt/etc/ndm/ifstatechanged.d/100-unblock-vpn.sh
 
     # dnsmasq.conf
     rm -f /opt/etc/dnsmasq.conf
-    curl -o /opt/etc/dnsmasq.conf https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/dnsmasq.conf || exit 1
+    curl -o /opt/etc/dnsmasq.conf https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/dnsmasq.conf || exit 1
     sed -i -e "s/192.168.1.1/${lanip}/g" -e "s/40500/${dnsovertlsport}/g" -e "s/40508/${dnsoverhttpsport}/g" /opt/etc/dnsmasq.conf && \
     echo "Установлена настройка dnsmasq и подключение дополнительного конфигурационного файла к dnsmasq"
     chmod 644 /opt/etc/dnsmasq.conf
 
     # cron file
     rm -f /opt/etc/crontab
-    curl -o /opt/etc/crontab https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/crontab || exit 1
+    curl -o /opt/etc/crontab https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/crontab || exit 1
     echo "Добавлены задачи в cron для периодического обновления содержимого множества"
     chmod 644 /opt/etc/crontab
     /opt/bin/unblock_update.sh
@@ -241,10 +239,10 @@ if [ "$1" = "-update" ]; then
     echo "Бэкап создан"
 	
     #что нужно обновить
-    curl -s -o /opt/etc/bot/main.py https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/bot3/main.py || exit 1
-    curl -s -o /opt/etc/bot/menu.py https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/bot3/maenu.py || exit 1
-    curl -s -o /opt/etc/bot/utils.py https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/bot3/utils.py || exit 1
-    curl -s -o /opt/etc/bot/handlers.py https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/bot3/handlers.py || exit 1
+    curl -s -o /opt/etc/bot/main.py https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/bot3/main.py || exit 1
+    curl -s -o /opt/etc/bot/menu.py https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/bot3/maenu.py || exit 1
+    curl -s -o /opt/etc/bot/utils.py https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/bot3/utils.py || exit 1
+    curl -s -o /opt/etc/bot/handlers.py https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/bot3/handlers.py || exit 1
     echo "Обновления загружены"
     chmod 755 /opt/etc/bot
     chmod 644 /opt/etc/bot/*.py
