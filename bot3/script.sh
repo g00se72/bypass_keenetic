@@ -127,7 +127,7 @@ if [ "$1" = "-install" ]; then
     echo "Установлены базовые настройки Trojan"
     
     curl -o /opt/etc/xray/config.json https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/vlessconfig.json && \
-    sed -i 's|ARGS="-confdir /opt/etc/xray"|ARGS="run -c /opt/etc/xray/config.json"|' /opt/etc/init.d/S24xray > /dev/null && \
+    sed -i 's|ARGS="run -confdir /opt/etc/xray"|ARGS="run -c /opt/etc/xray/config.json"|' /opt/etc/init.d/S24xray > /dev/null && \
     echo "Установлены базовые настройки Xray"
     chmod 755 /opt/etc/init.d/S24xray || chmod +x /opt/etc/init.d/S24xray
 
@@ -232,8 +232,7 @@ if [ "$1" = "-update" ]; then
         "/opt/etc/bot/main.py" \
         "/opt/etc/bot/menu.py" \
         "/opt/etc/bot/utils.py" \
-        "/opt/etc/bot/handlers.py" \
-        "/opt/etc/bot/bot_config.py"
+        "/opt/etc/bot/handlers.py"
     do
         if [ -e "$file" ]; then
             mv "$file" "${backup_dir}/$(basename "$file")"
@@ -242,13 +241,13 @@ if [ "$1" = "-update" ]; then
     echo "Бэкап создан"
 	
     #что нужно обновить
-    curl -s -o /opt/etc/bot/main.py https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/bot/main.py || exit 1
-	curl -s -o /opt/etc/bot/menu.py https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/bot/maenu.py || exit 1
-	curl -s -o /opt/etc/bot/utils.py https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/bot/utils.py || exit 1
-	curl -s -o /opt/etc/bot/handlers.py https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/bot/handlers.py || exit 1
+    curl -s -o /opt/etc/bot/main.py https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/bot3/main.py || exit 1
+    curl -s -o /opt/etc/bot/menu.py https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/bot3/maenu.py || exit 1
+    curl -s -o /opt/etc/bot/utils.py https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/bot3/utils.py || exit 1
+    curl -s -o /opt/etc/bot/handlers.py https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/bot3/handlers.py || exit 1
     echo "Обновления загружены"
     chmod 755 /opt/etc/bot
-	chmod 644 /opt/etc/bot/*.py
+    chmod 644 /opt/etc/bot/*.py
 
     #/opt/etc/init.d/S56dnsmasq restart > /dev/null 2>&1 || echo "Ошибка при перезапуске dnsmasq"
     #/opt/etc/init.d/S22shadowsocks start > /dev/null 2>&1 || echo "S22shadowsocks не запущен, проверьте конфигурацию, пропускаем остановку"
@@ -261,7 +260,7 @@ if [ "$1" = "-update" ]; then
 
     echo "Версия " "${bot_old_version}" " обновлена до " "${bot_new_version}"
     sleep 2
-    sed -i "s/${bot_old_version}/${bot_new_version}/g" /opt/etc/bot_config.py
+    sed -i "s/${bot_old_version}/${bot_new_version}/g" /opt/etc/bot/bot_config.py
     echo "Обновление выполнено. Сервисы перезапущены. Сейчас будет перезапущен бот (~15-30 сек)"
     sleep 2
     /bin/sh /opt/root/script.sh -restart || exit 1
