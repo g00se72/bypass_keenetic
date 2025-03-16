@@ -1,3 +1,8 @@
+# [3.0.0 - Что нового](https://github.com/g00se72/bypass_keenetic/releases/tag/2.0.0) - 16 Марта 2025
+
+## Что изменено
+- Полностью переработана структура скрипта
+
 # [2.0.0 - Что нового](https://github.com/g00se72/bypass_keenetic/releases/tag/2.0.0) - 15 Марта 2025
 
 ## Что изменено
