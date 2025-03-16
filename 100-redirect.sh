@@ -1,5 +1,6 @@
 #!/bin/sh
 
+# shellcheck disable=SC2154
 [ "$type" = "ip6tables" ] && exit 0
 [ "$table" != "mangle" ] && [ "$table" != "nat" ] && exit 0
 
@@ -116,6 +117,7 @@ vpn_unblock_name=$(echo $vpn_file_name | awk -F '/' '{print $5}' | sed 's/.txt//
 unblockvpn=$(echo unblock"$vpn_unblock_name");
 
 # проверяем есть ли подключенный линк к vpn
+#vpn_type=$(echo "$unblockvpn" | awk -F '-' '{print $3}') # old version
 vpn_type=$(echo "$unblockvpn" | sed 's/-/ /g' | awk '{print $NF}')
 vpn_link_up=$(curl -s localhost:79/rci/show/interface/"$vpn_type"/link | tr -d '"')
 if [ "$vpn_link_up" = "up" ]; then
@@ -124,13 +126,18 @@ vpn_type_lower=$(echo "$vpn_type" | tr [:upper:] [:lower:])
 get_vpn_fwmark_id=$(grep "$vpn_type_lower" /opt/etc/iproute2/rt_tables | awk '{print $1}')
 
 # проверка на особый случай, когда файл vpn с сайтами есть, подключение есть, а таблицы с fwmark под него нет
+#vpn_table_id=$((1000 + 1));
 if [ -n "${get_vpn_fwmark_id}" ]; then vpn_table_id=$get_vpn_fwmark_id; else break; fi
 vpn_mark_id=$(echo 0xd"$vpn_table_id")
+
+#не работает должным образом
+#if [ -z '$(iptables-save 2>/dev/null | grep "$unblockvpn")' ]; then
 
 # проверяем есть ли правила vpn для множества
 if iptables-save 2>/dev/null | grep -q "$unblockvpn"; then
 	vpn_rule_ok=$(echo Правила для "$unblockvpn" уже есть.)
 	echo "$vpn_rule_ok"
+	#logger -t "$TAG" "$vpn_rule_ok"
 
 	else
 	info_vpn_rule=$(echo ipset: "$unblockvpn", mark_id: "$vpn_mark_id")
@@ -145,7 +152,7 @@ if iptables-save 2>/dev/null | grep -q "$unblockvpn"; then
 	if [ -z "$fastnat" ] && [ "$software" = "false" ] && [ "$hardware" = "false" ]; then
 	    info=$(echo "VPN: fastnat, swnat и hwnat ВЫКЛЮЧЕНЫ, правила добавлены")
 		  logger -t "$TAG" "$info"
-	    # с отключеными fastnat и ускорителями
+	    # С отключеными fastnat и ускорителями
 	    iptables -A PREROUTING -w -t mangle -p tcp -m set --match-set "$unblockvpn" dst -j MARK --set-mark "$vpn_mark_id"
 	    iptables -A PREROUTING -w -t mangle -p udp -m set --match-set "$unblockvpn" dst -j MARK --set-mark "$vpn_mark_id"
 
@@ -153,20 +160,20 @@ if iptables-save 2>/dev/null | grep -q "$unblockvpn"; then
 	    #iptables -I PREROUTING -w -t mangle -i br0 -p tcp -m set --match-set "$unblockvpn" dst -j MARK --set-mark "$vpn_mark_id"
 	    #iptables -I PREROUTING -w -t mangle -i br0 -p udp -m set --match-set "$unblockvpn" dst -j MARK --set-mark "$vpn_mark_id"
 
-            # не включайте, возможны проблемы: следующее исходящее правило дает возможность использовать сайты из списка в системе entware.
+		  # не включайте, возможны проблемы: следующее исходящее правило дает возможность использовать сайты из списка в системе entware.
 	    #iptables -A OUTPUT -t mangle -p tcp -m set --match-set "$unblockvpn" dst -j MARK --set-mark "$vpn_mark_id"
 	else
 		  info=$(echo "VPN: fastnat, swnat и hwnat ВКЛЮЧЕНЫ, правила добавлены")
 		  logger -t "$TAG" "$info"
-	    # без отключения
+	    # Без отключения
 	    iptables -A PREROUTING -w -t mangle -m conntrack --ctstate NEW -m set --match-set "$unblockvpn" dst -j CONNMARK --set-mark "$vpn_mark_id"
 	    iptables -A PREROUTING -w -t mangle -j CONNMARK --restore-mark
 	fi
-fi
-fi
+fi # iptables
+fi # link
 
 done
-fi
+fi # check files exist
 
 
 exit 0
