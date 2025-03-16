@@ -51,6 +51,9 @@ curl -o /opt/etc/bot.py https://raw.githubusercontent.com/g00se72/bypass_keeneti
 curl -o /opt/etc/bot.py https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/bot3/utils.py
 curl -o /opt/etc/bot.py https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/bot3/handlers.py
 curl -o /opt/etc/bot_config.py https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/bot3/bot_config.py
+
+chmod 755 /opt/etc/bot
+chmod 644 /opt/etc/bot/*.py
 ```
 
 Заполнить ключ api бота и логин из телеграмма через nano или любым другим способом, сохранить файл
