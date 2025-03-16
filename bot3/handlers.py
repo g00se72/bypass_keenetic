@@ -6,14 +6,14 @@ from urllib.parse import urlparse, parse_qs
 import base64
 import bot_config as config
 from menu import MENU_CACHE
-from menu import create_bypass_files_menu  # Импортируем функцию из menu.py
+from menu import create_bypass_files_menu
 from utils import (
     download_script, send_long_message, load_bypass_list, save_bypass_list,
     update_service, return_to_main_menu
 )
 
 def setup_handlers(bot, level, selected_file):
-    """Настройка всех обработчиков"""
+#Настройка всех обработчиков
 
     def set_level_and_reply(chat_id, new_level, text, markup):
         nonlocal level
@@ -31,7 +31,7 @@ def setup_handlers(bot, level, selected_file):
                 selected_file = message.text
                 set_level_and_reply(message.chat.id, 2, "Меню " + selected_file, MENU_CACHE["bypass_list"])
                 return
-        bot.send_message(message.chat.id, "Не найден", reply_markup=create_bypass_files_menu())  # Используем функцию напрямую
+        bot.send_message(message.chat.id, "Не найден", reply_markup=create_bypass_files_menu())
 
     def handle_bypass_list_menu(message):
         filepath = f"{config.paths['unblock_dir']}{selected_file}.txt"
@@ -277,7 +277,6 @@ def setup_handlers(bot, level, selected_file):
         response = requests.get(config.download_urls["version_md"])
         bot_new_version = response.text.strip() if response.status_code == 200 else "N/A"
         
-        # Путь к main.py относительно handlers.py
         main_file_path = os.path.join(os.path.dirname(__file__), "main.py")
         with open(main_file_path, encoding='utf-8') as file:
             bot_version = next((line.replace('# ВЕРСИЯ СКРИПТА', '').strip() for line in file if line.startswith('# ВЕРСИЯ СКРИПТА')), "N/A")
