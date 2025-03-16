@@ -272,12 +272,18 @@ def handle_updates(message):
     with open(__file__, encoding='utf-8') as file:
         bot_version = next((line.replace('# ВЕРСИЯ СКРИПТА', '').strip() for line in file if line.startswith('# ВЕРСИЯ СКРИПТА')), "N/A")
     service_update_info = f"*Установленная версия:* {bot_version}\n*Доступная на git версия:* {bot_new_version}"
-    if tuple(map(int, bot_version.split("."))) < tuple(map(int, bot_new_version.split("."))):
-        markup = types.InlineKeyboardMarkup()
-        markup.add(types.InlineKeyboardButton("Обновить", callback_data="trigger_update"))
-        bot.send_message(message.chat.id, f"{service_update_info}\nЕсли хотите обновить, нажмите кнопку ниже", reply_markup=markup, parse_mode='Markdown')
+    if bot_version != "N/A" and bot_new_version != "N/A":
+        try:
+            if tuple(map(int, bot_version.split("."))) < tuple(map(int, bot_new_version.split("."))):
+                markup = types.InlineKeyboardMarkup()
+                markup.add(types.InlineKeyboardButton("Обновить", callback_data="trigger_update"))
+                bot.send_message(message.chat.id, f"{service_update_info}\nЕсли хотите обновить, нажмите кнопку ниже", reply_markup=markup, parse_mode='Markdown')
+            else:
+                bot.send_message(message.chat.id, f"{service_update_info}\n\nУ вас уже установлена последняя версия", parse_mode='Markdown')
+        except ValueError:
+            bot.send_message(message.chat.id, f"{service_update_info}\n\nОшибка: версии имеют неверный формат", parse_mode='Markdown')
     else:
-        bot.send_message(message.chat.id, f"{service_update_info}\n\nУ вас уже установлена последняя версия", parse_mode='Markdown')
+        bot.send_message(message.chat.id, f"{service_update_info}\n\nНе удалось проверить обновления", parse_mode='Markdown')
 
 def handle_install(message):
     download_script()
