@@ -24,7 +24,7 @@ paths = {
     "shadowsocks_config": "/opt/etc/shadowsocks.json",
     "trojan_config": "/opt/etc/trojan/config.json",
     "vless_config": "/opt/etc/xray/config.json",
-    "error_log": "/opt/etc/error.log",
+    "error_log": "/opt/etc/bot/error.log",
     "script_sh": "/opt/root/script.sh",
 }
 
