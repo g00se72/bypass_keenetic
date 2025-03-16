@@ -167,7 +167,7 @@ if [ "$1" = "-install" ]; then
     chmod 755 /opt/bin/unblock_update.sh || chmod +x /opt/bin/unblock_update.sh
 
     # s99unblock
-    curl -o /opt/etc/init.d/S99unblock https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/S99unblock || exit 1
+    curl -o /opt/etc/init.d/S99unblock https://raw.githubusercontent.com/${repo}/bypass_keenetic/main/bot3/S99unblock || exit 1
     echo "Установлен cкрипт автоматического заполнения множества unblock при загрузке маршрутизатора"
     chmod 755 /opt/etc/init.d/S99unblock || chmod +x /opt/etc/init.d/S99unblock
 
