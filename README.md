@@ -37,6 +37,9 @@ pip install pyTelegramBotAPI telethon pathlib
 ```bash
 curl -o /opt/etc/bot.py https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/bot.py
 curl -o /opt/etc/bot_config.py https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/bot_config.py
+
+chmod 644 /opt/etc/bot.py
+chmod 644 /opt/etc/bot_config.py
 ```
 
 или любую из новых версий (пока тестируются)
@@ -44,6 +47,9 @@ curl -o /opt/etc/bot_config.py https://raw.githubusercontent.com/g00se72/bypass_
 ```bash
 curl -o /opt/etc/bot.py https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/bot2/bot.py
 curl -o /opt/etc/bot_config.py https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/bot2/bot_config.py
+
+chmod 644 /opt/etc/bot.py
+chmod 644 /opt/etc/bot_config.py
 ```
 ```bash
 curl -o /opt/etc/bot.py https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/bot3/main.py
