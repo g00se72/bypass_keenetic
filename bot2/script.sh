@@ -21,10 +21,10 @@ if [ "$1" = "-restart" ]; then
     check_running=$(ps | grep "[p]ython3 /opt/etc/bot.py")
     if [ -n "$check_running" ]; then
         echo "Бот запущен. Нажмите на /start"
-        exit 0  # Успешное завершение
+        exit 0
     else
         echo "Ошибка: бот не запустился"
-        exit 1  # Ошибка
+        exit 1
     fi
 fi
 
@@ -33,7 +33,7 @@ if [ "$1" = "-remove" ]; then
     echo "Начинаем удаление"
     for pkg in tor tor-geoip bind-dig cron dnsmasq-full ipset iptables obfs4 shadowsocks-libev-ss-redir shadowsocks-libev-config xray trojan; do
     if opkg list-installed | grep -q "^$pkg "; then
-        #echo "Удаляем пакет: $pkg"
+        echo "Удаляем пакет: $pkg"
         opkg remove "$pkg" #--force-removal-of-dependent-packages
     else
         echo "Пакет $pkg не установлен, пропускаем..."
@@ -45,7 +45,6 @@ if [ "$1" = "-remove" ]; then
     ipset flush unblocksh
     ipset flush unblockvless
     ipset flush unblocktroj
-    #ipset flush unblockvpn
 	
     if ls -d /opt/etc/unblock/vpn-*.txt >/dev/null 2>&1; then
         for vpn_file_names in /opt/etc/unblock/vpn-*; do
