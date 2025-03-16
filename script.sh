@@ -14,6 +14,20 @@ dnsoverhttpsport=$(grep "dnsoverhttpsport" /opt/etc/bot_config.py | grep -Eo "[0
 keen_os_full=$(curl -s localhost:79/rci/show/version/title | tr -d \",)
 keen_os_short=$(curl -s localhost:79/rci/show/version/title | tr -d \", | cut -b 1)
 
+if [ "$1" = "-restart" ]; then
+    bot_pid=$(ps | grep "[p]ython3 /opt/etc/bot.py" | awk '{print $1}')
+    [ -n "$bot_pid" ] && echo "Останавливаем бота..." && kill "$bot_pid" && sleep 5
+    
+    python3 /opt/etc/bot.py &
+    check_running=$(ps | grep "[p]ython3 /opt/etc/bot.py")
+    if [ -n "$check_running" ]; then
+        echo "Бот запущен. Нажмите на /start"
+        exit 0  # Успешное завершение
+    else
+        echo "Ошибка: бот не запустился"
+        exit 1  # Ошибка
+    fi
+fi
 
 if [ "$1" = "-remove" ]; then
     echo "Начинаем удаление"
@@ -279,25 +293,20 @@ if [ "$1" = "-update" ]; then
     echo "Обновление выполнено. Сервисы перезапущены. Сейчас будет перезапущен бот (~15-30 сек)"
     sleep 7
 
-    bot_pid=$(ps | grep "[p]ython3 /opt/etc/bot.py" | awk '{print $1}')
-    [ -n "$bot_pid" ] && echo "Останавливаем бота..." && kill "$bot_pid" && sleep 5
-    
-    python3 /opt/etc/bot.py &
-    check_running=$(ps | grep "[p]ython3 /opt/etc/bot.py")
-    [ -n "$(ps | grep '[p]ython3 /opt/etc/bot.py')" ] && echo "Бот запущен. Нажмите на /start" || echo "Ошибка: бот не запустился"
+    /bin/sh /opt/root/script.sh -restart || exit 1
 
     exit 0
 fi
 
 
-if [ "$1" = "-reboot" ]; then
-    ndmc -c 'opkg dns-override'
-    sleep 3
-    ndmc -c 'system configuration save'
-    sleep 3
-    echo "Перезагрузка роутера"
-    ndmc -c 'system reboot'
-fi
+#if [ "$1" = "-reboot" ]; then
+#    ndmc -c 'opkg dns-override'
+#    sleep 3
+#    ndmc -c 'system configuration save'
+#    sleep 3
+#    echo "Перезагрузка роутера"
+#    ndmc -c 'system reboot'
+#fi
 
 
 if [ "$1" = "-version" ]; then
@@ -310,6 +319,7 @@ if [ "$1" = "-help" ]; then
     echo "-remove для удаления"
     echo "-update для обновления"
     echo "-version узнать версию KeenOS"
+    echo "-restart перезапустить бота"
     #echo "-reinstall - use for reinstall all files script"
 fi
 
