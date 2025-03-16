@@ -2,7 +2,6 @@
 
 repo="g00se72"
 
-# ip роутера
 lanip=$(ip addr show br0 | grep -Po "(?<=inet ).*(?=/)" | awk '{print $1}')
 ssredir="ss-redir"
 localportsh=$(grep "localportsh" /opt/etc/bot_config.py | grep -Eo "[0-9]{1,5}")
@@ -26,12 +25,10 @@ if [ "$1" = "-remove" ]; then
     ipset flush unblocksh
     ipset flush unblockvless
     ipset flush unblocktroj
-    #ipset flush unblockvpn
 	
     if ls -d /opt/etc/unblock/vpn-*.txt >/dev/null 2>&1; then
      for vpn_file_names in /opt/etc/unblock/vpn-*; do
      vpn_file_name=$(echo "$vpn_file_names" | awk -F '/' '{print $5}' | sed 's/.txt//')
-     #shellcheck disable=SC2116
      unblockvpn=$(echo unblock"$vpn_file_name")
      ipset flush "$unblockvpn"
      done
