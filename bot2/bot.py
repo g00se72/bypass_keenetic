@@ -26,9 +26,9 @@ def create_main_menu():
 
 def create_service_menu():
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    markup.add("🤖 Перезапустить бота", "⛔ Перезагрузить роутер")
-    markup.add("⁉️ DNS Override", "🚦 Перезагрузить сервисы")
-    markup.add("🔄 Обновления", "🔙 Назад")
+    markup.add("🤖 Перезапуск бота", "⛔ Перезапуск роутера", "🚦 Перезапуск сервисов")
+    markup.add("⁉️ DNS Override", "🔄 Обновления")
+    markup.add("🔙 Назад")
     return markup
 
 def create_install_remove_menu():
