@@ -99,16 +99,11 @@ def set_level_and_reply(chat_id, new_level, text, markup):
     bot.send_message(chat_id, text, reply_markup=markup)
 
 # Обработчики уровней
+
 def handle_bypass_files_selection(message):
-    dirname = config.paths["unblock_dir"]
-    dirfiles = os.listdir(dirname)
-    for fln in dirfiles:
-        if fln == message.text + '.txt':
-            global selected_file
-            selected_file = message.text
-            set_level_and_reply(message.chat.id, 2, "Меню " + selected_file, create_bypass_list_menu())
-            return
-    bot.send_message(message.chat.id, "⚠️ Не найден", reply_markup=create_back_menu())
+    global selected_file  # Или nonlocal, в зависимости от контекста
+    selected_file = message.text
+    set_level_and_reply(message.chat.id, 2, "Меню " + selected_file, create_bypass_list_menu())
 
 def handle_bypass_list_menu(message):
     if message.text == "📄 Показать список":
