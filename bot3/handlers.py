@@ -91,7 +91,7 @@ def setup_handlers(bot, level, selected_file):
         pbk, headerType = params.get('pbk', [''])[0], params.get('headerType', ['none'])[0]
         fp, spx, flow = params.get('fp', [''])[0], params.get('spx', ['/'])[0], params.get('flow', ['xtls-rprx-vision'])[0]
         sni, sid = params.get('sni', [''])[0], params.get('sid', [''])[0]
-        with open(config.paths["vless_config"], 'w') as f:
+        with open(config.paths["vless_config"], 'w', encoding='utf-8') as f:
             sh = (
                 f'{{"log":{{"access":"/opt/etc/xray/access.log","error":"/opt/etc/xray/error.log","loglevel":"none"}},'
                 f'"inbounds":[{{"port":{config.localportvless},"listen":"::","protocol":"dokodemo-door",'
@@ -116,7 +116,7 @@ def setup_handlers(bot, level, selected_file):
         host = key.split(':')[0]
         key = key.replace(host + ":", "", 1)
         port = key.split('?')[0].split('#')[0]
-        with open(config.paths["trojan_config"], 'w') as f:
+        with open(config.paths["trojan_config"], 'w', encoding='utf-8') as f:
             sh = (
                 f'{{"run_type":"nat",'
                 f'"local_addr":"::",'
@@ -135,7 +135,7 @@ def setup_handlers(bot, level, selected_file):
         server = key.split('@')[1].split('/')[0].split(':')[0]
         port = key.split('@')[1].split('/')[0].split(':')[1].split('#')[0]
         method = str(base64.b64decode(encodedkey).split(':')[0])[2:]
-        with open(config.paths["shadowsocks_config"], 'w') as f:
+        with open(config.paths["shadowsocks_config"], 'w', encoding='utf-8') as f:
             sh = (
                 f'{{"server":["{server}"],'
                 f'"mode":"tcp_and_udp",'
@@ -152,7 +152,7 @@ def setup_handlers(bot, level, selected_file):
             f.write(sh)
 
     def tor_config(bridges):
-        with open(config.paths["tor_config"], 'w') as f:
+        with open(config.paths["tor_config"], 'w', encoding='utf-8') as f:
             sh = (
                 f'User root\n'
                 f'PidFile /opt/var/run/tor.pid\n'
