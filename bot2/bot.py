@@ -118,9 +118,9 @@ def handle_bypass_list_menu(message):
         send_long_message(message.chat.id, text)
         bot.send_message(message.chat.id, "Меню " + selected_file, reply_markup=create_bypass_list_menu())
     elif message.text == "➕ Добавить в список":
-        set_level_and_reply(message.chat.id, 3, "Введите имя сайта или домена для разблокировки", create_back_menu())
+        set_level_and_reply(message.chat.id, 3, "Введите сайт, домен или IP-адресс для добавления", create_back_menu())
     elif message.text == "➖ Удалить из списка":
-        set_level_and_reply(message.chat.id, 4, "Введите имя сайта или домена для удаления", create_back_menu())
+        set_level_and_reply(message.chat.id, 4, "Введите сайт, домен или IP-адресс для удаления", create_back_menu())
 
 def handle_add_to_bypass(message):
     global level
@@ -210,7 +210,7 @@ level_handlers = {
 @bot.message_handler(commands=['start'])
 def start(message):
     if message.from_user.username not in config.usernames:
-        bot.send_message(message.chat.id, 'Вы не являетесь автором канала')
+        bot.send_message(message.chat.id, '🤖 Вы не являетесь автором канала!')
         return
     return_to_main_menu(message.chat.id)
 
@@ -225,7 +225,7 @@ def handle_update(call):
 @bot.message_handler(content_types=['text'])
 def bot_message(message):
     if message.from_user.username not in config.usernames or message.chat.type != 'private':
-        bot.send_message(message.chat.id, '🤖 Вы не являетесь автором канала или это не приватный чат')
+        bot.send_message(message.chat.id, '🤖 Вы не являетесь автором канала или это не приватный чат!')
         return
 
     global level, selected_file
@@ -247,12 +247,12 @@ def bot_message(message):
     menu_commands = {
         '💡 Информация': lambda: bot.send_message(message.chat.id, requests.get(config.download_urls["info_md"]).text, reply_markup=create_main_menu(), parse_mode='Markdown', disable_web_page_preview=True),
         '⚙️ Сервис': lambda: bot.send_message(message.chat.id, '⚙️ Сервисное меню!', reply_markup=create_service_menu()),
-        '🤖 Перезапуск бота': lambda: (bot.send_message(message.chat.id, "⏳ Бот будет перезапущен", reply_markup=create_service_menu()), subprocess.Popen([config.paths['script_sh'], '-restart'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, close_fds=True)),
-        '⛔ Перезапуск роутера': lambda: (os.system(config.services["router_reboot"]), bot.send_message(message.chat.id, "⏳ Роутер перезагружается!\nЭто займет около 2 минут", reply_markup=create_service_menu())),
+        '🤖 Перезапуск бота': lambda: (bot.send_message(message.chat.id, "⏳ Бот будет перезапущен!\nЭто займет около 15-30 секунд", reply_markup=create_service_menu()), subprocess.Popen([config.paths['script_sh'], '-restart'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, close_fds=True)),
+        '⛔ Перезапуск роутера': lambda: (os.system(config.services["router_reboot"]), bot.send_message(message.chat.id, "⏳ Роутер будет перезапущен!\nЭто займет около 2 минут", reply_markup=create_service_menu())),
         '⁉️ DNS Override': lambda: bot.send_message(message.chat.id, '⁉️ DNS Override', reply_markup=create_dns_override_menu()),
-        '✅ DNS Override ВКЛ': lambda: (os.system(config.services["dns_override_on"]), time.sleep(2), os.system(config.services["save_config"]), bot.send_message(message.chat.id, '✅ DNS Override включен!\nРоутер перезагружается...', reply_markup=create_service_menu()), time.sleep(5), os.system(config.services["router_reboot"])),
-        '❌ DNS Override ВЫКЛ': lambda: (os.system(config.services["dns_override_off"]), time.sleep(2), os.system(config.services["save_config"]), bot.send_message(message.chat.id, '❌ DNS Override выключен!\nРоутер перезагружается...', reply_markup=create_service_menu()), time.sleep(5), os.system(config.services["router_reboot"])),
-        '🚦 Перезапуск сервисов': lambda: (bot.send_message(message.chat.id, '⏳ Перезагрузка сервисов...'), [os.system(srv) for srv in [config.services["shadowsocks_restart"], config.services["trojan_restart"], config.services["vless_restart"], config.services["tor_restart"]]], bot.send_message(message.chat.id, '✅ Сервисы перезагружены!', reply_markup=create_service_menu())),
+        '✅ DNS Override ВКЛ': lambda: (os.system(config.services["dns_override_on"]), time.sleep(2), os.system(config.services["save_config"]), bot.send_message(message.chat.id, '✅ DNS Override включен!\n⏳ Роутер будет перезапущен!\nЭто займет около 2 минут', reply_markup=create_service_menu()), time.sleep(5), os.system(config.services["router_reboot"])),
+        '❌ DNS Override ВЫКЛ': lambda: (os.system(config.services["dns_override_off"]), time.sleep(2), os.system(config.services["save_config"]), bot.send_message(message.chat.id, '❌ DNS Override выключен!\n⏳ Роутер будет перезапущен!\nЭто займет около 2 минут', reply_markup=create_service_menu()), time.sleep(5), os.system(config.services["router_reboot"])),
+        '🚦 Перезапуск сервисов': lambda: (bot.send_message(message.chat.id, '⏳ Сервисы будут перезапущены!nЭто займет около 10-15 секунд'), [os.system(srv) for srv in [config.services["shadowsocks_restart"], config.services["trojan_restart"], config.services["vless_restart"], config.services["tor_restart"]]], bot.send_message(message.chat.id, '✅ Сервисы перезапущены', reply_markup=create_service_menu())),
         '🔄 Обновления': lambda: handle_updates(message),
         '📑 Списки обхода': lambda: set_level_and_reply(message.chat.id, 1, "📑 Списки обхода", create_bypass_files_menu()),
         '🔑 Ключи и мосты': lambda: set_level_and_reply(message.chat.id, 5, "🔑 Ключи и мосты", create_keys_bridges_menu()),
@@ -289,7 +289,7 @@ def handle_install(message):
     download_script()
     install = subprocess.Popen([config.paths['script_sh'], '-install'], stdout=subprocess.PIPE)
     results = "\n".join(line.decode().strip() for line in install.stdout)
-    full_message = f"{results}\n\nУстановка завершена. Теперь нужно настроить роутер и перейти к спискам для разблокировок. Ключи устанавливаются вручную - Ключи и Мосты -> Tor, Vless, Shadowsocks, Trojan.\n\nДля завершения настройки зайдите в меню Сервис -> DNS Override -> ВКЛ. Роутер перезагрузится, это займёт около 2 минут."
+    full_message = f"{results}\n\nУстановка завершена. Теперь нужно настроить роутер и перейти к спискам для разблокировок. Ключи устанавливаются вручную - Ключи и Мосты -> Tor, Vless, Shadowsocks, Trojan.\n\nДля завершения настройки зайдите в меню Сервис -> DNS Override -> ВКЛ. Роутер перезапустится, это займёт около 2 минут"
     bot.send_message(message.chat.id, full_message, reply_markup=create_main_menu())
 
 def handle_remove(message):
