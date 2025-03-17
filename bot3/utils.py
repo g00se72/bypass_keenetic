@@ -38,7 +38,7 @@ def update_service(bot, chat_id, service_name, config_func, restart_cmd):
     config_func()
     result = subprocess.run(restart_cmd, shell=True, capture_output=True)
     if result.returncode == 0:
-        bot.send_message(chat_id, f'✅ {service_name} успешно перезапущен')
+        bot.send_message(chat_id, f'✅ Сервис {service_name} успешно перезапущен')
     else:
         error_message = result.stderr.decode().strip() or "Неизвестная ошибка"
         bot.send_message(chat_id, f'❌ Ошибка при перезапуске {service_name}: {error_message}')
