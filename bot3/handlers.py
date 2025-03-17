@@ -31,7 +31,7 @@ def setup_handlers(bot, level, selected_file):
                 selected_file = message.text
                 set_level_and_reply(message.chat.id, 2, "Меню " + selected_file, MENU_CACHE["bypass_list"])
                 return
-        bot.send_message(message.chat.id, "Не найден", reply_markup=create_bypass_files_menu())
+        bot.send_message(message.chat.id, "⚠️ Не найден", reply_markup=create_bypass_files_menu())
 
     def handle_bypass_list_menu(message):
         filepath = f"{config.paths['unblock_dir']}{selected_file}.txt"
@@ -57,7 +57,7 @@ def setup_handlers(bot, level, selected_file):
             bot.send_message(message.chat.id, "✅ Успешно добавлено")
             os.system(config.services["unblock_update"])
         else:
-            bot.send_message(message.chat.id, "Было добавлено ранее")
+            bot.send_message(message.chat.id, "❕Было добавлено ранее")
         level = 2
         bot.send_message(message.chat.id, "Меню " + selected_file, reply_markup=MENU_CACHE["bypass_list"])
 
@@ -72,7 +72,7 @@ def setup_handlers(bot, level, selected_file):
             bot.send_message(message.chat.id, "✅ Успешно удалено")
             os.system(config.services["unblock_update"])
         else:
-            bot.send_message(message.chat.id, "Не найдено в списке")
+            bot.send_message(message.chat.id, "❕Не найдено в списке")
         level = 2
         bot.send_message(message.chat.id, "Меню " + selected_file, reply_markup=MENU_CACHE["bypass_list"])
 
@@ -217,7 +217,7 @@ def setup_handlers(bot, level, selected_file):
     @bot.message_handler(commands=['start'])
     def start(message):
         if message.from_user.username not in config.usernames:
-            bot.send_message(message.chat.id, '🤖 Вы не являетесь автором канала!')
+            bot.send_message(message.chat.id, '⚠️ Вы не являетесь автором канала!')
             return
         nonlocal level, selected_file
         level, selected_file = return_to_main_menu(bot, message.chat.id, level, selected_file)
@@ -234,7 +234,7 @@ def setup_handlers(bot, level, selected_file):
     def bot_message(message):
         nonlocal level, selected_file
         if message.from_user.username not in config.usernames or message.chat.type != 'private':
-            bot.send_message(message.chat.id, '🤖 Вы не являетесь автором канала или это не приватный чат!')
+            bot.send_message(message.chat.id, '⚠️ Вы не являетесь автором канала или это не приватный чат!')
             return
 
         if message.text == '🔙 Назад':
