@@ -14,7 +14,17 @@
 
 ## Установка
 
+При первом подключении рекомендуется изменить пароль командой
+
+```bash
+passwd
+```
+
 Выполнить команды по очереди
+
+```bash
+opkg update
+```
 
 ```bash
 opkg install curl python3 python3-pip
@@ -32,7 +42,7 @@ python get-pip.py
 pip install pyTelegramBotAPI telethon pathlib
 ```
 
-загрузить первую версию бота (оставлю для истории в репозитории)
+Загрузить первую версию бота (оставлю для истории в репозитории)
 
 ```bash
 curl -o /opt/etc/bot.py https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/bot.py
@@ -51,6 +61,7 @@ curl -o /opt/etc/bot_config.py https://raw.githubusercontent.com/g00se72/bypass_
 chmod 644 /opt/etc/bot.py
 chmod 644 /opt/etc/bot_config.py
 ```
+
 ```bash
 curl -o /opt/etc/bot.py https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/bot3/main.py
 curl -o /opt/etc/bot.py https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/bot3/menu.py
@@ -62,7 +73,7 @@ chmod 755 /opt/etc/bot
 chmod 644 /opt/etc/bot/*.py
 ```
 
-Заполнить ключ api бота и логин из телеграмма через nano или любым другим способом, сохранить файл
+Заполнить ключ api бота и другие данные для авторизации в telegram через nano или любым другим способом, сохранить файл
 
 ```bash
 nano /opt/etc/bot_config.py
@@ -74,7 +85,7 @@ nano /opt/etc/bot_config.py
 python3 /opt/etc/bot.py &
 ```
 
-Запустить бота (для версии 3)
+или для версии 3
 
 ```bash
 python3 /opt/etc/bot/main.py &
@@ -85,11 +96,8 @@ python3 /opt/etc/bot/main.py &
 `Установка и удаление` -> `Установка` :
 
 Прогресс установки будет отображаться в телеграм-боте
-
 Добавить через бота в списки обхода необходимые вам домены и ip-адреса
-
 В меню бота -> `Сервис` -> `DNS Override` -> `Вкл DNS Override`, после чего роутер перезагрузится
-
 Готово
 
 ## Справка
