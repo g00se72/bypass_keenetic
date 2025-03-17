@@ -1,10 +1,9 @@
 #!/usr/bin/python3
-# ВЕРСИЯ СКРИПТА 3.0.2
+# ВЕРСИЯ СКРИПТА 3.0.3
 
 import os
 import sys
 import telebot
-import time
 from handlers import setup_handlers
 from utils import log_error
 import bot_config as config
@@ -50,14 +49,6 @@ def cleanup_pid(PID_FILE):
             log_error(f"PID файл не найден для удаления: {PID_FILE}")
     except Exception as e:
         log_error(f"Ошибка при удалении PID файла: {e}")
-
-# Функция для записи ошибок в файл
-def log_error(message):
-    try:
-        with open(config.paths["error_log"], "a") as fl:
-            fl.write(f"{time.strftime('%Y-%m-%d %H:%M:%S')} - {message}\n")
-    except Exception as e:
-        print(f"Ошибка при записи в log файл: {e}")
 
 if __name__ == "__main__":
     # Проверяем можно ли запустить бот
