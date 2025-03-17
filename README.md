@@ -63,11 +63,11 @@ chmod 644 /opt/etc/bot_config.py
 ```
 
 ```bash
-curl -o /opt/etc/bot.py https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/bot3/main.py
-curl -o /opt/etc/bot.py https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/bot3/menu.py
-curl -o /opt/etc/bot.py https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/bot3/utils.py
-curl -o /opt/etc/bot.py https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/bot3/handlers.py
-curl -o /opt/etc/bot_config.py https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/bot3/bot_config.py
+curl -o /opt/etc/bot/main.py https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/bot3/main.py
+curl -o /opt/etc/bot/menu.py https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/bot3/menu.py
+curl -o /opt/etc/bot/utils.py https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/bot3/utils.py
+curl -o /opt/etc/bot/handlers.py https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/bot3/handlers.py
+curl -o /opt/etc/bot/bot_config.py https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/bot3/bot_config.py
 
 chmod 755 /opt/etc/bot
 chmod 644 /opt/etc/bot/*.py
