@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-# ВЕРСИЯ СКРИПТА 3.0.0
+# ВЕРСИЯ СКРИПТА 3.0.1
 
 import telebot
 import time
