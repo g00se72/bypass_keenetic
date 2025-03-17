@@ -274,11 +274,11 @@ def handle_updates(message):
                 markup.add(types.InlineKeyboardButton("Обновить", callback_data="trigger_update"))
                 bot.send_message(message.chat.id, f"{service_update_info}\nЕсли хотите обновить, нажмите кнопку ниже", reply_markup=markup, parse_mode='Markdown')
             else:
-                bot.send_message(message.chat.id, f"{service_update_info}\n\nУ вас уже установлена последняя версия", parse_mode='Markdown')
+                bot.send_message(message.chat.id, f"{service_update_info}\nУ вас уже установлена последняя версия", parse_mode='Markdown')
         except ValueError:
-            bot.send_message(message.chat.id, f"{service_update_info}\n\nОшибка: версии имеют неверный формат", parse_mode='Markdown')
+            bot.send_message(message.chat.id, f"{service_update_info}\nОшибка: версии имеют неверный формат", parse_mode='Markdown')
     else:
-        bot.send_message(message.chat.id, f"{service_update_info}\n\nНе удалось проверить обновления", parse_mode='Markdown')
+        bot.send_message(message.chat.id, f"{service_update_info}\nНе удалось проверить обновления", parse_mode='Markdown')
 
 def handle_install(message):
     download_script()
