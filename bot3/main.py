@@ -8,11 +8,10 @@ import bot_config as config
 
 bot = telebot.TeleBot(config.token)
 
-# Глобальные переменные
 level = 0
+restart_count = 0
 selected_file = ""
 MAX_RESTARTS = 5
-restart_count = 0
 
 if __name__ == "__main__":
     setup_handlers(bot, level, selected_file)
@@ -27,4 +26,4 @@ if __name__ == "__main__":
             time.sleep(60)
     
     with open(config.paths["error_log"], "a") as fl:
-        fl.write("Bot stopped after reaching max restart attempts.\n")
+        fl.write("Бот остановлен после достижения максимального количества попыток перезапуска\n")
