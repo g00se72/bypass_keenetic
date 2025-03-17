@@ -270,13 +270,10 @@ def setup_handlers(bot, level, selected_file):
     def handle_updates(message):
         response = requests.get(config.download_urls["version_md"])
         bot_new_version = response.text.strip() if response.status_code == 200 else "N/A"
-        
         main_file_path = os.path.join(os.path.dirname(__file__), "main.py")
         with open(main_file_path, encoding='utf-8') as file:
             bot_version = next((line.replace('# ВЕРСИЯ СКРИПТА', '').strip() for line in file if line.startswith('# ВЕРСИЯ СКРИПТА')), "N/A")
-        
         service_update_info = f"*Установленная версия:* {bot_version}\n*Доступная на git версия:* {bot_new_version}"
-        
         if bot_version != "N/A" and bot_new_version != "N/A":
             try:
                 if tuple(map(int, bot_version.split("."))) < tuple(map(int, bot_new_version.split("."))):
