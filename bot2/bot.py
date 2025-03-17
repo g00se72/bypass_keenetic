@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 # ВЕРСИЯ СКРИПТА 2.0.0
-# ✅ ❌ 🔑 ❗ ⚙️ ‼️ 🤖 🚦 📲 🗑 ⏳ 💡 📑 📄 ⁉️ ➕ ➖ ⛔ 🔄
+# ✅ ❌ 🔑 ❗ ⚙️ ‼️ 🤖 🚦 📲 🗑 ⏳ 💡 📑 📄 ⁉️ ➕ ➖ ⛔ 🔄 ❕ ⚠️
 
 import subprocess
 import os
@@ -108,7 +108,7 @@ def handle_bypass_files_selection(message):
             selected_file = message.text
             set_level_and_reply(message.chat.id, 2, "Меню " + selected_file, create_bypass_list_menu())
             return
-    bot.send_message(message.chat.id, "Не найден", reply_markup=create_back_menu())
+    bot.send_message(message.chat.id, "⚠️ Не найден", reply_markup=create_back_menu())
 
 def handle_bypass_list_menu(message):
     if message.text == "📄 Показать список":
@@ -135,7 +135,7 @@ def handle_add_to_bypass(message):
         bot.send_message(message.chat.id, "✅ Успешно добавлено")
         os.system(config.services["unblock_update"])
     else:
-        bot.send_message(message.chat.id, "Было добавлено ранее")
+        bot.send_message(message.chat.id, "❕Было добавлено ранее")
     level = 2
     bot.send_message(message.chat.id, "Меню " + selected_file, reply_markup=create_bypass_list_menu())
 
@@ -151,7 +151,7 @@ def handle_remove_from_bypass(message):
         bot.send_message(message.chat.id, "✅ Успешно удалено")
         os.system(config.services["unblock_update"])
     else:
-        bot.send_message(message.chat.id, "Не найдено в списке")
+        bot.send_message(message.chat.id, "❕Не найдено в списке")
     level = 2
     bot.send_message(message.chat.id, "Меню " + selected_file, reply_markup=create_bypass_list_menu())
 
@@ -210,7 +210,7 @@ level_handlers = {
 @bot.message_handler(commands=['start'])
 def start(message):
     if message.from_user.username not in config.usernames:
-        bot.send_message(message.chat.id, '🤖 Вы не являетесь автором канала!')
+        bot.send_message(message.chat.id, '⚠️ Вы не являетесь автором канала!')
         return
     return_to_main_menu(message.chat.id)
 
@@ -225,7 +225,7 @@ def handle_update(call):
 @bot.message_handler(content_types=['text'])
 def bot_message(message):
     if message.from_user.username not in config.usernames or message.chat.type != 'private':
-        bot.send_message(message.chat.id, '🤖 Вы не являетесь автором канала или это не приватный чат!')
+        bot.send_message(message.chat.id, '⚠️ Вы не являетесь автором канала или это не приватный чат!')
         return
 
     global level, selected_file
