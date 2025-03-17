@@ -34,7 +34,7 @@ def save_bypass_list(filepath, sites):
         f.write('\n'.join(sorted(sites)))
 
 def update_service(bot, chat_id, service_name, config_func, restart_cmd):
-# Обновление конфигурации и перезапуск сервиса без отправки клавиатуры."""
+# Обновление конфигурации и перезапуск сервиса без отправки клавиатуры
     config_func()
     result = subprocess.run(restart_cmd, shell=True, capture_output=True)
     if result.returncode == 0:
