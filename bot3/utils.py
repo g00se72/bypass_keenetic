@@ -34,13 +34,14 @@ def save_bypass_list(filepath, sites):
         f.write('\n'.join(sorted(sites)))
 
 def update_service(bot, chat_id, service_name, config_func, restart_cmd):
-# Обновление конфигурации и перезапуск сервиса
+# Обновление конфигурации и перезапуск сервиса без отправки клавиатуры."""
     config_func()
     result = subprocess.run(restart_cmd, shell=True, capture_output=True)
     if result.returncode == 0:
-        bot.send_message(chat_id, f'✅ Сервис {service_name} перезапущен', reply_markup=MENU_CACHE["main"])
+        bot.send_message(chat_id, f'✅ {service_name} успешно перезапущен')
     else:
-        bot.send_message(chat_id, f'❌ Ошибка при перезапуске {service_name}: {result.stderr.decode()}')
+        error_message = result.stderr.decode().strip() or "Неизвестная ошибка"
+        bot.send_message(chat_id, f'❌ Ошибка при перезапуске {service_name}: {error_message}')
 
 def return_to_main_menu(bot, chat_id, level, selected_file):
 # Возврат в главное меню
