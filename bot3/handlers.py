@@ -253,7 +253,14 @@ def setup_handlers(bot, level, selected_file):
             '⁉️ DNS Override': lambda: bot.send_message(message.chat.id, '⁉️ DNS Override', reply_markup=MENU_CACHE["dns_override"]),
             '✅ DNS Override ВКЛ': lambda: (os.system(config.services["dns_override_on"]), os.system(config.services["save_config"]), bot.send_message(message.chat.id, '✅ DNS Override включен!\n⏳ Роутер будет перезапущен!\nЭто займет около 2 минут', reply_markup=MENU_CACHE["service"]), os.system(config.services["router_reboot"])),
             '❌ DNS Override ВЫКЛ': lambda: (os.system(config.services["dns_override_off"]), os.system(config.services["save_config"]), bot.send_message(message.chat.id, '❌ DNS Override выключен!\n⏳ Роутер будет перезапущен!\nЭто займет около 2 минут', reply_markup=MENU_CACHE["service"]), os.system(config.services["router_reboot"])),
-            '🚦 Перезапуск сервисов': lambda: (bot.send_message(message.chat.id, '⏳ Сервисы будут перезапущены!\nЭто займет около 10-15 секунд'), [os.system(srv) for srv in [config.services["shadowsocks_restart"], config.services["trojan_restart"], config.services["vless_restart"], config.services["tor_restart"]]], bot.send_message(message.chat.id, '✅ Сервисы перезагружены', reply_markup=MENU_CACHE["service"])),
+            '🚦 Перезапуск сервисов': lambda: (
+                bot.send_message(message.chat.id, '⏳ Сервисы будут перезапущены!\nЭто займет около 10-15 секунд'),
+                update_service(bot, message.chat.id, "Shadowsocks", lambda: None, config.services["shadowsocks_restart"]),
+                update_service(bot, message.chat.id, "Tor", lambda: None, config.services["tor_restart"]),
+                update_service(bot, message.chat.id, "Vless", lambda: None, config.services["vless_restart"]),
+                update_service(bot, message.chat.id, "Trojan", lambda: None, config.services["trojan_restart"]),
+                bot.send_message(message.chat.id, '✅ Перезапуск сервисов завершен', reply_markup=MENU_CACHE["main"])  # Добавляем после всех перезапусков
+            ),
             '🔄 Обновления': lambda: handle_updates(message),
             '📑 Списки обхода': lambda: set_level_and_reply(message.chat.id, 1, "📑 Списки обхода", create_bypass_files_menu()),
             '🔑 Ключи и мосты': lambda: set_level_and_reply(message.chat.id, 5, "🔑 Ключи и мосты", MENU_CACHE["keys_bridges"]),
