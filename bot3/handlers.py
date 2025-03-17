@@ -24,14 +24,8 @@ def setup_handlers(bot, level, selected_file):
     # Обработчики уровней
     def handle_bypass_files_selection(message):
         nonlocal selected_file
-        dirname = config.paths["unblock_dir"]
-        dirfiles = os.listdir(dirname)
-        for fln in dirfiles:
-            if fln == message.text + '.txt':
-                selected_file = message.text
-                set_level_and_reply(message.chat.id, 2, "Меню " + selected_file, MENU_CACHE["bypass_list"])
-                return
-        bot.send_message(message.chat.id, "⚠️ Не найден", reply_markup=create_bypass_files_menu())
+        selected_file = message.text
+        set_level_and_reply(message.chat.id, 2, "Меню " + selected_file, MENU_CACHE["bypass_list"])
 
     def handle_bypass_list_menu(message):
         filepath = f"{config.paths['unblock_dir']}{selected_file}.txt"
