@@ -6,6 +6,7 @@ import sys
 import telebot
 import time
 from handlers import setup_handlers
+from utils import log_error
 import bot_config as config
 
 bot = telebot.TeleBot(config.token)
