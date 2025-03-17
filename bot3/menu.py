@@ -74,8 +74,7 @@ def create_bypass_files_menu():
     if os.path.exists(dirname):
         dirfiles = os.listdir(dirname)
         file_buttons = [fln.replace(".txt", "") for fln in dirfiles]
-        for i in range(0, len(file_buttons), 3):
-            buttons.append(file_buttons[i:i + 3])
+        buttons.append(file_buttons)
     buttons.append(["🔙 Назад"])
     return create_menu(buttons)
 
