@@ -61,3 +61,11 @@ def toggle_dns_override(bot, chat_id, enable: bool):
         reply_markup=MENU_CACHE["service"]
     )
     os.system(config.services["router_reboot"])
+
+def log_error(message):
+# Функция для записи ошибок в файл
+    try:
+        with open(config.paths["error_log"], "a") as fl:
+            fl.write(f"{time.strftime('%Y-%m-%d %H:%M:%S')} - {message}\n")
+    except Exception as e:
+        print(f"Ошибка при записи в log файл: {e}")
