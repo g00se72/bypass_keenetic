@@ -48,3 +48,16 @@ def return_to_main_menu(bot, chat_id, level, selected_file):
     level, selected_file = 0, ""
     bot.send_message(chat_id, '🤖 Добро пожаловать в меню!', reply_markup=MENU_CACHE["main"])
     return level, selected_file
+
+def toggle_dns_override(bot, chat_id, enable: bool):
+# Включает или выключает DNS Override
+    command = config.services["dns_override_on"] if enable else config.services["dns_override_off"]
+    status_text = "включен" if enable else "выключен"
+    os.system(command)
+    os.system(config.services["save_config"])
+    bot.send_message(
+        chat_id,
+        f'{"✅" if enable else "❌"} DNS Override {status_text}!\n⏳ Роутер будет перезапущен!\nЭто займет около 2 минут',
+        reply_markup=MENU_CACHE["service"]
+    )
+    os.system(config.services["router_reboot"])
