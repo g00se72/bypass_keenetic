@@ -39,7 +39,7 @@ def create_install_remove_menu():
 
 def create_keys_bridges_menu():
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    markup.row("Shadowsocks", "Tor", "Vless", "Trojan")
+    markup.add("Shadowsocks", "Tor", "Vless", "Trojan")
     markup.row("🔙 Назад")
     return markup
 
