@@ -247,35 +247,35 @@ def setup_handlers(bot, level, selected_file):
 
         menu_commands = {
             '💡 Информация': lambda: bot.send_message(message.chat.id, requests.get(config.download_urls["info_md"]).text, reply_markup=MENU_CACHE["main"], parse_mode='Markdown', disable_web_page_preview=True),
-
+            
             '⚙️ Сервис': lambda: bot.send_message(message.chat.id, '⚙️ Сервисное меню!', reply_markup=MENU_CACHE["service"]),
-
+            
             '🤖 Перезапуск бота': lambda: (
                 bot.send_message(message.chat.id, "⏳ Бот будет перезапущен!\nЭто займет около 15-30 секунд", reply_markup=MENU_CACHE["service"]),
                 subprocess.Popen([config.paths['script_sh'], '-restart'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, close_fds=True)
             ),
-
+            
             '⛔ Перезапуск роутера': lambda: (
                 bot.send_message(message.chat.id, "⏳ Роутер будет перезапущен!\nЭто займет около 2 минут", reply_markup=MENU_CACHE["service"]),
                 os.system(config.services["router_reboot"]),
             ),
-
+            
             '⁉️ DNS Override': lambda: bot.send_message(message.chat.id, '⁉️ DNS Override', reply_markup=MENU_CACHE["dns_override"]),
-
+            
             '✅ DNS Override ВКЛ': lambda: (
                 os.system(config.services["dns_override_on"]),
                 os.system(config.services["save_config"]),
                 bot.send_message(message.chat.id, '✅ DNS Override включен!\n⏳ Роутер будет перезапущен!\nЭто займет около 2 минут', reply_markup=MENU_CACHE["service"]),
                 os.system(config.services["router_reboot"])
             ),
-
+            
             '❌ DNS Override ВЫКЛ': lambda: (
                 os.system(config.services["dns_override_off"]),
                 os.system(config.services["save_config"]),
                 bot.send_message(message.chat.id, '❌ DNS Override выключен!\n⏳ Роутер будет перезапущен!\nЭто займет около 2 минут', reply_markup=MENU_CACHE["service"]),
                 os.system(config.services["router_reboot"])
             ),
-
+            
             '🚦 Перезапуск сервисов': lambda: (
                 bot.send_message(message.chat.id, '⏳ Сервисы будут перезапущены!\nЭто займет около 10-15 секунд'),
                 update_service(bot, message.chat.id, "Shadowsocks", lambda: None, config.services["shadowsocks_restart"]),
