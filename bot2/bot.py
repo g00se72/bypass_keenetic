@@ -19,16 +19,16 @@ selected_file = ""
 # Функции для создания меню
 def create_main_menu():
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    markup.add("🔑 Ключи и мосты", "📑 Списки обхода")
-    markup.add("📲 Установка и удаление", "⚙️ Сервис")
-    markup.add("💡 Информация")
+    markup.row("🔑 Ключи и мосты", "📑 Списки обхода")
+    markup.row("📲 Установка и удаление", "⚙️ Сервис")
+    markup.row("💡 Информация")
     return markup
 
 def create_service_menu():
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    markup.add("🤖 Перезапуск бота", "⛔ Перезапуск роутера", "🚦 Перезапуск сервисов")
-    markup.add("⁉️ DNS Override", "🔄 Обновления")
-    markup.add("🔙 Назад")
+    markup.row("🤖 Перезапуск бота", "⛔ Перезапуск роутера", "🚦 Перезапуск сервисов")
+    markup.row("⁉️ DNS Override", "🔄 Обновления")
+    markup.row("🔙 Назад")
     return markup
 
 def create_install_remove_menu():
@@ -39,9 +39,8 @@ def create_install_remove_menu():
 
 def create_keys_bridges_menu():
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    markup.add("Shadowsocks", "Tor")
-    markup.add("Vless", "Trojan")
-    markup.add("🔙 Назад")
+    markup.row("Shadowsocks", "Tor", "Vless", "Trojan")
+    markup.row("🔙 Назад")
     return markup
 
 def create_bypass_list_menu():
@@ -50,15 +49,10 @@ def create_bypass_list_menu():
     markup.row("🔙 Назад")
     return markup
 
-def create_back_menu():
-    markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    markup.add("🔙 Назад")
-    return markup
-
 def create_dns_override_menu():
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    markup.add("✅ DNS Override ВКЛ", "❌ DNS Override ВЫКЛ")
-    markup.add("🔙 Назад")
+    markup.row("✅ DNS Override ВКЛ", "❌ DNS Override ВЫКЛ")
+    markup.row("🔙 Назад")
     return markup
 
 def create_bypass_files_menu():
@@ -68,6 +62,11 @@ def create_bypass_files_menu():
         dirfiles = os.listdir(dirname)
         markuplist = [fln.replace(".txt", "") for fln in dirfiles]
         markup.add(*markuplist)
+    markup.add("🔙 Назад")
+    return markup
+
+def create_back_menu():
+    markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
     markup.add("🔙 Назад")
     return markup
 
