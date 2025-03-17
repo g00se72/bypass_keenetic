@@ -262,19 +262,9 @@ def setup_handlers(bot, level, selected_file):
             
             '⁉️ DNS Override': lambda: bot.send_message(message.chat.id, '⁉️ DNS Override', reply_markup=MENU_CACHE["dns_override"]),
             
-            '✅ DNS Override ВКЛ': lambda: (
-                os.system(config.services["dns_override_on"]),
-                os.system(config.services["save_config"]),
-                bot.send_message(message.chat.id, '✅ DNS Override включен!\n⏳ Роутер будет перезапущен!\nЭто займет около 2 минут', reply_markup=MENU_CACHE["service"]),
-                os.system(config.services["router_reboot"])
-            ),
+            '✅ DNS Override ВКЛ': lambda: toggle_dns_override(bot, message.chat.id, True),
             
-            '❌ DNS Override ВЫКЛ': lambda: (
-                os.system(config.services["dns_override_off"]),
-                os.system(config.services["save_config"]),
-                bot.send_message(message.chat.id, '❌ DNS Override выключен!\n⏳ Роутер будет перезапущен!\nЭто займет около 2 минут', reply_markup=MENU_CACHE["service"]),
-                os.system(config.services["router_reboot"])
-            ),
+            '❌ DNS Override ВЫКЛ': lambda: toggle_dns_override(bot, message.chat.id, False),
             
             '🚦 Перезапуск сервисов': lambda: (
                 bot.send_message(message.chat.id, '⏳ Сервисы будут перезапущены!\nЭто займет около 10-15 секунд'),
