@@ -287,7 +287,7 @@ def setup_handlers(bot, level, selected_file):
             try:
                 if tuple(map(int, bot_version.split("."))) < tuple(map(int, bot_new_version.split("."))):
                     markup = types.InlineKeyboardMarkup()
-                    markup.add(types.InlineKeyboardButton("Обновить", callback_data="trigger_update"))
+                    markup.add(types.InlineKeyboardButton("🔄 Обновить", callback_data="trigger_update"))
                     bot.send_message(message.chat.id, f"{service_update_info}\nЕсли хотите обновить, нажмите кнопку ниже", reply_markup=markup, parse_mode='Markdown')
                 else:
                     bot.send_message(message.chat.id, f"{service_update_info}\n\nУ вас уже установлена последняя версия", parse_mode='Markdown')
