@@ -7,7 +7,7 @@ MENU_CACHE = {}
 def create_menu(buttons, resize_keyboard=True):
     markup = types.ReplyKeyboardMarkup(resize_keyboard=resize_keyboard)
     for row in buttons:
-        markup.row(*row)
+        markup.add(*row)
     return markup
 
 def init_menus():
@@ -44,8 +44,7 @@ def create_install_remove_menu():
 
 def create_keys_bridges_menu():
     buttons = [
-        ["Shadowsocks", "Tor"],
-        ["Vless", "Trojan"],
+        ["Tor", "Vless", "Trojan", "Shadowsocks"],
         ["🔙 Назад"]
     ]
     return create_menu(buttons)
