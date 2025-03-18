@@ -25,10 +25,10 @@ def write_pid(PID_FILE):
                 existing_pid = f.read().strip()
                 try:
                     os.kill(int(existing_pid), 0)
-                    log_error(f"Ошибка: бот с PID {existing_pid} уже запущен.")
+                    log_error(f"Ошибка: бот с PID {existing_pid} уже запущен")
                     return False
                 except ProcessLookupError:
-                    log_error(f"Процесс с PID {existing_pid} не найден, возможно, бот не работает.")
+                    log_error(f"Процесс с PID {existing_pid} не найден, возможно, бот не работает")
                     os.remove(PID_FILE)
 
         with open(PID_FILE, "w") as f:
