@@ -75,16 +75,27 @@ class ConfigWriter:
 
 def parse_vless_key(key, bot=None, chat_id=None):
     try:
-        if not key.startswith("vless://"):
-            raise ValueError("Ключ должен начинаться с 'vless://'")
+        vless_pattern = re.compile(
+            r"^vless://[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}"
+            r"@(?:\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|\[[0-9a-fA-F:]*\]|[a-zA-Z0-9.-]+)"
+            r":\d{1,5}(?:\?.*)?(?:#.*)?$"
+        )
+        if not vless_pattern.match(key):
+            raise ValueError("Неверный формат ключа VLESS. Ожидается: vless://<UUID>@<IP>:<порт>?параметры#имя")
+
         url = key[6:]
         parsed_url = urlparse(url)
         params = parse_qs(parsed_url.query)
         if not parsed_url.hostname or not parsed_url.username:
             raise ValueError("Отсутствует адрес сервера или ID пользователя")
+        
+        port = parsed_url.port or 443
+        if not (1 <= port <= 65535):
+            raise ValueError(f"Порт должен быть от 1 до 65535, получено: {port}")
+
         return {
             'address': parsed_url.hostname,
-            'port': parsed_url.port or 443,
+            'port': port,
             'id': parsed_url.username,
             'security': params.get('security', [''])[0],
             'encryption': params.get('encryption', ['none'])[0],
@@ -97,13 +108,18 @@ def parse_vless_key(key, bot=None, chat_id=None):
         }
     except Exception as e:
         if bot and chat_id:
-            bot.send_message(chat_id, f"❌ Ошибка в ключе Vless: {str(e)}")
+            bot.send_message(chat_id, f"❌ Ошибка в ключе VLESS: {str(e)}")
         raise
 
 def parse_trojan_key(key, bot=None, chat_id=None):
     try:
-        if not key.startswith("trojan://"):
-            raise ValueError("Ключ должен начинаться с 'trojan://'")
+        trojan_pattern = re.compile(
+            r"^trojan://[^@]+@(?:\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|\[[0-9a-fA-F:]*\]|[a-zA-Z0-9.-]+)"
+            r":\d{1,5}(?:\?.*)?(?:#.*)?$"
+        )
+        if not trojan_pattern.match(key):
+            raise ValueError("Неверный формат ключа Trojan. Ожидается: trojan://<пароль>@<IP>:<порт>?параметры#имя")
+
         key = key.split('//')[1]
         pw = key.split('@')[0]
         if not pw:
@@ -113,7 +129,12 @@ def parse_trojan_key(key, bot=None, chat_id=None):
         port = key.split(':')[1].split('?')[0].split('#')[0]
         if not host or not port.isdigit():
             raise ValueError("Некорректный адрес сервера или порт")
-        return {'pw': pw, 'host': host, 'port': int(port)}
+        
+        port_num = int(port)
+        if not (1 <= port_num <= 65535):
+            raise ValueError(f"Порт должен быть от 1 до 65535, получено: {port}")
+
+        return {'pw': pw, 'host': host, 'port': port_num}
     except Exception as e:
         if bot and chat_id:
             bot.send_message(chat_id, f"❌ Ошибка в ключе Trojan: {str(e)}")
@@ -121,8 +142,13 @@ def parse_trojan_key(key, bot=None, chat_id=None):
 
 def parse_shadowsocks_key(key, bot=None, chat_id=None):
     try:
-        if not key.startswith("ss://"):
-            raise ValueError("Ключ должен начинаться с 'ss://'")
+        ss_pattern = re.compile(
+            r"^ss://[A-Za-z0-9+/=]+@(?:\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|\[[0-9a-fA-F:]*\]|[a-zA-Z0-9.-]+)"
+            r":\d{1,5}(?:#.*)?$"
+        )
+        if not ss_pattern.match(key):
+            raise ValueError("Неверный формат ключа Shadowsocks. Ожидается: ss://<base64(метод:пароль)>@<IP>:<порт>#имя")
+
         encodedkey = key.split('//')[1].split('@')[0] + '=='
         decoded = base64.b64decode(encodedkey)
         method = str(decoded.split(b':')[0])[2:]
@@ -131,7 +157,12 @@ def parse_shadowsocks_key(key, bot=None, chat_id=None):
         port = key.split('@')[1].split('/')[0].split(':')[1].split('#')[0]
         if not server or not port.isdigit() or not method or not password:
             raise ValueError("Некорректные данные сервера, порта, метода или пароля")
-        return {'server': server, 'port': int(port), 'password': password, 'method': method}
+        
+        port_num = int(port)
+        if not (1 <= port_num <= 65535):
+            raise ValueError(f"Порт должен быть от 1 до 65535, получено: {port}")
+
+        return {'server': server, 'port': port_num, 'password': password, 'method': method}
     except Exception as e:
         if bot and chat_id:
             bot.send_message(chat_id, f"❌ Ошибка в ключе Shadowsocks: {str(e)}")
