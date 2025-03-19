@@ -12,6 +12,9 @@ from utils import (
     update_service, return_to_main_menu, toggle_dns_override
 )
 
+level = 0
+selected_file = ""
+
 def setup_handlers(bot, level, selected_file):
 #Настройка всех обработчиков
 
