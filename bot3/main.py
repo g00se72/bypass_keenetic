@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-# ВЕРСИЯ СКРИПТА 3.0.4
+# ВЕРСИЯ СКРИПТА 3.0.5
 
 import sys
 import time
