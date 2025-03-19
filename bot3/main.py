@@ -17,7 +17,7 @@ selected_file = ""
 
 if __name__ == "__main__":
     # Проверяем можно ли запустить бот
-    if not write_pid(config.paths["bot_pid_path"]):
+    if not write_pid(config.paths["pid_path"]):
         sys.exit(1)
 
     # Запуск бота и обработчиков
@@ -36,4 +36,4 @@ if __name__ == "__main__":
         log_error("Бот остановлен пользователем")
     finally:
         # Удаляем PID-файл при завершении работы
-        cleanup_pid(config.paths["bot_pid_path"])
+        cleanup_pid(config.paths["pid_path"])
