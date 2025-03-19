@@ -112,7 +112,6 @@ if [ "$1" = "-install" ]; then
 
     mkdir -p /opt/tmp/tor
     curl -o /opt/etc/tor/torrc https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/torrc && \
-    sed -i "s/hash:net/${set_type}/g" /opt/etc/tor/torrc && \
     echo "Установлены базовые настройки Tor"
 
     curl -o /opt/etc/shadowsocks.json https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/shadowsocks.json && \
@@ -227,6 +226,7 @@ if [ "$1" = "-update" ]; then
     # Массив с путями к файлам, которые будут обновлены
     for file in \
         "/opt/etc/bot.py"
+	"/opt/etc/bot_config.py"
     do
         if [ -e "$file" ]; then
             mv "$file" "${backup_dir}/$(basename "$file")"
