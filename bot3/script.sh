@@ -2,13 +2,13 @@
 
 # читаем переменные
 lanip=$(ip addr show br0 | grep -Po "(?<=inet ).*(?=/)" | awk '{print $1}')
-localportsh=$(grep "localportsh" /opt/etc/bot_config.py | grep -Eo "[0-9]{1,5}")
-#dnsporttor=$(grep "dnsporttor" /opt/etc/bot_config.py | grep -Eo "[0-9]{1,5}")
-localporttor=$(grep "localporttor" /opt/etc/bot_config.py | grep -Eo "[0-9]{1,5}")
-localportvless=$(grep "localportvless" /opt/etc/bot_config.py | grep -Eo "[0-9]{1,5}")
-localporttrojan=$(grep "localporttrojan" /opt/etc/bot_config.py | grep -Eo "[0-9]{1,5}")
-dnsovertlsport=$(grep "dnsovertlsport" /opt/etc/bot_config.py | grep -Eo "[0-9]{1,5}")
-dnsoverhttpsport=$(grep "dnsoverhttpsport" /opt/etc/bot_config.py | grep -Eo "[0-9]{1,5}")
+localportsh=$(grep "localportsh" /opt/etc/bot/bot_config.py | grep -Eo "[0-9]{1,5}")
+#dnsporttor=$(grep "dnsporttor" /opt/etc/bot/bot_config.py | grep -Eo "[0-9]{1,5}")
+localporttor=$(grep "localporttor" /opt/etc/bot/bot_config.py | grep -Eo "[0-9]{1,5}")
+localportvless=$(grep "localportvless" /opt/etc/bot/bot_config.py | grep -Eo "[0-9]{1,5}")
+localporttrojan=$(grep "localporttrojan" /opt/etc/bot/bot_config.py | grep -Eo "[0-9]{1,5}")
+dnsovertlsport=$(grep "dnsovertlsport" /opt/etc/bot/bot_config.py | grep -Eo "[0-9]{1,5}")
+dnsoverhttpsport=$(grep "dnsoverhttpsport" /opt/etc/bot/bot_config.py | grep -Eo "[0-9]{1,5}")
 keen_os_full=$(curl -s localhost:79/rci/show/version/title | tr -d \",)
 keen_os_short=$(echo "$keen_os_full" | cut -b 1)
 PID_FILE="/opt/var/run/bot.pid"
