@@ -177,6 +177,33 @@ def shadowsocks_config(key, bot=None, chat_id=None):
 
 def tor_config(bridges, bot=None, chat_id=None):
     try:
+        bridge_lines = bridges.strip().split('\n')
+        valid_transports = {"obfs4", "obfs3", "meek", "scramblesuit"}
+        for line in bridge_lines:
+            line = line.strip()
+            if not line:
+                continue
+            parts = line.split()
+            if not parts:
+                raise ValueError(f"Некорректный мост: '{line}'")
+            if parts[0] in valid_transports:
+                if len(parts) < 2:
+                    raise ValueError(f"Указан транспорт '{parts[0]}', но нет IP:порт в '{line}'")
+                ip_port = parts[1]
+            else:
+                ip_port = parts[0]
+            if ':' not in ip_port:
+                raise ValueError(f"Отсутствует порт в '{line}'")
+            ip, port = ip_port.rsplit(':', 1)
+            if ip.startswith('[') and ip.endswith(']'):
+                ip = ip[1:-1]
+                if not ip or ':' not in ip:
+                    raise ValueError(f"Некорректный IPv6 адрес в '{line}'")
+            elif '.' not in ip:
+                raise ValueError(f"Некорректный IPv4 адрес в '{line}'")
+            if not port.isdigit() or not (1 <= int(port) <= 65535):
+                raise ValueError(f"Порт должен быть числом от 1 до 65535 в '{line}'")
+
         with open(os.path.join(config.paths["templates_dir"], "tor_template.torrc"), 'r', encoding='utf-8') as f:
             config_data = f.read()
         config_data = config_data.replace("{{localporttor}}", str(config.localporttor))
@@ -184,4 +211,6 @@ def tor_config(bridges, bot=None, chat_id=None):
         config_data = config_data.replace("{{bridges}}", bridges.replace("obfs4", "Bridge obfs4"))
         ConfigWriter.write_config(config.paths["tor_config"], config_data, format='text')
     except Exception as e:
+        if bot and chat_id:
+            bot.send_message(chat_id, f"❌ Ошибка в мостах Tor: {str(e)}")
         raise
