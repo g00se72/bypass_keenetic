@@ -98,37 +98,54 @@ def setup_handlers(bot):
             set_menu_and_reply(message.chat.id, MENU_TROJAN, "🔑 Вставьте ключ Trojan")
 
     def update_service(chat_id, service_name, config_func, restart_cmd):
-        config_func()
-        result = subprocess.run(restart_cmd, shell=True, capture_output=True)
-        if result.returncode == 0:
-            bot.send_message(chat_id, f'✅ Сервис {service_name} успешно перезапущен')
-        else:
-            error_message = result.stderr.decode().strip() or "Неизвестная ошибка"
-            bot.send_message(chat_id, f'❌ Ошибка при перезапуске {service_name}: {error_message}')    
-        
+        try:
+            config_func()
+            result = subprocess.run(restart_cmd, shell=True, capture_output=True)
+            if result.returncode == 0:
+                bot.send_message(chat_id, f'✅ Сервис {service_name} успешно перезапущен')
+                return True
+            else:
+                error_message = result.stderr.decode().strip() or "Неизвестная ошибка"
+                bot.send_message(chat_id, f'❌ Ошибка при перезапуске {service_name}: {error_message}')
+                return False
+        except Exception:
+            return False
+
     def handle_tor_manually(message):
-        update_service(message.chat.id, "Tor", 
-                       lambda: tor_config(message.text, bot, message.chat.id), 
-                       config.services["tor_restart"])
-        set_menu_and_reply(message.chat.id, MENU_KEYS_BRIDGES)
+        success = update_service(message.chat.id, "Tor", 
+                                lambda: tor_config(message.text, bot, message.chat.id), 
+                                config.services["tor_restart"])
+        if success:
+            set_menu_and_reply(message.chat.id, MENU_KEYS_BRIDGES)
+        else:
+            bot.send_message(message.chat.id, "❕Попробуйте ввести мосты заново", reply_markup=state.current_menu.markup)
 
     def handle_shadowsocks(message):
-        update_service(message.chat.id, "Shadowsocks", 
-                       lambda: shadowsocks_config(message.text, bot, message.chat.id), 
-                       config.services["shadowsocks_restart"])
-        set_menu_and_reply(message.chat.id, MENU_KEYS_BRIDGES)
+        success = update_service(message.chat.id, "Shadowsocks", 
+                                lambda: shadowsocks_config(message.text, bot, message.chat.id), 
+                                config.services["shadowsocks_restart"])
+        if success:
+            set_menu_and_reply(message.chat.id, MENU_KEYS_BRIDGES)
+        else:
+            bot.send_message(message.chat.id, "❕Попробуйте ввести ключ заново", reply_markup=state.current_menu.markup)
 
     def handle_vless(message):
-        update_service(message.chat.id, "Vless", 
-                       lambda: vless_config(message.text, bot, message.chat.id), 
-                       config.services["vless_restart"])
-        set_menu_and_reply(message.chat.id, MENU_KEYS_BRIDGES)
+        success = update_service(message.chat.id, "Vless", 
+                                lambda: vless_config(message.text, bot, message.chat.id), 
+                                config.services["vless_restart"])
+        if success:
+            set_menu_and_reply(message.chat.id, MENU_KEYS_BRIDGES)
+        else:
+            bot.send_message(message.chat.id, "❕Попробуйте ввести ключ заново", reply_markup=state.current_menu.markup)
 
     def handle_trojan(message):
-        update_service(message.chat.id, "Trojan", 
-                       lambda: trojan_config(message.text, bot, message.chat.id), 
-                       config.services["trojan_restart"])
-        set_menu_and_reply(message.chat.id, MENU_KEYS_BRIDGES)
+        success = update_service(message.chat.id, "Trojan", 
+                                lambda: trojan_config(message.text, bot, message.chat.id), 
+                                config.services["trojan_restart"])
+        if success:
+            set_menu_and_reply(message.chat.id, MENU_KEYS_BRIDGES)
+        else:
+            bot.send_message(message.chat.id, "❕Попробуйте ввести ключ заново", reply_markup=state.current_menu.markup)
         
     def toggle_dns_override(chat_id, enable: bool):
         command = config.services["dns_override_on"] if enable else config.services["dns_override_off"]
