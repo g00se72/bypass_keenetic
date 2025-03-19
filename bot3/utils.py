@@ -43,12 +43,6 @@ def update_service(bot, chat_id, service_name, config_func, restart_cmd):
         error_message = result.stderr.decode().strip() or "Неизвестная ошибка"
         bot.send_message(chat_id, f'❌ Ошибка при перезапуске {service_name}: {error_message}')
 
-def return_to_main_menu(bot, chat_id, level, selected_file):
-# Возврат в главное меню
-    level, selected_file = 0, ""
-    bot.send_message(chat_id, '🤖 Добро пожаловать в меню!', reply_markup=MENU_CACHE["main"])
-    return level, selected_file
-
 def toggle_dns_override(bot, chat_id, enable: bool):
 # Включает или выключает DNS Override
     command = config.services["dns_override_on"] if enable else config.services["dns_override_off"]
