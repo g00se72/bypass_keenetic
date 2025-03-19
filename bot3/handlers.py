@@ -57,7 +57,7 @@ def setup_handlers(bot):
             mylist.update(message.text.split('\n'))
         save_bypass_list(filepath, mylist)
         if k != len(mylist):
-            bot.send_message(message.chat.id, "✅ Успешно добавлено")
+            bot.send_message(message.chat.id, "✅ Успешно добавлено, применяю изменения...")
             os.system(config.services["unblock_update"])
         else:
             bot.send_message(message.chat.id, "❕Было добавлено ранее")
@@ -72,7 +72,7 @@ def setup_handlers(bot):
         mylist.difference_update(message.text.split('\n'))
         save_bypass_list(filepath, mylist)
         if k != len(mylist):
-            bot.send_message(message.chat.id, "✅ Успешно удалено")
+            bot.send_message(message.chat.id, "✅ Успешно удалено, применяю изменения...")
             os.system(config.services["unblock_update"])
         else:
             bot.send_message(message.chat.id, "❕Не найдено в списке")
