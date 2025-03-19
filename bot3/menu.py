@@ -2,7 +2,12 @@ from telebot import types
 import bot_config as config
 import os
 
-MENU_CACHE = {}
+class Menu:
+    def __init__(self, name, markup, level, back_level=None):
+        self.name = name
+        self.markup = markup
+        self.level = level
+        self.back_level = back_level
 
 def create_menu(buttons, resize_keyboard=True):
     markup = types.ReplyKeyboardMarkup(resize_keyboard=resize_keyboard)
@@ -10,62 +15,48 @@ def create_menu(buttons, resize_keyboard=True):
         markup.add(*row)
     return markup
 
-def init_menus():
-    MENU_CACHE["main"] = create_main_menu()
-    MENU_CACHE["service"] = create_service_menu()
-    MENU_CACHE["install_remove"] = create_install_remove_menu()
-    MENU_CACHE["keys_bridges"] = create_keys_bridges_menu()
-    MENU_CACHE["bypass_list"] = create_bypass_list_menu()
-    MENU_CACHE["back"] = create_back_menu()
-    MENU_CACHE["dns_override"] = create_dns_override_menu()
+# Определение всех меню как объектов класса Menu
+MENU_MAIN = Menu("🤖 Добро пожаловать в меню!", create_menu([
+    ["🔑 Ключи и мосты", "📑 Списки обхода"],
+    ["📲 Установка и удаление", "⚙️ Сервис"],
+    ["💡 Информация"]
+]), 0)
 
-def create_main_menu():
-    buttons = [
-        ["🔑 Ключи и мосты", "📑 Списки обхода"],
-        ["📲 Установка и удаление", "⚙️ Сервис"],
-        ["💡 Информация"]
-    ]
-    return create_menu(buttons)
+MENU_BYPASS_FILES = Menu("📑 Списки обхода", None, 1, 0)
 
-def create_service_menu():
-    buttons = [
-        ["🤖 Перезапуск бота", "⛔ Перезапуск роутера", "🚦 Перезапуск сервисов"],
-        ["⁉️ DNS Override", "🔄 Обновления"],
-        ["🔙 Назад"]
-    ]
-    return create_menu(buttons)
+MENU_BYPASS_LIST = Menu("Bypass List", create_menu([
+    ["📄 Показать список", "➕ Добавить в список", "➖ Удалить из списка"],
+    ["🔙 Назад"]
+]), 2, 1)
 
-def create_install_remove_menu():
-    buttons = [
-        ["📲 Установка", "🗑 Удаление"],
-        ["🔙 Назад"]
-    ]
-    return create_menu(buttons)
+MENU_ADD_BYPASS = Menu("➕ Добавить в список", create_menu([["🔙 Назад"]]), 3, 2)
+MENU_REMOVE_BYPASS = Menu("➖ Удалить из списка", create_menu([["🔙 Назад"]]), 4, 2)
 
-def create_keys_bridges_menu():
-    buttons = [
-        ["Tor", "Vless", "Trojan", "Shadowsocks"],
-        ["🔙 Назад"]
-    ]
-    return create_menu(buttons)
+MENU_KEYS_BRIDGES = Menu("🔑 Ключи и мосты", create_menu([
+    ["Tor", "Vless", "Trojan", "Shadowsocks"],
+    ["🔙 Назад"]
+]), 5, 0)
 
-def create_bypass_list_menu():
-    buttons = [
-        ["📄 Показать список", "➕ Добавить в список", "➖ Удалить из списка"],
-        ["🔙 Назад"]
-    ]
-    return create_menu(buttons)
+MENU_TOR = Menu("Tor", create_menu([["🔙 Назад"]]), 8, 5)
+MENU_SHADOWSOCKS = Menu("Shadowsocks", create_menu([["🔙 Назад"]]), 9, 5)
+MENU_VLESS = Menu("Vless", create_menu([["🔙 Назад"]]), 10, 5)
+MENU_TROJAN = Menu("Trojan", create_menu([["🔙 Назад"]]), 11, 5)
 
-def create_back_menu():
-    buttons = [["🔙 Назад"]]
-    return create_menu(buttons)
+MENU_SERVICE = Menu("⚙️ Сервисное меню!", create_menu([
+    ["🤖 Перезапуск бота", "⛔ Перезапуск роутера", "🚦 Перезапуск сервисов"],
+    ["⁉️ DNS Override", "🔄 Обновления"],
+    ["🔙 Назад"]
+]), 6, 0)
 
-def create_dns_override_menu():
-    buttons = [
-        ["✅ DNS Override ВКЛ", "❌ DNS Override ВЫКЛ"],
-        ["🔙 Назад"]
-    ]
-    return create_menu(buttons)
+MENU_DNS_OVERRIDE = Menu("⁉️ DNS Override", create_menu([
+    ["✅ DNS Override ВКЛ", "❌ DNS Override ВЫКЛ"],
+    ["🔙 Назад"]
+]), 7, 6)
+
+MENU_INSTALL_REMOVE = Menu("📲 Установка и удаление", create_menu([
+    ["📲 Установка", "🗑 Удаление"],
+    ["🔙 Назад"]
+]), 12, 0)
 
 def create_bypass_files_menu():
     dirname = config.paths["unblock_dir"]
@@ -75,6 +66,5 @@ def create_bypass_files_menu():
         file_buttons = [fln.replace(".txt", "") for fln in dirfiles]
         buttons.append(file_buttons)
     buttons.append(["🔙 Назад"])
-    return create_menu(buttons)
-
-init_menus()
+    MENU_BYPASS_FILES.markup = create_menu(buttons)
+    return MENU_BYPASS_FILES.markup
