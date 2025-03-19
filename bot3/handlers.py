@@ -5,52 +5,53 @@ from telebot import types
 from urllib.parse import urlparse, parse_qs
 import base64
 import bot_config as config
-from menu import MENU_CACHE
-from menu import create_bypass_files_menu
+from menu import (
+    MENU_MAIN, MENU_BYPASS_FILES, MENU_BYPASS_LIST, MENU_ADD_BYPASS, MENU_REMOVE_BYPASS,
+    MENU_KEYS_BRIDGES, MENU_TOR, MENU_SHADOWSOCKS, MENU_VLESS, MENU_TROJAN,
+    MENU_SERVICE, MENU_DNS_OVERRIDE, MENU_INSTALL_REMOVE, create_bypass_files_menu
+)
 from utils import (
     download_script, send_long_message, load_bypass_list, save_bypass_list,
     update_service, toggle_dns_override
 )
 
+class BotState:
+    def __init__(self):
+        self.current_menu = MENU_MAIN
+        self.selected_file = ""
 
 def setup_handlers(bot):
-#Настройка всех обработчиков
-    level = 0
-    selected_file = ""
-
-    def return_to_main_menu(chat_id):
-        nonlocal level, selected_file
-        level = 0
-        selected_file = ""
-        bot.send_message(chat_id, '🤖 Добро пожаловать в меню!', reply_markup=MENU_CACHE["main"])
+    state = BotState()
     
-    def set_level_and_reply(chat_id, new_level, text, markup):
-        nonlocal level
-        level = new_level
-        bot.send_message(chat_id, text, reply_markup=markup)
-        return level
+    def set_menu_and_reply(chat_id, new_menu, text=None):
+        state.current_menu = new_menu
+        if not text:
+            text = new_menu.name
+        bot.send_message(chat_id, text, reply_markup=new_menu.markup)
+    
+    def go_to_bypass_files(chat_id):
+        create_bypass_files_menu()
+        set_menu_and_reply(chat_id, MENU_BYPASS_FILES)
 
-    # Обработчики уровней
+    # Обработчики действий
     def handle_bypass_files_selection(message):
-        nonlocal selected_file
-        selected_file = message.text
-        set_level_and_reply(message.chat.id, 2, "Меню " + selected_file, MENU_CACHE["bypass_list"])
+        state.selected_file = message.text
+        set_menu_and_reply(message.chat.id, MENU_BYPASS_LIST, "Меню " + state.selected_file)
 
     def handle_bypass_list_menu(message):
-        filepath = f"{config.paths['unblock_dir']}{selected_file}.txt"
+        filepath = f"{config.paths['unblock_dir']}{state.selected_file}.txt"
         if message.text == "📄 Показать список":
             sites = sorted(load_bypass_list(filepath))
             text = "Список пуст" if not sites else "\n".join(sites)
             send_long_message(bot, message.chat.id, text)
-            bot.send_message(message.chat.id, "Меню " + selected_file, reply_markup=MENU_CACHE["bypass_list"])
+            bot.send_message(message.chat.id, "Меню " + state.selected_file, reply_markup=MENU_BYPASS_LIST.markup)
         elif message.text == "➕ Добавить в список":
-            set_level_and_reply(message.chat.id, 3, "Введите сайт, домен или IP-адресс для добавления", MENU_CACHE["back"])
+            set_menu_and_reply(message.chat.id, MENU_ADD_BYPASS, "Введите сайт, домен или IP-адресс для добавления")
         elif message.text == "➖ Удалить из списка":
-            set_level_and_reply(message.chat.id, 4, "Введите сайт, домен или IP-адресс для удаления", MENU_CACHE["back"])
+            set_menu_and_reply(message.chat.id, MENU_REMOVE_BYPASS, "Введите сайт, домен или IP-адресс для удаления")
 
     def handle_add_to_bypass(message):
-        nonlocal level
-        filepath = f"{config.paths['unblock_dir']}{selected_file}.txt"
+        filepath = f"{config.paths['unblock_dir']}{state.selected_file}.txt"
         mylist = load_bypass_list(filepath)
         k = len(mylist)
         if len(message.text) > 1:
@@ -61,12 +62,10 @@ def setup_handlers(bot):
             os.system(config.services["unblock_update"])
         else:
             bot.send_message(message.chat.id, "❕Было добавлено ранее")
-        level = 2
-        bot.send_message(message.chat.id, "Меню " + selected_file, reply_markup=MENU_CACHE["bypass_list"])
+        set_menu_and_reply(message.chat.id, MENU_BYPASS_LIST, "Меню " + state.selected_file)
 
     def handle_remove_from_bypass(message):
-        nonlocal level
-        filepath = f"{config.paths['unblock_dir']}{selected_file}.txt"
+        filepath = f"{config.paths['unblock_dir']}{state.selected_file}.txt"
         mylist = load_bypass_list(filepath)
         k = len(mylist)
         mylist.difference_update(message.text.split('\n'))
@@ -76,18 +75,17 @@ def setup_handlers(bot):
             os.system(config.services["unblock_update"])
         else:
             bot.send_message(message.chat.id, "❕Не найдено в списке")
-        level = 2
-        bot.send_message(message.chat.id, "Меню " + selected_file, reply_markup=MENU_CACHE["bypass_list"])
+        set_menu_and_reply(message.chat.id, MENU_BYPASS_LIST, "Меню " + state.selected_file)
 
     def handle_keys_bridges_selection(message):
         if message.text == 'Tor':
-            set_level_and_reply(message.chat.id, 8, "🔑 Скопируйте мосты сюда", MENU_CACHE["back"])
+            set_menu_and_reply(message.chat.id, MENU_TOR, "🔑 Скопируйте мосты сюда")
         elif message.text == 'Shadowsocks':
-            set_level_and_reply(message.chat.id, 9, "🔑 Скопируйте ключ сюда", MENU_CACHE["back"])
+            set_menu_and_reply(message.chat.id, MENU_SHADOWSOCKS, "🔑 Скопируйте ключ сюда")
         elif message.text == 'Vless':
-            set_level_and_reply(message.chat.id, 10, "🔑 Скопируйте ключ сюда", MENU_CACHE["back"])
+            set_menu_and_reply(message.chat.id, MENU_VLESS, "🔑 Скопируйте ключ сюда")
         elif message.text == 'Trojan':
-            set_level_and_reply(message.chat.id, 11, "🔑 Скопируйте ключ сюда", MENU_CACHE["back"])
+            set_menu_and_reply(message.chat.id, MENU_TROJAN, "🔑 Скопируйте ключ сюда")
 
     # Функции конфигурации сервисов
     def vless_config(key):
@@ -182,29 +180,71 @@ def setup_handlers(bot):
                 f'{bridges.replace("obfs4", "Bridge obfs4")}'
             )
             f.write(sh)
-
+            
     # Обработчики сервисов
     def handle_tor_manually(message):
         update_service(bot, message.chat.id, "Tor", 
                        lambda: tor_config(message.text), 
                        config.services["tor_restart"])
+        set_menu_and_reply(message.chat.id, MENU_KEYS_BRIDGES)
 
     def handle_shadowsocks(message):
         update_service(bot, message.chat.id, "Shadowsocks", 
                        lambda: shadowsocks_config(message.text), 
                        config.services["shadowsocks_restart"])
+        set_menu_and_reply(message.chat.id, MENU_KEYS_BRIDGES)
 
     def handle_vless(message):
         update_service(bot, message.chat.id, "Vless", 
                        lambda: vless_config(message.text), 
                        config.services["vless_restart"])
+        set_menu_and_reply(message.chat.id, MENU_KEYS_BRIDGES)
 
     def handle_trojan(message):
         update_service(bot, message.chat.id, "Trojan", 
                        lambda: trojan_config(message.text), 
                        config.services["trojan_restart"])
+        set_menu_and_reply(message.chat.id, MENU_KEYS_BRIDGES)
 
-    level_handlers = {
+    # Словарь переходов и действий
+    MENU_TRANSITIONS = {
+        '🔙 Назад': lambda chat_id: (
+        set_menu_and_reply(chat_id, next(
+            (m for m in [MENU_MAIN, MENU_BYPASS_FILES, MENU_BYPASS_LIST, MENU_ADD_BYPASS, MENU_REMOVE_BYPASS,
+                         MENU_KEYS_BRIDGES, MENU_TOR, MENU_SHADOWSOCKS, MENU_VLESS, MENU_TROJAN,
+                         MENU_SERVICE, MENU_DNS_OVERRIDE, MENU_INSTALL_REMOVE]
+             if m.level == state.current_menu.back_level), MENU_MAIN))
+        ),
+        '💡 Информация': lambda chat_id: bot.send_message(chat_id, requests.get(config.download_urls["info_md"]).text, reply_markup=MENU_MAIN.markup, parse_mode='Markdown', disable_web_page_preview=True),
+        '📑 Списки обхода': go_to_bypass_files,
+        '🔑 Ключи и мосты': lambda chat_id: set_menu_and_reply(chat_id, MENU_KEYS_BRIDGES),
+        '⚙️ Сервис': lambda chat_id: set_menu_and_reply(chat_id, MENU_SERVICE),
+        '🤖 Перезапуск бота': lambda chat_id: (
+            bot.send_message(chat_id, "⏳ Бот будет перезапущен!\nЭто займет около 15-30 секунд", reply_markup=MENU_SERVICE.markup),
+            subprocess.Popen([config.paths['script_sh'], '-restart'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, close_fds=True)
+        ),
+        '⛔ Перезапуск роутера': lambda chat_id: (
+            bot.send_message(chat_id, "⏳ Роутер будет перезапущен!\nЭто займет около 2 минут", reply_markup=MENU_SERVICE.markup),
+            os.system(config.services["router_reboot"])
+        ),
+        '⁉️ DNS Override': lambda chat_id: set_menu_and_reply(chat_id, MENU_DNS_OVERRIDE),
+        '✅ DNS Override ВКЛ': lambda chat_id: toggle_dns_override(bot, chat_id, True),
+        '❌ DNS Override ВЫКЛ': lambda chat_id: toggle_dns_override(bot, chat_id, False),
+        '🚦 Перезапуск сервисов': lambda chat_id: (
+            bot.send_message(chat_id, '⏳ Сервисы будут перезапущены!\nЭто займет около 10-15 секунд'),
+            update_service(bot, chat_id, "Shadowsocks", lambda: None, config.services["shadowsocks_restart"]),
+            update_service(bot, chat_id, "Tor", lambda: None, config.services["tor_restart"]),
+            update_service(bot, chat_id, "Vless", lambda: None, config.services["vless_restart"]),
+            update_service(bot, chat_id, "Trojan", lambda: None, config.services["trojan_restart"]),
+            bot.send_message(chat_id, '✅ Перезапуск сервисов завершен', reply_markup=MENU_MAIN.markup)
+        ),
+        '🔄 Обновления': lambda chat_id: handle_updates(chat_id),
+        '📲 Установка и удаление': lambda chat_id: set_menu_and_reply(chat_id, MENU_INSTALL_REMOVE),
+        '📲 Установка': lambda chat_id: handle_install(chat_id),
+        '🗑 Удаление': lambda chat_id: handle_remove(chat_id),
+    }
+
+    LEVEL_HANDLERS = {
         1: handle_bypass_files_selection,
         2: handle_bypass_list_menu,
         3: handle_add_to_bypass,
@@ -216,14 +256,12 @@ def setup_handlers(bot):
         11: handle_trojan,
     }
 
-    # Обработчики команд
     @bot.message_handler(commands=['start'])
     def start(message):
         if message.from_user.username not in config.usernames:
             bot.send_message(message.chat.id, '⚠️ Вы не являетесь автором канала!')
             return
-        nonlocal level, selected_file
-        return_to_main_menu(message.chat.id)
+        set_menu_and_reply(message.chat.id, MENU_MAIN)
 
     @bot.callback_query_handler(func=lambda call: call.data == "trigger_update")
     def handle_update(call):
@@ -235,61 +273,16 @@ def setup_handlers(bot):
 
     @bot.message_handler(content_types=['text'])
     def bot_message(message):
-        nonlocal level, selected_file
         if message.from_user.username not in config.usernames or message.chat.type != 'private':
             bot.send_message(message.chat.id, '⚠️ Вы не являетесь автором канала или это не приватный чат!')
             return
 
-        if message.text == '🔙 Назад':
-            if level in (3, 4):
-                level = 2
-                bot.send_message(message.chat.id, "Меню " + selected_file, reply_markup=MENU_CACHE["bypass_list"])
-            elif level == 2:
-                level = 1
-                bot.send_message(message.chat.id, "📑 Списки обхода", reply_markup=create_bypass_files_menu())
-            elif level in (8, 9, 10, 11):
-                level = 5
-                bot.send_message(message.chat.id, "🔑 Ключи и мосты", reply_markup=MENU_CACHE["keys_bridges"])
-            else:
-                return_to_main_menu(message.chat.id)
-            return
+        if message.text in MENU_TRANSITIONS:
+            MENU_TRANSITIONS[message.text](message.chat.id)
+        elif state.current_menu.level in LEVEL_HANDLERS:
+            LEVEL_HANDLERS[state.current_menu.level](message)
 
-        menu_commands = {
-            '💡 Информация': lambda: bot.send_message(message.chat.id, requests.get(config.download_urls["info_md"]).text, reply_markup=MENU_CACHE["main"], parse_mode='Markdown', disable_web_page_preview=True),
-            '📑 Списки обхода': lambda: set_level_and_reply(message.chat.id, 1, "📑 Списки обхода", create_bypass_files_menu()),
-            '🔑 Ключи и мосты': lambda: set_level_and_reply(message.chat.id, 5, "🔑 Ключи и мосты", MENU_CACHE["keys_bridges"]),
-            '⚙️ Сервис': lambda: bot.send_message(message.chat.id, '⚙️ Сервисное меню!', reply_markup=MENU_CACHE["service"]),
-            '🤖 Перезапуск бота': lambda: (
-                bot.send_message(message.chat.id, "⏳ Бот будет перезапущен!\nЭто займет около 15-30 секунд", reply_markup=MENU_CACHE["service"]),
-                subprocess.Popen([config.paths['script_sh'], '-restart'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, close_fds=True)
-            ),
-            '⛔ Перезапуск роутера': lambda: (
-                bot.send_message(message.chat.id, "⏳ Роутер будет перезапущен!\nЭто займет около 2 минут", reply_markup=MENU_CACHE["service"]),
-                os.system(config.services["router_reboot"]),
-            ),
-            '⁉️ DNS Override': lambda: bot.send_message(message.chat.id, '⁉️ DNS Override', reply_markup=MENU_CACHE["dns_override"]),
-            '✅ DNS Override ВКЛ': lambda: toggle_dns_override(bot, message.chat.id, True),
-            '❌ DNS Override ВЫКЛ': lambda: toggle_dns_override(bot, message.chat.id, False),
-            '🚦 Перезапуск сервисов': lambda: (
-                bot.send_message(message.chat.id, '⏳ Сервисы будут перезапущены!\nЭто займет около 10-15 секунд'),
-                update_service(bot, message.chat.id, "Shadowsocks", lambda: None, config.services["shadowsocks_restart"]),
-                update_service(bot, message.chat.id, "Tor", lambda: None, config.services["tor_restart"]),
-                update_service(bot, message.chat.id, "Vless", lambda: None, config.services["vless_restart"]),
-                update_service(bot, message.chat.id, "Trojan", lambda: None, config.services["trojan_restart"]),
-                bot.send_message(message.chat.id, '✅ Перезапуск сервисов завершен', reply_markup=MENU_CACHE["main"])
-            ),
-            '🔄 Обновления': lambda: handle_updates(message),
-            '📲 Установка и удаление': lambda: bot.send_message(message.chat.id, '📲 Установка и удаление', reply_markup=MENU_CACHE["install_remove"]),
-            '📲 Установка': lambda: handle_install(message),
-            '🗑 Удаление': lambda: handle_remove(message),
-        }
-
-        if message.text in menu_commands:
-            menu_commands[message.text]()
-        elif level in level_handlers:
-            level_handlers[level](message)
-
-    def handle_updates(message):
+    def handle_updates(chat_id):
         response = requests.get(config.download_urls["version_md"])
         bot_new_version = response.text.strip() if response.status_code == 200 else "N/A"
         main_file_path = os.path.join(os.path.dirname(__file__), "main.py")
@@ -301,23 +294,23 @@ def setup_handlers(bot):
                 if tuple(map(int, bot_version.split("."))) < tuple(map(int, bot_new_version.split("."))):
                     markup = types.InlineKeyboardMarkup()
                     markup.add(types.InlineKeyboardButton("🔄 Обновить", callback_data="trigger_update"))
-                    bot.send_message(message.chat.id, f"{service_update_info}\nЕсли хотите обновить, нажмите кнопку ниже", reply_markup=markup, parse_mode='Markdown')
+                    bot.send_message(chat_id, f"{service_update_info}\nЕсли хотите обновить, нажмите кнопку ниже", reply_markup=markup, parse_mode='Markdown')
                 else:
-                    bot.send_message(message.chat.id, f"{service_update_info}\nУ вас уже установлена последняя версия", parse_mode='Markdown')
+                    bot.send_message(chat_id, f"{service_update_info}\nУ вас уже установлена последняя версия", parse_mode='Markdown')
             except ValueError:
-                bot.send_message(message.chat.id, f"{service_update_info}\nОшибка: версии имеют неверный формат", parse_mode='Markdown')
+                bot.send_message(chat_id, f"{service_update_info}\nОшибка: версии имеют неверный формат", parse_mode='Markdown')
         else:
-            bot.send_message(message.chat.id, f"{service_update_info}\nНе удалось проверить обновления", parse_mode='Markdown')
+            bot.send_message(chat_id, f"{service_update_info}\nНе удалось проверить обновления", parse_mode='Markdown')
 
-    def handle_install(message):
+    def handle_install(chat_id):
         download_script()
         install = subprocess.Popen([config.paths['script_sh'], '-install'], stdout=subprocess.PIPE)
         results = "\n".join(line.decode().strip() for line in install.stdout)
         full_message = f"{results}\n\nУстановка завершена. Теперь нужно настроить роутер и перейти к спискам для разблокировок. Ключи устанавливаются вручную - Ключи и Мосты -> Tor, Vless, Shadowsocks, Trojan.\n\nДля завершения настройки зайдите в меню Сервис -> DNS Override -> ВКЛ. Роутер перезагрузится, это займёт около 2 минут"
-        bot.send_message(message.chat.id, full_message, reply_markup=MENU_CACHE["main"])
+        bot.send_message(chat_id, full_message, reply_markup=MENU_MAIN.markup)
 
-    def handle_remove(message):
+    def handle_remove(chat_id):
         download_script()
         remove = subprocess.Popen([config.paths['script_sh'], '-remove'], stdout=subprocess.PIPE)
         results = "\n".join(line.decode().strip() for line in remove.stdout)
-        bot.send_message(message.chat.id, results, reply_markup=MENU_CACHE["service"])
+        bot.send_message(chat_id, results, reply_markup=MENU_SERVICE.markup)
