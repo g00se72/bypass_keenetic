@@ -109,24 +109,30 @@ if [ "$1" = "-install" ]; then
     sed -i "s/hash:net/${set_type}/g" /opt/etc/ndm/fs.d/100-ipset.sh && \
     echo "Созданы файлы под множества"
     chmod 755 /opt/etc/ndm/fs.d/100-ipset.sh || chmod +x /opt/etc/ndm/fs.d/100-ipset.sh
-
+    
     mkdir -p /opt/tmp/tor
-    curl -o /opt/etc/tor/torrc https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/torrc && \
-    sed -i "s/hash:net/${set_type}/g" /opt/etc/tor/torrc && \
+    curl -o /opt/etc/tor/torrc https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/tor_template.torrc && \
     echo "Установлены базовые настройки Tor"
 
-    curl -o /opt/etc/shadowsocks.json https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/shadowsocks.json && \
+    curl -o /opt/etc/shadowsocks.json https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/shadowsocks_template.json && \
     sed -i "s/ss-local/ss-redir/g" /opt/etc/init.d/S22shadowsocks && \
     echo "Установлены базовые настройки Shadowsocks"
     chmod 755 /opt/etc/init.d/S22shadowsocks || chmod +x /opt/etc/init.d/S22shadowsocks
 
-    curl -o /opt/etc/trojan/config.json https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/trojanconfig.json && \
+    curl -o /opt/etc/trojan/config.json https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/trojan_template.json && \
     echo "Установлены базовые настройки Trojan"
     
-    curl -o /opt/etc/xray/config.json https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/vlessconfig.json && \
+    curl -o /opt/etc/xray/config.json https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/vless_template.json && \
     sed -i 's|ARGS="run -confdir /opt/etc/xray"|ARGS="run -c /opt/etc/xray/config.json"|' /opt/etc/init.d/S24xray > /dev/null && \
     echo "Установлены базовые настройки Xray"
     chmod 755 /opt/etc/init.d/S24xray || chmod +x /opt/etc/init.d/S24xray
+
+    mkdir -p /opt/etc/bot/templates
+    curl -o /opt/etc/bot/templates/tor_template.torrc https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/tor_template.torrc
+    curl -o /opt/etc/bot/templates/vless_template.json https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/vless_template.json
+    curl -o /opt/etc/bot/templates/trojan_template.json https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/trojan_template.json
+    curl -o /opt/etc/bot/templates/shadowsocks_template.json https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/shadowsocks_template.json
+    echo "Загружены темплейты конфигураций для Tor, Shadowsocks, Vless, Trojan"
 
     # создание unblock папки и файлов под домены и ip-адреса
     mkdir -p /opt/etc/unblock
@@ -225,17 +231,15 @@ if [ "$1" = "-update" ]; then
     backup_dir="/opt/root/backup-${now}"
     mkdir -p "${backup_dir}"
     # Массив с путями к файлам, которые будут обновлены
-    for file in \
-        "/opt/etc/bot/main.py" \
-        "/opt/etc/bot/menu.py" \
-        "/opt/etc/bot/utils.py" \
-        "/opt/etc/bot/handlers.py"
-    do
-        if [ -e "$file" ]; then
-            mv "$file" "${backup_dir}/$(basename "$file")"
+    items_to_backup=(
+        "/opt/etc/bot/"
+    )
+    for item in "${items_to_backup[@]}"; do
+        if [ -e "$item" ]; then
+            cp -r "$item" "${backup_dir}/"
         fi
     done
-    echo "Бэкап создан"
+    echo "Бэкап выполнен в ${backup_dir}"
 	
     #что нужно обновить
     curl -s -o /opt/etc/bot/main.py https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/bot3/main.py || exit 1
