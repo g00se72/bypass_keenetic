@@ -8,10 +8,13 @@ from handlers import setup_handlers
 from utils import log_error, write_pid, cleanup_pid
 import bot_config as config
 
-bot = telebot.TeleBot(config.token)
-
 restart_count = 0
 
+if not config.token or config.token.strip() == "":
+    log_error("Ошибка: Токен не указан или пустой в bot_config.py")
+    sys.exit(1)
+
+bot = telebot.TeleBot(config.token)
 
 if __name__ == "__main__":
     # Проверяем можно ли запустить бот
