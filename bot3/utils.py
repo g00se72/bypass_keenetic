@@ -5,7 +5,7 @@ import bot_config as config
 from menu import MENU_CACHE
 
 def download_script():
-    # Загрузка скрипта с установкой прав
+# Загрузка скрипта с установкой прав
     subprocess.run(["curl", "-s", "-o", config.paths["script_sh"], config.download_urls["script_sh"]])
     os.chmod(config.paths["script_sh"], 0o0755)
 
@@ -64,8 +64,8 @@ def log_error(message):
     except Exception as e:
         print(f"Ошибка при записи в log файл: {e}")
 
-# Функция для записи PID в файл
 def write_pid(pid_file):
+# Функция для записи PID в файл
     try:
         pid = os.getpid()
         if os.path.exists(pid_file):
@@ -87,8 +87,8 @@ def write_pid(pid_file):
         log_error(f"Ошибка при записи в файл PID: {e}")
         return False
 
-# Функция для очистки файла PID при завершении работы
 def cleanup_pid(pid_file):
+# Функция для очистки файла PID при завершении работы
     try:
         if os.path.exists(pid_file):
             os.remove(pid_file)
