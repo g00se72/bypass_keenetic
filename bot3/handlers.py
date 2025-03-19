@@ -89,13 +89,13 @@ def setup_handlers(bot):
 
     def handle_keys_bridges_selection(message):
         if message.text == 'Tor':
-            set_menu_and_reply(message.chat.id, MENU_TOR, "🔑 Скопируйте мосты сюда")
+            set_menu_and_reply(message.chat.id, MENU_TOR, "🔑 Вставьте мосты Tor")
         elif message.text == 'Shadowsocks':
-            set_menu_and_reply(message.chat.id, MENU_SHADOWSOCKS, "🔑 Скопируйте ключ сюда")
+            set_menu_and_reply(message.chat.id, MENU_SHADOWSOCKS, "🔑 Вставьте ключ Shadowsocks")
         elif message.text == 'Vless':
-            set_menu_and_reply(message.chat.id, MENU_VLESS, "🔑 Скопируйте ключ сюда")
+            set_menu_and_reply(message.chat.id, MENU_VLESS, "🔑 Вставьте ключ Vless")
         elif message.text == 'Trojan':
-            set_menu_and_reply(message.chat.id, MENU_TROJAN, "🔑 Скопируйте ключ сюда")
+            set_menu_and_reply(message.chat.id, MENU_TROJAN, "🔑 Вставьте ключ Trojan")
 
     def update_service(chat_id, service_name, config_func, restart_cmd):
         config_func()
