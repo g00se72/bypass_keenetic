@@ -2,15 +2,15 @@ import os
 import time
 import subprocess
 import bot_config as config
-from menu import MENU_CACHE
+from menu import MENU_SERVICE
 
 def download_script():
-# Загрузка скрипта с установкой прав
+    # Загрузка скрипта с установкой прав
     subprocess.run(["curl", "-s", "-o", config.paths["script_sh"], config.download_urls["script_sh"]])
     os.chmod(config.paths["script_sh"], 0o0755)
 
 def send_long_message(bot, chat_id, text, parse_mode=None):
-# Отправка длинных сообщений по частям
+    # Отправка длинных сообщений по частям
     current_part = ""
     for line in text.split('\n'):
         if len(current_part + '\n' + line) > 4096:
@@ -22,19 +22,19 @@ def send_long_message(bot, chat_id, text, parse_mode=None):
         bot.send_message(chat_id, current_part, parse_mode=parse_mode)
 
 def load_bypass_list(filepath):
-# Загрузка списка обхода из файла
+    # Загрузка списка обхода из файла
     if not os.path.exists(filepath):
         return set()
     with open(filepath, 'r', encoding='utf-8') as f:
         return set(line.strip() for line in f if line.strip())
 
 def save_bypass_list(filepath, sites):
-# Сохранение списка обхода в файл
+    # Сохранение списка обхода в файл
     with open(filepath, 'w', encoding='utf-8') as f:
         f.write('\n'.join(sorted(sites)))
 
 def update_service(bot, chat_id, service_name, config_func, restart_cmd):
-# Обновление конфигурации и перезапуск сервиса без отправки клавиатуры
+    # Обновление конфигурации и перезапуск сервиса без отправки клавиатуры
     config_func()
     result = subprocess.run(restart_cmd, shell=True, capture_output=True)
     if result.returncode == 0:
@@ -44,7 +44,7 @@ def update_service(bot, chat_id, service_name, config_func, restart_cmd):
         bot.send_message(chat_id, f'❌ Ошибка при перезапуске {service_name}: {error_message}')
 
 def toggle_dns_override(bot, chat_id, enable: bool):
-# Включает или выключает DNS Override
+    # Включает или выключает DNS Override
     command = config.services["dns_override_on"] if enable else config.services["dns_override_off"]
     status_text = "включен" if enable else "выключен"
     os.system(command)
@@ -52,12 +52,12 @@ def toggle_dns_override(bot, chat_id, enable: bool):
     bot.send_message(
         chat_id,
         f'{"✅" if enable else "❌"} DNS Override {status_text}!\n⏳ Роутер будет перезапущен!\nЭто займет около 2 минут',
-        reply_markup=MENU_CACHE["service"]
+        reply_markup=MENU_SERVICE.markup
     )
     os.system(config.services["router_reboot"])
 
 def log_error(message):
-# Функция для записи ошибок в файл
+    # Функция для записи ошибок в файл
     try:
         with open(config.paths["error_log"], "a") as fl:
             fl.write(f"{time.strftime('%Y-%m-%d %H:%M:%S')} - {message}\n")
@@ -65,7 +65,7 @@ def log_error(message):
         print(f"Ошибка при записи в log файл: {e}")
 
 def write_pid(pid_file):
-# Функция для записи PID в файл
+    # Функция для записи PID в файл
     try:
         pid = os.getpid()
         if os.path.exists(pid_file):
@@ -88,7 +88,7 @@ def write_pid(pid_file):
         return False
 
 def cleanup_pid(pid_file):
-# Функция для очистки файла PID при завершении работы
+    # Функция для очистки файла PID при завершении работы
     try:
         if os.path.exists(pid_file):
             os.remove(pid_file)
