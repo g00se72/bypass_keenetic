@@ -11,7 +11,7 @@ import bot_config as config
 restart_count = 0
 
 if not config.token or config.token.strip() == "" or ":" not in config.token or len(config.token) < 10:
-    log_error("Ошибка: Токен не указан или пустой в bot_config.py")
+    log_error("Ошибка: Токен не указан или имеет неверный формат в bot_config.py")
     sys.exit(1)
 
 bot = telebot.TeleBot(config.token)
