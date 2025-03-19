@@ -20,7 +20,7 @@ if __name__ == "__main__":
 
     # Запуск бота и обработчиков
     log_error("Бот успешно запущен")
-    setup_handlers(bot, level, selected_file)
+    setup_handlers(bot)
     try:
         while restart_count < config.MAX_RESTARTS:
             try:
