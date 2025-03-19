@@ -2,6 +2,7 @@ import os
 import time
 import subprocess
 import json
+import re
 from urllib.parse import urlparse, parse_qs
 import base64
 import bot_config as config
@@ -179,6 +180,7 @@ def tor_config(bridges, bot=None, chat_id=None):
     try:
         bridge_lines = bridges.strip().split('\n')
         valid_transports = {"obfs4", "obfs3", "meek", "scramblesuit"}
+        ip_port_pattern = re.compile(r"^(?:(?:\d{1,3}\.){3}\d{1,3}|\[[0-9a-fA-F:]*\]):\d{1,5}$")
         for line in bridge_lines:
             line = line.strip()
             if not line:
@@ -192,17 +194,8 @@ def tor_config(bridges, bot=None, chat_id=None):
                 ip_port = parts[1]
             else:
                 ip_port = parts[0]
-            if ':' not in ip_port:
-                raise ValueError(f"Отсутствует порт в '{line}'")
-            ip, port = ip_port.rsplit(':', 1)
-            if ip.startswith('[') and ip.endswith(']'):
-                ip = ip[1:-1]
-                if not ip or ':' not in ip:
-                    raise ValueError(f"Некорректный IPv6 адрес в '{line}'")
-            elif '.' not in ip:
-                raise ValueError(f"Некорректный IPv4 адрес в '{line}'")
-            if not port.isdigit() or not (1 <= int(port) <= 65535):
-                raise ValueError(f"Порт должен быть числом от 1 до 65535 в '{line}'")
+            if not ip_port_pattern.match(ip_port):
+                raise ValueError(f"Некорректный формат IP:порт в '{line}'")
 
         with open(os.path.join(config.paths["templates_dir"], "tor_template.torrc"), 'r', encoding='utf-8') as f:
             config_data = f.read()
