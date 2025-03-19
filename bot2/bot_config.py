@@ -1,7 +1,7 @@
 # ВЕРСИЯ СКРИПТА 2.0.0
 
 token = 'MyBotFatherToken'  # Ключ api бота
-usernames = ['MySuperLogin']  # Ваш логин в телеграмме без @, не бота. Логин именно Вашей учетной записи в ТГ.
+usernames = ['MySuperLogin']  # Ваш логин в телеграмме без @
 
 routerip = '192.168.1.1'  # IP роутера
 
