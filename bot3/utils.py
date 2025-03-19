@@ -69,3 +69,37 @@ def log_error(message):
             fl.write(f"{time.strftime('%Y-%m-%d %H:%M:%S')} - {message}\n")
     except Exception as e:
         print(f"Ошибка при записи в log файл: {e}")
+
+# Функция для записи PID в файл
+def write_pid(pid_file):
+    try:
+        pid = os.getpid()
+        if os.path.exists(pid_file):
+            with open(pid_file, "r") as f:
+                existing_pid = f.read().strip()
+                try:
+                    os.kill(int(existing_pid), 0)
+                    log_error(f"Ошибка: бот с PID {existing_pid} уже запущен")
+                    return False
+                except ProcessLookupError:
+                    log_error(f"Процесс с PID {existing_pid} не найден, возможно, бот не работает")
+                    os.remove(pid_file)
+
+        with open(pid_file, "w") as f:
+            f.write(str(pid))
+        log_error(f"PID {pid} записан в файл {pid_file}")
+        return True
+    except Exception as e:
+        log_error(f"Ошибка при записи в файл PID: {e}")
+        return False
+
+# Функция для очистки файла PID при завершении работы
+def cleanup_pid(pid_file):
+    try:
+        if os.path.exists(pid_file):
+            os.remove(pid_file)
+            log_error(f"Файл PID удален: {pid_file}")
+        else:
+            log_error(f"PID файл не найден для удаления: {pid_file}")
+    except Exception as e:
+        log_error(f"Ошибка при удалении PID файла: {e}")
