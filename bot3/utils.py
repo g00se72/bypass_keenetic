@@ -76,7 +76,7 @@ def write_pid(pid_file):
                     log_error(f"Ошибка: бот с PID {existing_pid} уже запущен")
                     return False
                 except ProcessLookupError:
-                    log_error(f"Процесс с PID {existing_pid} не найден, возможно, удаляем старый PID-файл и продолжаем")
+                    log_error(f"Процесс с PID {existing_pid} не найден, удаляем старый PID-файл и продолжаем")
                     os.remove(pid_file)
 
         with open(pid_file, "w") as f:
