@@ -1,0 +1,12 @@
+{
+  "server": ["{{server}}"],
+  "mode": "tcp_and_udp",
+  "server_port": {{port}},
+  "password": "{{password}}",
+  "timeout": 86400,
+  "method": "{{method}}",
+  "local_address": "::",
+  "local_port": {{localportsh}},
+  "fast_open": false,
+  "ipv6_first": true
+}
