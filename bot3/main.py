@@ -19,7 +19,7 @@ if __name__ == "__main__":
         sys.exit(1)
 
     # Запуск бота и обработчиков
-    log_error("Бот успешно запущен")
+    log_error("Запускаем бота...")
     setup_handlers(bot)
     try:
         while restart_count < config.MAX_RESTARTS:
