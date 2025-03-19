@@ -10,9 +10,7 @@ import bot_config as config
 
 bot = telebot.TeleBot(config.token)
 
-level = 0
 restart_count = 0
-selected_file = ""
 
 
 if __name__ == "__main__":
