@@ -9,7 +9,7 @@ from menu import MENU_CACHE
 from menu import create_bypass_files_menu
 from utils import (
     download_script, send_long_message, load_bypass_list, save_bypass_list,
-    update_service, return_to_main_menu, toggle_dns_override
+    update_service, toggle_dns_override
 )
 
 
