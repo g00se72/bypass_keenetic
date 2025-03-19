@@ -9,16 +9,16 @@ RESTART_DELAY = 60  # Задержка в секундах перед перез
 routerip = '192.168.1.1'  # IP роутера
 
 # Список vpn для выборочной маршрутизации
-vpn_allowed="IKE|SSTP|OpenVPN|Wireguard|L2TP"
+vpn_allowed = "IKE|SSTP|OpenVPN|Wireguard|L2TP"
 
-# Следующие настройки могут быть оставлены по умолчанию, но можно будет что-то поменять
-localportsh = '1082'  # локальный порт для shadowsocks
-dnsporttor = '9053'  # чтобы onion сайты открывался через любой браузер - любой открытый порт
-localporttor = '9141'  # локальный порт для тор
-localportvless = '10810'  # локальный порт для vless
-localporttrojan = '10829'  # локальный порт для trojan
-dnsovertlsport = '40500'  # можно посмотреть номер порта командой "cat /tmp/ndnproxymain.stat"
-dnsoverhttpsport = '40508'  # можно посмотреть номер порта командой "cat /tmp/ndnproxymain.stat"
+# Локальные порты
+localportsh = 1082  # локальный порт для shadowsocks
+dnsporttor = 9053  # чтобы onion сайты открывался через любой браузер - любой открытый порт
+localporttor = 9141  # локальный порт для тор
+localportvless = 10810  # локальный порт для vless
+localporttrojan = 10829  # локальный порт для trojan
+dnsovertlsport = 40500  # можно посмотреть номер порта командой "cat /tmp/ndnproxymain.stat"
+dnsoverhttpsport = 40508  # можно посмотреть номер порта командой "cat /tmp/ndnproxymain.stat"
 
 # Пути к конфигурационным файлам и директориям
 paths = {
@@ -30,6 +30,7 @@ paths = {
     "error_log": "/opt/etc/bot/error.log",
     "script_sh": "/opt/root/script.sh",
     "pid_path": "/opt/var/run/bot.pid",
+    "templates_dir": "/opt/etc/bot/templates/"
 }
 
 # Команды для перезапуска сервисов
