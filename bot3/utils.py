@@ -99,7 +99,5 @@ def cleanup_pid(pid_file):
         if os.path.exists(pid_file):
             os.remove(pid_file)
             log_error(f"Файл PID удален: {pid_file}")
-        else:
-            log_error(f"PID файл не найден для удаления: {pid_file}")
     except Exception as e:
         log_error(f"Ошибка при удалении PID файла: {e}")
