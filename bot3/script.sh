@@ -231,10 +231,11 @@ if [ "$1" = "-update" ]; then
     backup_dir="/opt/root/backup-${now}"
     mkdir -p "${backup_dir}"
     # Массив с путями к файлам, которые будут обновлены
-    items_to_backup=(
-        "/opt/etc/bot/"
-    )
-    for item in "${items_to_backup[@]}"; do
+    items_to_backup="
+    /opt/etc/bot
+    "
+
+    for item in $items_to_backup; do
         if [ -e "$item" ]; then
             cp -r "$item" "${backup_dir}/"
         fi
