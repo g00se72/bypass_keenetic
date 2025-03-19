@@ -13,7 +13,7 @@ from utils import (
 )
 
 
-def setup_handlers(bot, level, selected_file):
+def setup_handlers(bot):
 #Настройка всех обработчиков
     level = 0
     selected_file = ""
