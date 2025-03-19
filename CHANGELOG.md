@@ -1,20 +1,26 @@
-# [3.0.5 - Что нового](https://github.com/g00se72/bypass_keenetic/releases/tag/3.0.5) - 19 Марта 2025
+# [3.1.0](https://github.com/g00se72/bypass_keenetic/releases/tag/3.0.5) - 19 Марта 2025
 
 ## Что изменено
+- Переход с кэшированного меню (MENU_CACHE) на меню как класс. Каждое меню — объект класса Menu с атрибутами name, markup, level, back_level
+
+# [3.0.5 - Что нового](https://github.com/g00se72/bypass_keenetic/releases/tag/3.0.5) - 19 Марта 2025
+
 - Добавлена защита от повторного запуска (через PID)
 - Добавлена проверка токена
 - Ограничено количество перезапусков бота, добавлен таймаут
 - Добавлено логирование по работы бота
+
+## Что изменено
 - Исправлены ошибки
 - Другие незначительные изменения
 
-# [3.0.0 - Что нового](https://github.com/g00se72/bypass_keenetic/releases/tag/3.0.0) - 16 Марта 2025
+# [3.0.0](https://github.com/g00se72/bypass_keenetic/releases/tag/3.0.0) - 16 Марта 2025
 
 ## Что изменено
 - Полностью переработана структура скрипта.
   Скрипт теперь имеет следующую структуру: main.py, menu.py, handlers.py, utils.py
 
-# [2.0.0 - Что нового](https://github.com/g00se72/bypass_keenetic/releases/tag/2.0.0) - 15 Марта 2025
+# [2.0.0](https://github.com/g00se72/bypass_keenetic/releases/tag/2.0.0) - 15 Марта 2025
 
 ## Что изменено
 - Полностью переработан скрипт
