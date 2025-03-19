@@ -61,10 +61,11 @@ MENU_INSTALL_REMOVE = Menu("📲 Установка и удаление", create
 def create_bypass_files_menu():
     dirname = config.paths["unblock_dir"]
     buttons = []
-    if os.path.exists(dirname):
-        dirfiles = os.listdir(dirname)
-        file_buttons = [fln.replace(".txt", "") for fln in dirfiles]
+    if os.path.exists(dirname) and os.listdir(dirname):
+        file_buttons = [fln.replace(".txt", "") for fln in os.listdir(dirname)]
         buttons.append(file_buttons)
+    else:
+        buttons.append(["Нет доступных файлов"])
     buttons.append(["🔙 Назад"])
     MENU_BYPASS_FILES.markup = create_menu(buttons)
     return MENU_BYPASS_FILES.markup
