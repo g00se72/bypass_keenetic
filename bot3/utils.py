@@ -1,25 +1,15 @@
 import os
 import time
 import subprocess
+import json
+from urllib.parse import urlparse, parse_qs
+import base64
 import bot_config as config
-from menu import MENU_SERVICE
 
 def download_script():
     # Загрузка скрипта с установкой прав
     subprocess.run(["curl", "-s", "-o", config.paths["script_sh"], config.download_urls["script_sh"]])
     os.chmod(config.paths["script_sh"], 0o0755)
-
-def send_long_message(bot, chat_id, text, parse_mode=None):
-    # Отправка длинных сообщений по частям
-    current_part = ""
-    for line in text.split('\n'):
-        if len(current_part + '\n' + line) > 4096:
-            bot.send_message(chat_id, current_part, parse_mode=parse_mode)
-            current_part = line
-        else:
-            current_part += '\n' + line if current_part else line
-    if current_part:
-        bot.send_message(chat_id, current_part, parse_mode=parse_mode)
 
 def load_bypass_list(filepath):
     # Загрузка списка обхода из файла
@@ -32,29 +22,6 @@ def save_bypass_list(filepath, sites):
     # Сохранение списка обхода в файл
     with open(filepath, 'w', encoding='utf-8') as f:
         f.write('\n'.join(sorted(sites)))
-
-def update_service(bot, chat_id, service_name, config_func, restart_cmd):
-    # Обновление конфигурации и перезапуск сервиса без отправки клавиатуры
-    config_func()
-    result = subprocess.run(restart_cmd, shell=True, capture_output=True)
-    if result.returncode == 0:
-        bot.send_message(chat_id, f'✅ Сервис {service_name} успешно перезапущен')
-    else:
-        error_message = result.stderr.decode().strip() or "Неизвестная ошибка"
-        bot.send_message(chat_id, f'❌ Ошибка при перезапуске {service_name}: {error_message}')
-
-def toggle_dns_override(bot, chat_id, enable: bool):
-    # Включает или выключает DNS Override
-    command = config.services["dns_override_on"] if enable else config.services["dns_override_off"]
-    status_text = "включен" if enable else "выключен"
-    os.system(command)
-    os.system(config.services["save_config"])
-    bot.send_message(
-        chat_id,
-        f'{"✅" if enable else "❌"} DNS Override {status_text}!\n⏳ Роутер будет перезапущен!\nЭто займет около 2 минут',
-        reply_markup=MENU_SERVICE.markup
-    )
-    os.system(config.services["router_reboot"])
 
 def log_error(message):
     # Функция для записи ошибок в файл
@@ -95,3 +62,136 @@ def cleanup_pid(pid_file):
             log_error(f"Файл PID удален: {pid_file}")
     except Exception as e:
         log_error(f"Ошибка при удалении PID файла: {e}")
+
+class ConfigWriter:
+    @staticmethod
+    def write_config(file_path, config_data, format='json'):
+        with open(file_path, 'w', encoding='utf-8') as f:
+            if format == 'json':
+                f.write(config_data)
+            else:
+                f.write(config_data)
+
+def parse_vless_key(key, bot=None, chat_id=None):
+    try:
+        if not key.startswith("vless://"):
+            raise ValueError("Ключ должен начинаться с 'vless://'")
+        url = key[6:]
+        parsed_url = urlparse(url)
+        params = parse_qs(parsed_url.query)
+        if not parsed_url.hostname or not parsed_url.username:
+            raise ValueError("Отсутствует адрес сервера или ID пользователя")
+        return {
+            'address': parsed_url.hostname,
+            'port': parsed_url.port or 443,
+            'id': parsed_url.username,
+            'security': params.get('security', [''])[0],
+            'encryption': params.get('encryption', ['none'])[0],
+            'pbk': params.get('pbk', [''])[0],
+            'fp': params.get('fp', [''])[0],
+            'spx': params.get('spx', ['/'])[0],
+            'flow': params.get('flow', ['xtls-rprx-vision'])[0],
+            'sni': params.get('sni', [''])[0],
+            'sid': params.get('sid', [''])[0]
+        }
+    except Exception as e:
+        if bot and chat_id:
+            bot.send_message(chat_id, f"❌ Ошибка в ключе Vless: {str(e)}")
+        raise
+
+def parse_trojan_key(key, bot=None, chat_id=None):
+    try:
+        if not key.startswith("trojan://"):
+            raise ValueError("Ключ должен начинаться с 'trojan://'")
+        key = key.split('//')[1]
+        pw = key.split('@')[0]
+        if not pw:
+            raise ValueError("Отсутствует пароль")
+        key = key.replace(pw + "@", "", 1)
+        host = key.split(':')[0]
+        port = key.split(':')[1].split('?')[0].split('#')[0]
+        if not host or not port.isdigit():
+            raise ValueError("Некорректный адрес сервера или порт")
+        return {'pw': pw, 'host': host, 'port': int(port)}
+    except Exception as e:
+        if bot and chat_id:
+            bot.send_message(chat_id, f"❌ Ошибка в ключе Trojan: {str(e)}")
+        raise
+
+def parse_shadowsocks_key(key, bot=None, chat_id=None):
+    try:
+        if not key.startswith("ss://"):
+            raise ValueError("Ключ должен начинаться с 'ss://'")
+        encodedkey = key.split('//')[1].split('@')[0] + '=='
+        decoded = base64.b64decode(encodedkey)
+        method = str(decoded.split(b':')[0])[2:]
+        password = str(decoded[2:].split(b':')[1])[:-1]
+        server = key.split('@')[1].split('/')[0].split(':')[0]
+        port = key.split('@')[1].split('/')[0].split(':')[1].split('#')[0]
+        if not server or not port.isdigit() or not method or not password:
+            raise ValueError("Некорректные данные сервера, порта, метода или пароля")
+        return {'server': server, 'port': int(port), 'password': password, 'method': method}
+    except Exception as e:
+        if bot and chat_id:
+            bot.send_message(chat_id, f"❌ Ошибка в ключе Shadowsocks: {str(e)}")
+        raise
+
+def vless_config(key, bot=None, chat_id=None):
+    try:
+        params = parse_vless_key(key, bot, chat_id)
+        with open(os.path.join(config.paths["templates_dir"], "vless_template.json"), 'r', encoding='utf-8') as f:
+            template = f.read()
+        config_data = template.replace("{{localportvless}}", str(config.localportvless))
+        for key, value in params.items():
+            config_data = config_data.replace("{{" + key + "}}", str(value))
+        ConfigWriter.write_config(config.paths["vless_config"], config_data)
+    except Exception as e:
+        if bot and chat_id:
+            bot.send_message(chat_id, f"❌ Не удалось создать конфигурацию Vless: {str(e)}")
+        raise
+
+def trojan_config(key, bot=None, chat_id=None):
+    try:
+        params = parse_trojan_key(key, bot, chat_id)
+        with open(os.path.join(config.paths["templates_dir"], "trojan_template.json"), 'r', encoding='utf-8') as f:
+            template = f.read()
+        config_data = template.replace("{{localporttrojan}}", str(config.localporttrojan))
+        config_data = config_data.replace("{{host}}", params['host'])
+        config_data = config_data.replace("{{port}}", str(params['port']))
+        config_data = config_data.replace("{{pw}}", params['pw'])
+        ConfigWriter.write_config(config.paths["trojan_config"], config_data)
+    except Exception as e:
+        if bot and chat_id:
+            bot.send_message(chat_id, f"❌ Не удалось создать конфигурацию Trojan: {str(e)}")
+        raise
+
+def shadowsocks_config(key, bot=None, chat_id=None):
+    try:
+        params = parse_shadowsocks_key(key, bot, chat_id)
+        with open(os.path.join(config.paths["templates_dir"], "shadowsocks_template.json"), 'r', encoding='utf-8') as f:
+            template = f.read()
+        config_data = template.replace("{{localportsh}}", str(config.localportsh))
+        config_data = config_data.replace("{{server}}", params['server'])
+        config_data = config_data.replace("{{port}}", str(params['port']))
+        config_data = config_data.replace("{{password}}", params['password'])
+        config_data = config_data.replace("{{method}}", params['method'])
+        ConfigWriter.write_config(config.paths["shadowsocks_config"], config_data)
+    except Exception as e:
+        if bot and chat_id:
+            bot.send_message(chat_id, f"❌ Не удалось создать конфигурацию Shadowsocks: {str(e)}")
+        raise
+
+def tor_config(bridges, bot=None, chat_id=None):
+    try:
+        if not bridges.strip():
+            raise ValueError("Мосты не могут быть пустыми")
+        with open(os.path.join(config.paths["templates_dir"], "tor_template.torrc"), 'r', encoding='utf-8') as f:
+            template = f.read()
+        config_data = template.replace("{{localporttor}}", str(config.localporttor))
+        config_data = config_data.replace("{{dnsporttor}}", str(config.dnsporttor))
+        config_data = config_data.replace("{{bridges}}", bridges.replace("obfs4", "Bridge obfs4"))
+        ConfigWriter.write_config(config.paths["tor_config"], config_data, format='text')
+    except Exception as e:
+        if bot and chat_id:
+            bot.send_message(chat_id, f"❌ Не удалось создать конфигурацию Tor: {str(e)}")
+        raise
