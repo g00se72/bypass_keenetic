@@ -6,7 +6,7 @@
 		},
 	"inbounds":[
 		{
-			"port":{vlessport},
+			"port":{{localportvless}},
 			"listen":"::",
 			"protocol":"dokodemo-door",
 			"settings":{
@@ -29,13 +29,13 @@
             "settings": {
                 "vnext": [
                     {
-                        "address": "{address}",
-                        "port": {port},
+                        "address": "{{address}}",
+                        "port": {{port}},
                         "users": [
                             {
-                                "id": "{id}",
-                                "flow": "{flow}",
-                                "encryption": "{encryption}",
+                                "id": "{{id}}",
+                                "flow": "{{flow}}",
+                                "encryption": "{{encryption}}",
                                 "level": 0
                             }
                         ]
@@ -44,13 +44,13 @@
             },
             "streamSettings": {
                 "network": "tcp",
-                "security": "{security}",
+                "security": "{{security}}",
                 "realitySettings": {
-                    "publicKey": "{pbk}",
-                    "fingerprint": "{fp}",
-                    "serverName": "{sni}",
-                    "shortId": "{sid}",
-                    "spiderX": "{spx}"
+                    "publicKey": "{{pbk}}",
+                    "fingerprint": "{{fp}}",
+                    "serverName": "{{sni}}",
+                    "shortId": "{{sid}}",
+                    "spiderX": "{{spx}}"
                 }
             }
         },
