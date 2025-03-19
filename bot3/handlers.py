@@ -12,12 +12,18 @@ from utils import (
     update_service, return_to_main_menu, toggle_dns_override
 )
 
-level = 0
-selected_file = ""
 
 def setup_handlers(bot, level, selected_file):
 #Настройка всех обработчиков
+    level = 0
+    selected_file = ""
 
+    def return_to_main_menu(chat_id):
+        nonlocal level, selected_file
+        level = 0
+        selected_file = ""
+        bot.send_message(chat_id, '🤖 Добро пожаловать в меню!', reply_markup=MENU_CACHE["main"])
+    
     def set_level_and_reply(chat_id, new_level, text, markup):
         nonlocal level
         level = new_level
