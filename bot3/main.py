@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 # ВЕРСИЯ СКРИПТА 3.0.3
 
-import os
 import sys
 import time
 import telebot
@@ -22,6 +21,7 @@ if __name__ == "__main__":
         sys.exit(1)
 
     # Запуск бота и обработчиков
+    log_error("Бот успешно запущен")
     setup_handlers(bot, level, selected_file)
     try:
         while restart_count < config.MAX_RESTARTS:
@@ -32,6 +32,8 @@ if __name__ == "__main__":
                 restart_count += 1
                 time.sleep(config.RESTART_DELAY)
         log_error("Бот остановлен после достижения максимального количества попыток перезапуска")
+    except KeyboardInterrupt:
+        log_error("Бот остановлен пользователем")
     finally:
-        # Удаляем PID файл при завершении работы
+        # Удаляем PID-файл при завершении работы
         cleanup_pid(config.paths["bot_pid_path"])
