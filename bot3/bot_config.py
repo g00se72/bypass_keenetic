@@ -29,7 +29,7 @@ paths = {
     "vless_config": "/opt/etc/xray/config.json",
     "error_log": "/opt/etc/bot/error.log",
     "script_sh": "/opt/root/script.sh",
-    "pid_file": "/opt/var/run/bot.pid",
+    "bot_pid_path": "/opt/var/run/bot.pid",
 }
 
 # Команды для перезапуска сервисов
