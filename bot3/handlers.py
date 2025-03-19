@@ -236,7 +236,7 @@ def setup_handlers(bot):
             update_service(bot, chat_id, "Tor", lambda: None, config.services["tor_restart"]),
             update_service(bot, chat_id, "Vless", lambda: None, config.services["vless_restart"]),
             update_service(bot, chat_id, "Trojan", lambda: None, config.services["trojan_restart"]),
-            bot.send_message(chat_id, '✅ Перезапуск сервисов завершен', reply_markup=MENU_MAIN.markup)
+            bot.send_message(chat_id, '❕ Перезапуск сервисов завершен', reply_markup=MENU_MAIN.markup)
         ),
         '🔄 Обновления': lambda chat_id: handle_updates(chat_id),
         '📲 Установка и удаление': lambda chat_id: set_menu_and_reply(chat_id, MENU_INSTALL_REMOVE),
