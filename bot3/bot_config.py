@@ -1,7 +1,10 @@
 # ВЕРСИЯ СКРИПТА 3.0.3
 
+# Настройки бота
 token = 'MyBotFatherToken'  # Ключ api бота
-usernames = ['MySuperLogin']  # Ваш логин в телеграмме без @, не бота. Логин именно Вашей учетной записи в ТГ.
+usernames = ['MySuperLogin']  # Ваш логин в телеграмме без @
+MAX_RESTARTS = 5  # Максимальное количество перезапусков бота
+RESTART_DELAY = 60  # Задержка в секундах перед перезапуском после ошибки
 
 routerip = '192.168.1.1'  # IP роутера
 
@@ -26,6 +29,7 @@ paths = {
     "vless_config": "/opt/etc/xray/config.json",
     "error_log": "/opt/etc/bot/error.log",
     "script_sh": "/opt/root/script.sh",
+    "pid_file": "/opt/var/run/bot.pid",
 }
 
 # Команды для перезапуска сервисов
