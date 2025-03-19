@@ -1,4 +1,4 @@
-# [3.1.0](https://github.com/g00se72/bypass_keenetic/releases/tag/3.0.5) - 19 Марта 2025
+# [3.1.0](https://github.com/g00se72/bypass_keenetic/releases/tag/3.1.0) - 19 Марта 2025
 
 ## Что изменено
 - Переход с кэшированного меню (MENU_CACHE) на меню как класс. Каждое меню — объект класса Menu с атрибутами name, markup, level, back_level
