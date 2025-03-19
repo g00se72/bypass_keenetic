@@ -223,7 +223,7 @@ def setup_handlers(bot):
             bot.send_message(message.chat.id, '⚠️ Вы не являетесь автором канала!')
             return
         nonlocal level, selected_file
-        level, selected_file = return_to_main_menu(message.chat.id)
+        return_to_main_menu(message.chat.id)
 
     @bot.callback_query_handler(func=lambda call: call.data == "trigger_update")
     def handle_update(call):
@@ -251,7 +251,7 @@ def setup_handlers(bot):
                 level = 5
                 bot.send_message(message.chat.id, "🔑 Ключи и мосты", reply_markup=MENU_CACHE["keys_bridges"])
             else:
-                level, selected_file = return_to_main_menu(message.chat.id)
+                return_to_main_menu(message.chat.id)
             return
 
         menu_commands = {
