@@ -146,10 +146,8 @@ def vless_config(key, bot=None, chat_id=None):
             config_data = config_data.replace("{{" + key + "}}", str(value))
         ConfigWriter.write_config(config.paths["vless_config"], config_data)
     except Exception as e:
-        if bot and chat_id:
-            bot.send_message(chat_id, f"❌ Не удалось создать конфигурацию Vless: {str(e)}")
         raise
-
+        
 def trojan_config(key, bot=None, chat_id=None):
     try:
         params = parse_trojan_key(key, bot, chat_id)
@@ -161,8 +159,6 @@ def trojan_config(key, bot=None, chat_id=None):
         config_data = config_data.replace("{{pw}}", params['pw'])
         ConfigWriter.write_config(config.paths["trojan_config"], config_data)
     except Exception as e:
-        if bot and chat_id:
-            bot.send_message(chat_id, f"❌ Не удалось создать конфигурацию Trojan: {str(e)}")
         raise
 
 def shadowsocks_config(key, bot=None, chat_id=None):
@@ -177,21 +173,15 @@ def shadowsocks_config(key, bot=None, chat_id=None):
         config_data = config_data.replace("{{method}}", params['method'])
         ConfigWriter.write_config(config.paths["shadowsocks_config"], config_data)
     except Exception as e:
-        if bot and chat_id:
-            bot.send_message(chat_id, f"❌ Не удалось создать конфигурацию Shadowsocks: {str(e)}")
         raise
 
 def tor_config(bridges, bot=None, chat_id=None):
     try:
-        if not bridges.strip():
-            raise ValueError("Мосты не могут быть пустыми")
         with open(os.path.join(config.paths["templates_dir"], "tor_template.torrc"), 'r', encoding='utf-8') as f:
-            template = f.read()
-        config_data = template.replace("{{localporttor}}", str(config.localporttor))
+            config_data = f.read()
+        config_data = config_data.replace("{{localporttor}}", str(config.localporttor))
         config_data = config_data.replace("{{dnsporttor}}", str(config.dnsporttor))
         config_data = config_data.replace("{{bridges}}", bridges.replace("obfs4", "Bridge obfs4"))
         ConfigWriter.write_config(config.paths["tor_config"], config_data, format='text')
     except Exception as e:
-        if bot and chat_id:
-            bot.send_message(chat_id, f"❌ Не удалось создать конфигурацию Tor: {str(e)}")
         raise
