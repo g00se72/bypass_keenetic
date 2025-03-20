@@ -5,7 +5,7 @@ import sys
 import time
 import telebot
 from handlers import setup_handlers
-from utils import log_error, write_pid, cleanup_pid
+from utils import log_error, write_pid, cleanup_pid, check_restart
 import bot_config as config
 
 restart_count = 0
@@ -20,7 +20,9 @@ if __name__ == "__main__":
     # Проверяем можно ли запустить бот
     if not write_pid(config.paths["pid_path"]):
         sys.exit(1)
-
+        
+    check_restart(bot)
+    
     # Запуск бота и обработчиков
     log_error("Запускаем бота...")
     setup_handlers(bot)
