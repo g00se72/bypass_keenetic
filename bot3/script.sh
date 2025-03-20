@@ -14,7 +14,7 @@ keen_os_short=$(echo "$keen_os_full" | cut -b 1)
 PID_FILE="/opt/var/run/bot.pid"
 
 if [ "$1" = "-restart" ]; then
-    [ -f "$PID_FILE" ] && bot_pid=$(cat "$PID_FILE") && kill -0 "$bot_pid" 2>/dev/null && echo "Останавливаем бота..." && kill "$bot_pid" && sleep 3
+    [ -f "$PID_FILE" ] && bot_pid=$(cat "$PID_FILE") && kill -0 "$bot_pid" 2>/dev/null && echo "Останавливаем бота..." && kill "$bot_pid" && sleep 5
 
     python3 /opt/etc/bot/main.py &  
 
