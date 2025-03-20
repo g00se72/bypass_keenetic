@@ -100,12 +100,12 @@ def setup_handlers(bot):
     def update_service(chat_id, service_name, config_func, restart_cmd):
         try:
             config_func()
-            result = subprocess.run(restart_cmd, shell=True, capture_output=True)
+            result = subprocess.run(restart_cmd, shell=True, capture_output=True, text=True)
             if result.returncode == 0:
                 bot.send_message(chat_id, f'✅ Сервис {service_name} успешно перезапущен')
                 return True
             else:
-                error_message = result.stderr.decode().strip() or "Неизвестная ошибка"
+                error_message = result.stderr.strip() or result.stdout.strip() or "Неизвестная ошибка"
                 bot.send_message(chat_id, f'❌ Ошибка при перезапуске {service_name}: {error_message}')
                 return False
         except Exception:
