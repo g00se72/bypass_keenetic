@@ -30,7 +30,7 @@ paths = {
     "error_log": "/opt/etc/bot/error.log",
     "script_sh": "/opt/root/script.sh",
     "pid_path": "/opt/var/run/bot.pid",
-    "chat_id_path": "/tmp/bot_chat_id.txt",
+    "chat_id_path": "/opt/var/run/bot_chat_id.txt",
     "templates_dir": "/opt/etc/bot/templates/"
 }
 
