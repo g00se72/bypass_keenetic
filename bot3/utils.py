@@ -66,7 +66,7 @@ def cleanup_pid(pid_file):
 
 def check_restart(bot):
     #Проверка перезапуска бота
-    chat_id_path = paths["chat_id_path"]
+    chat_id_path = config.paths["chat_id_path"]
     if os.path.exists(chat_id_path):
         with open(chat_id_path, 'r') as f:
             chat_id = int(f.read().strip())
