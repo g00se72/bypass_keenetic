@@ -173,7 +173,6 @@ def setup_handlers(bot):
         '🔑 Ключи и мосты': lambda chat_id: set_menu_and_reply(chat_id, MENU_KEYS_BRIDGES),
         '⚙️ Сервис': lambda chat_id: set_menu_and_reply(chat_id, MENU_SERVICE),
         '🤖 Перезапуск бота': lambda call: (
-            # Сохраняем chat_id перед перезапуском
             open(config.paths["chat_id_path"], 'w').write(str(call.message.chat.id)),
             bot.send_message(call.message.chat.id, "⏳ Бот будет перезапущен!\nЭто займет около 15-30 секунд", reply_markup=MENU_SERVICE.markup),
             subprocess.Popen([config.paths['script_sh'], '-restart'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, close_fds=True)
