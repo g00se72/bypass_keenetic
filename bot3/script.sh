@@ -248,7 +248,7 @@ if [ "$1" = "-update" ]; then
     curl -s -o /opt/etc/bot/menu.py https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/bot3/menu.py || exit 1
     curl -s -o /opt/etc/bot/utils.py https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/bot3/utils.py || exit 1
     curl -s -o /opt/etc/bot/handlers.py https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/bot3/handlers.py || exit 1
-    echo "Обновления загружены"
+    echo "Обновления загружены, применяем права"
     chmod 755 /opt/etc/bot
     chmod 644 /opt/etc/bot/*.py
 
@@ -264,7 +264,7 @@ if [ "$1" = "-update" ]; then
     echo "Версия " "${bot_old_version}" " обновлена до " "${bot_new_version}"
     sleep 2
     sed -i "s/${bot_old_version}/${bot_new_version}/g" /opt/etc/bot/bot_config.py
-    echo "Обновление выполнено. Сервисы перезапущены. Сейчас будет перезапущен бот (~15-30 сек)"
+    echo "Обновление выполнено. Сейчас будет перезапущен бот (~15-30 сек)"
     sleep 2
     /bin/sh /opt/root/script.sh -restart || exit 1
 
