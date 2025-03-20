@@ -227,6 +227,33 @@ def setup_handlers(bot):
         elif state.current_menu.level in LEVEL_HANDLERS:
             LEVEL_HANDLERS[state.current_menu.level](message)
 
+    def handle_install(chat_id):
+        download_script()
+        chat_id = call.message.chat.id
+        bot.send_message(chat_id, '⏳ Начинаем утановку, подождите!')
+        process = subprocess.Popen([config.paths['script_sh'], '-install'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, bufsize=1)
+        for line in process.stdout:
+            bot.send_message(chat_id, line.strip())
+        process.wait()
+        if process.returncode == 0:
+            full_message = "Установка завершена. Теперь нужно настроить роутер и перейти к спискам для разблокировок. Ключи устанавливаются вручную - Ключи и Мосты -> Tor, Vless, Shadowsocks, Trojan.\n\nДля завершения настройки зайдите в меню Сервис -> DNS Override -> ВКЛ. Роутер перезагрузится, это займёт около 2 минут"
+            bot.send_message(chat_id, full_message, reply_markup=MENU_MAIN.markup)
+        else:
+            bot.send_message(chat_id, '❌ Установка завершилась с ошибкой')
+    
+    def handle_remove(chat_id):
+        download_script()
+        chat_id = call.message.chat.id
+        bot.send_message(chat_id, '⏳ Начинаем удаление, подождите!')
+        process = subprocess.Popen([config.paths['script_sh'], '-remove'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, bufsize=1)
+        for line in process.stdout:
+            bot.send_message(chat_id, line.strip())
+        process.wait()
+        if process.returncode == 0:
+            bot.send_message(chat_id, '✅ Удаление завершено', reply_markup=MENU_SERVICE.markup)
+        else:
+            bot.send_message(chat_id, '❌ Ошибка при удалении', reply_markup=MENU_SERVICE.markup)
+
     @bot.callback_query_handler(func=lambda call: call.data == "trigger_update")
     def handle_update(call):
         download_script()
@@ -255,30 +282,3 @@ def setup_handlers(bot):
                 bot.send_message(chat_id, f"{service_update_info}\nОшибка: версии имеют неверный формат", parse_mode='Markdown')
         else:
             bot.send_message(chat_id, f"{service_update_info}\nНе удалось проверить обновления", parse_mode='Markdown')
-
-    def handle_install(chat_id):
-        download_script()
-        chat_id = call.message.chat.id
-        bot.send_message(chat_id, '⏳ Начинаем утановку, подождите!')
-        process = subprocess.Popen([config.paths['script_sh'], '-install'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, bufsize=1)
-        for line in process.stdout:
-            bot.send_message(chat_id, line.strip())
-        process.wait()
-        if process.returncode == 0:
-            full_message = "Установка завершена. Теперь нужно настроить роутер и перейти к спискам для разблокировок. Ключи устанавливаются вручную - Ключи и Мосты -> Tor, Vless, Shadowsocks, Trojan.\n\nДля завершения настройки зайдите в меню Сервис -> DNS Override -> ВКЛ. Роутер перезагрузится, это займёт около 2 минут"
-            bot.send_message(chat_id, full_message, reply_markup=MENU_MAIN.markup)
-        else:
-            bot.send_message(chat_id, '❌ Установка завершилась с ошибкой')
-    
-    def handle_remove(chat_id):
-        download_script()
-        chat_id = call.message.chat.id
-        bot.send_message(chat_id, '⏳ Начинаем удаление, подождите!')
-        process = subprocess.Popen([config.paths['script_sh'], '-remove'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, bufsize=1)
-        for line in process.stdout:
-            bot.send_message(chat_id, line.strip())
-        process.wait()
-        if process.returncode == 0:
-            bot.send_message(chat_id, '✅ Удаление завершено', reply_markup=MENU_SERVICE.markup)
-        else:
-            bot.send_message(chat_id, '❌ Ошибка при удалении', reply_markup=MENU_SERVICE.markup)
