@@ -229,13 +229,10 @@ def setup_handlers(bot):
 
     @bot.callback_query_handler(func=lambda call: call.data == "trigger_update")
     def handle_update(call):
+        download_script()
         chat_id = call.message.chat.id
         bot.send_message(chat_id, '⏳ Устанавливаются обновления, подождите!')
-        download_script()
-        process = subprocess.Popen(
-            [config.paths['script_sh'], '-update'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True,
-            bufsize=1
-        )
+        process = subprocess.Popen([config.paths['script_sh'], '-update'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, bufsize=1)
         for line in process.stdout:
             bot.send_message(chat_id, line.strip())
 
@@ -261,13 +258,27 @@ def setup_handlers(bot):
 
     def handle_install(chat_id):
         download_script()
-        install = subprocess.Popen([config.paths['script_sh'], '-install'], stdout=subprocess.PIPE)
-        results = "\n".join(line.decode().strip() for line in install.stdout)
-        full_message = f"{results}\n\nУстановка завершена. Теперь нужно настроить роутер и перейти к спискам для разблокировок. Ключи устанавливаются вручную - Ключи и Мосты -> Tor, Vless, Shadowsocks, Trojan.\n\nДля завершения настройки зайдите в меню Сервис -> DNS Override -> ВКЛ. Роутер перезагрузится, это займёт около 2 минут"
-        bot.send_message(chat_id, full_message, reply_markup=MENU_MAIN.markup)
-
+        chat_id = call.message.chat.id
+        bot.send_message(chat_id, '⏳ Начинаем утановку, подождите!')
+        process = subprocess.Popen([config.paths['script_sh'], '-install'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, bufsize=1)
+        for line in process.stdout:
+            bot.send_message(chat_id, line.strip())
+        process.wait()
+        if process.returncode == 0:
+            full_message = "Установка завершена. Теперь нужно настроить роутер и перейти к спискам для разблокировок. Ключи устанавливаются вручную - Ключи и Мосты -> Tor, Vless, Shadowsocks, Trojan.\n\nДля завершения настройки зайдите в меню Сервис -> DNS Override -> ВКЛ. Роутер перезагрузится, это займёт около 2 минут"
+            bot.send_message(chat_id, full_message, reply_markup=MENU_MAIN.markup)
+        else:
+            bot.send_message(chat_id, '❌ Установка завершилась с ошибкой')
+    
     def handle_remove(chat_id):
         download_script()
-        remove = subprocess.Popen([config.paths['script_sh'], '-remove'], stdout=subprocess.PIPE)
-        results = "\n".join(line.decode().strip() for line in remove.stdout)
-        bot.send_message(chat_id, results, reply_markup=MENU_SERVICE.markup)
+        chat_id = call.message.chat.id
+        bot.send_message(chat_id, '⏳ Начинаем удаление, подождите!')
+        process = subprocess.Popen([config.paths['script_sh'], '-remove'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, bufsize=1)
+        for line in process.stdout:
+            bot.send_message(chat_id, line.strip())
+        process.wait()
+        if process.returncode == 0:
+            bot.send_message(chat_id, '✅ Удаление завершено', reply_markup=MENU_SERVICE.markup)
+        else:
+            bot.send_message(chat_id, '❌ Ошибка при удалении', reply_markup=MENU_SERVICE.markup)
