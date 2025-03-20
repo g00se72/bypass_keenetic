@@ -159,6 +159,12 @@ def setup_handlers(bot):
         )
         os.system(config.services["router_reboot"])
 
+    def handle_restart(chat_id):
+    bot.send_message(chat_id, "⏳ Бот будет перезапущен!\nЭто займет около 15-30 секунд", reply_markup=MENU_SERVICE.markup)
+    with open(config.paths["chat_id_path"], 'w') as f:
+        f.write(str(chat_id))
+    subprocess.Popen([config.paths['script_sh'], '-restart'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, close_fds=True)
+
     # Словарь переходов и действий
     MENU_TRANSITIONS = {
         '🔙 Назад': lambda chat_id: (
@@ -172,10 +178,7 @@ def setup_handlers(bot):
         '📑 Списки обхода': go_to_bypass_files,
         '🔑 Ключи и мосты': lambda chat_id: set_menu_and_reply(chat_id, MENU_KEYS_BRIDGES),
         '⚙️ Сервис': lambda chat_id: set_menu_and_reply(chat_id, MENU_SERVICE),
-        '🤖 Перезапуск бота': lambda chat_id: (
-            bot.send_message(chat_id, "⏳ Бот будет перезапущен!\nЭто займет около 15-30 секунд", reply_markup=MENU_SERVICE.markup),
-            subprocess.Popen([config.paths['script_sh'], '-restart'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, close_fds=True)
-        ),
+        '🤖 Перезапуск бота': lambda call: handle_restart(call.message.chat.id),
         '⛔ Перезапуск роутера': lambda chat_id: (
             bot.send_message(chat_id, "⏳ Роутер будет перезапущен!\nЭто займет около 2 минут", reply_markup=MENU_SERVICE.markup),
             os.system(config.services["router_reboot"])
