@@ -109,7 +109,8 @@ if [ "$1" = "-install" ]; then
     sed -i "s/hash:net/${set_type}/g" /opt/etc/ndm/fs.d/100-ipset.sh && \
     echo "Созданы файлы под множества"
     chmod 755 /opt/etc/ndm/fs.d/100-ipset.sh || chmod +x /opt/etc/ndm/fs.d/100-ipset.sh
-    
+
+    # базовые настройки Tor, SS, Xray, Trojan
     mkdir -p /opt/tmp/tor
     curl -o /opt/etc/tor/torrc https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/tor_template.torrc && \
     echo "Установлены базовые настройки Tor"
