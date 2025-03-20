@@ -236,7 +236,7 @@ def setup_handlers(bot):
             bot.send_message(chat_id, line.strip())
         process.wait()
         if process.returncode == 0:
-            full_message = "Установка завершена. Теперь нужно настроить роутер и перейти к спискам для разблокировок. Ключи устанавливаются вручную - Ключи и Мосты -> Tor, Vless, Shadowsocks, Trojan.\n\nДля завершения настройки зайдите в меню Сервис -> DNS Override -> ВКЛ. Роутер перезагрузится, это займёт около 2 минут"
+            full_message = "✅ Установка завершена. Теперь нужно настроить роутер и перейти к спискам для разблокировок. Ключи устанавливаются вручную - Ключи и Мосты -> Tor, Vless, Shadowsocks, Trojan.\n\nДля завершения настройки зайдите в меню Сервис -> DNS Override -> ВКЛ. Роутер перезагрузится, это займёт около 2 минут"
             bot.send_message(chat_id, full_message, reply_markup=MENU_MAIN.markup)
         else:
             bot.send_message(chat_id, '❌ Установка завершилась с ошибкой')
