@@ -31,7 +31,6 @@ paths = {
     "script_sh": "/opt/root/script.sh",
     "pid_path": "/opt/var/run/bot.pid",
     "chat_id_path": "/tmp/bot_chat_id.txt",
-    "update_log_path": "/tmp/update_log.txt",
     "templates_dir": "/opt/etc/bot/templates/"
 }
 
