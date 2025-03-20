@@ -20,12 +20,15 @@ if __name__ == "__main__":
     # Проверяем можно ли запустить бот
     if not write_pid(config.paths["pid_path"]):
         sys.exit(1)
-        
-    check_restart(bot)
     
     # Запуск бота и обработчиков
     log_error("Запускаем бота...")
     setup_handlers(bot)
+
+    # Ожидание 3 секунды перед отправкой сообщения
+    time.sleep(3)
+    check_restart(bot)
+    
     try:
         while restart_count < config.MAX_RESTARTS:
             try:
