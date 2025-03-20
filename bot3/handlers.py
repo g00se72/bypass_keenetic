@@ -229,11 +229,15 @@ def setup_handlers(bot):
 
     @bot.callback_query_handler(func=lambda call: call.data == "trigger_update")
     def handle_update(call):
-        bot.send_message(call.message.chat.id, '⏳ Устанавливаются обновления, подождите!')
+        chat_id = call.message.chat.id
+        bot.send_message(chat_id, '⏳ Устанавливаются обновления, подождите!')
         download_script()
-        update = subprocess.Popen([config.paths['script_sh'], '-update'], stdout=subprocess.PIPE)
-        results = "\n".join(line.decode().strip() for line in update.stdout)
-        bot.send_message(call.message.chat.id, results)
+        process = subprocess.Popen(
+            [config.paths['script_sh'], '-update'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True,
+            bufsize=1
+        )
+        for line in process.stdout:
+            bot.send_message(chat_id, line.strip())
 
     def handle_updates(chat_id):
         response = requests.get(config.download_urls["version_md"])
