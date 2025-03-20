@@ -64,6 +64,18 @@ def cleanup_pid(pid_file):
     except Exception as e:
         log_error(f"Ошибка при удалении PID файла: {e}")
 
+def check_restart(bot):
+    #Проверка перезапуска бота
+    chat_id_path = paths["chat_id_path"]
+    if os.path.exists(chat_id_path):
+        with open(chat_id_path, 'r') as f:
+            chat_id = int(f.read().strip())
+        try:
+            bot.send_message(chat_id, '✅ Бот перезапущен')
+        except Exception as e:
+            log_error(f"Ошибка при отправке сообщения после перезапуска: {str(e)}")
+        os.remove(chat_id_path)
+
 class ConfigWriter:
     @staticmethod
     def write_config(file_path, config_data, format='json'):
