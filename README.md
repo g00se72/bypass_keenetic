@@ -42,51 +42,40 @@ python get-pip.py
 pip install pyTelegramBotAPI telethon pathlib
 ```
 
-Загрузить первую версию бота (оставлю для истории в репозитории)
-
-```bash
-curl -o /opt/etc/bot.py https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/bot.py
-curl -o /opt/etc/bot_config.py https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/bot_config.py
-
-chmod 644 /opt/etc/bot.py
-chmod 644 /opt/etc/bot_config.py
-```
-
-или любую из новых версий (пока тестируются)
-
-```bash
-curl -o /opt/etc/bot.py https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/bot2/bot.py
-curl -o /opt/etc/bot_config.py https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/bot2/bot_config.py
-
-chmod 644 /opt/etc/bot.py
-chmod 644 /opt/etc/bot_config.py
-```
+Загрузить бота
 
 ```bash
 mkdir -p /opt/etc/bot
+```
+```bash
 curl -o /opt/etc/bot/main.py https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/bot3/main.py
+```
+```bash
 curl -o /opt/etc/bot/menu.py https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/bot3/menu.py
+```
+```bash
 curl -o /opt/etc/bot/utils.py https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/bot3/utils.py
+```
+```bash
 curl -o /opt/etc/bot/handlers.py https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/bot3/handlers.py
+```
+```bash
 curl -o /opt/etc/bot/bot_config.py https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/bot3/bot_config.py
-
+```
+```bash
 chmod 755 /opt/etc/bot
+```
+```bash
 chmod 644 /opt/etc/bot/*.py
 ```
 
 Заполнить ключ api бота и другие данные для авторизации в telegram через nano или любым другим способом, сохранить файл
 
 ```bash
-nano /opt/etc/bot_config.py
+nano /opt/etc/bot/bot_config.py
 ```
 
-Запустить бота (для версий 1 и 2)
-
-```bash
-python3 /opt/etc/bot.py &
-```
-
-или для версии 3
+Запустить бота
 
 ```bash
 python3 /opt/etc/bot/main.py &
@@ -100,13 +89,7 @@ python3 /opt/etc/bot/main.py &
 
 ## Справка
 
-Запустить xray можно командой
-
-```bash
-xray run -c /opt/etc/xray/config.json
-```
-
-Проверить статус xray
+Проверить статус, например, xray можно командой
 
 ```bash
 /opt/etc/init.d/S24xray status
