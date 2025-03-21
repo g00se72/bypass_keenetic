@@ -36,15 +36,15 @@ paths = {
 
 # Команды для перезапуска сервисов
 services = {
-    "tor_restart": "/opt/etc/init.d/S35tor restart",
-    "shadowsocks_restart": "/opt/etc/init.d/S22shadowsocks restart",
-    "trojan_restart": "/opt/etc/init.d/S22trojan restart",
-    "vless_restart": "/opt/etc/init.d/S24xray restart",
-    "unblock_update": "/opt/bin/unblock_update.sh",
-    "router_reboot": "ndmc -c system reboot",
-    "dns_override_on": "ndmc -c 'opkg dns-override'",
-    "dns_override_off": "ndmc -c 'no opkg dns-override'",
-    "save_config": "ndmc -c 'system configuration save'",
+    "tor_restart": ["/opt/etc/init.d/S35tor", "restart"],
+    "shadowsocks_restart": ["/opt/etc/init.d/S22shadowsocks", "restart"],
+    "trojan_restart": ["/opt/etc/init.d/S22trojan", "restart"],
+    "vless_restart": ["/opt/etc/init.d/S24xray", "restart"],
+    "unblock_update": ["/opt/bin/unblock_update.sh"],
+    "router_reboot": ["ndmc", "-c", "system", "reboot"],
+    "dns_override_on": ["ndmc", "-c", "opkg dns-override"],
+    "dns_override_off": ["ndmc", "-c", "no opkg dns-override"],
+    "save_config": ["ndmc", "-c", "system configuration save"],
 }
 
 # URL-адреса для скачиваемых файлов
