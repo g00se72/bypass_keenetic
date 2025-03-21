@@ -107,6 +107,12 @@ ps | grep .py
 Kill <ID_Процесса>
 ```
 
+Бэкап entware
+
+```bash
+tar cvzf /opt/backup.tar.gz -C /opt .
+```
+
 ## Ссылки на исходные репозитории
 
 [https://github.com/ziwork/bypass_keenetic](https://github.com/ziwork/bypass_keenetic "https://github.com/ziwork/bypass_keenetic")
