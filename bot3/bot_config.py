@@ -50,6 +50,5 @@ services = {
 # URL-адреса для скачиваемых файлов
 download_urls = {
     "script_sh": "https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/bot3/script.sh",
-    "info_md": "https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/info.md",
     "version_md": "https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/bot3/version.md",
 }
