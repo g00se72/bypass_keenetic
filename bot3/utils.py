@@ -1,4 +1,5 @@
 import os
+import signal
 import time
 import subprocess
 import json
@@ -11,6 +12,11 @@ def download_script():
     # Загрузка скрипта с установкой прав
     subprocess.run(["curl", "-s", "-o", config.paths["script_sh"], config.download_urls["script_sh"]])
     os.chmod(config.paths["script_sh"], 0o0755)
+
+def signal_handler(sig, frame):
+    # Обрабатывает сигналы завершения
+    log_error(f"Бот остановлен сигналом {signal.Signals(sig).name}")
+    raise SystemExit
 
 def load_bypass_list(filepath):
     # Загрузка списка обхода из файла
