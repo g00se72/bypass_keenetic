@@ -238,7 +238,7 @@ if [ "$1" = "-update" ]; then
     now=$(date +"%Y.%m.%d.%H-%M")
     backup_dir="/opt/root/backup-${now}"
     mkdir -p "${backup_dir}"
-    # Массив с путями к файлам, которые будут обновлены
+    # Бэкапим файлы, которые будут обновлены
     items_to_backup="
     /opt/etc/bot
     "
@@ -250,7 +250,7 @@ if [ "$1" = "-update" ]; then
     done
     echo "Бэкап выполнен в ${backup_dir}"
 	
-    #что нужно обновить
+    # Что нужно обновить
     curl -s -o /opt/etc/bot/main.py https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/bot3/main.py || exit 1
     curl -s -o /opt/etc/bot/menu.py https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/bot3/menu.py || exit 1
     curl -s -o /opt/etc/bot/utils.py https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/bot3/utils.py || exit 1
