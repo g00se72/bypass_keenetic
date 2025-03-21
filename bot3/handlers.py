@@ -174,7 +174,6 @@ def setup_handlers(bot):
                          MENU_SERVICE, MENU_DNS_OVERRIDE, MENU_INSTALL_REMOVE]
              if m.level == state.current_menu.back_level), MENU_MAIN))
         ),
-        '💡 Информация': lambda chat_id: bot.send_message(chat_id, requests.get(config.download_urls["info_md"]).text, reply_markup=MENU_MAIN.markup, parse_mode='Markdown', disable_web_page_preview=True),
         '📑 Списки обхода': go_to_bypass_files,
         '🔑 Ключи и мосты': lambda chat_id: set_menu_and_reply(chat_id, MENU_KEYS_BRIDGES),
         '⚙️ Сервис': lambda chat_id: set_menu_and_reply(chat_id, MENU_SERVICE),
