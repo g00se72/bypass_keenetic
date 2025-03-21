@@ -14,18 +14,25 @@ keen_os_short=$(echo "$keen_os_full" | cut -b 1)
 PID_FILE="/opt/var/run/bot.pid"
 
 if [ "$1" = "-restart" ]; then
-    [ -f "$PID_FILE" ] && bot_pid=$(cat "$PID_FILE") && kill -0 "$bot_pid" 2>/dev/null && echo "Останавливаем бота..." && kill "$bot_pid" && sleep 5
+    [ -f "$PID_FILE" ] && bot_pid=$(cat "$PID_FILE") && kill -0 "$bot_pid" 2>/dev/null && echo "Останавливаем бота..." && kill "$bot_pid"
+
+    for i in $(seq 1 5); do
+        [ -f "$PID_FILE" ] && kill -0 $(cat "$PID_FILE") 2>/dev/null || break
+        sleep 1
+    done
 
     python3 /opt/etc/bot/main.py &  
 
-    sleep 5
-    if [ -f "$PID_FILE" ] && kill -0 $(cat "$PID_FILE") 2>/dev/null; then
-        echo "Бот запущен. Нажмите на /start"
-        exit 0
-    else
-        echo "Ошибка: бот не запустился"
-        exit 1
-    fi
+    for i in $(seq 1 10); do
+        [ -f "$PID_FILE" ] && kill -0 $(cat "$PID_FILE") 2>/dev/null && {
+            echo "Бот запущен. Нажмите на /start"
+            exit 0
+        }
+        sleep 1
+    done
+
+    echo "Ошибка: бот не запустился"
+    exit 1
 fi
 
 
