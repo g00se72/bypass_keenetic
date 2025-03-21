@@ -2,7 +2,7 @@
 
 ## Что изменено
 - Использование os.system() заменено на subprocess.run()
-- Subprocess.run() вызывается без параметра shell=True, внесены небольшие изменения в bot_config.py service
+- Subprocess.run() вызывается без параметра shell=True, внесены небольшие изменения в bot_config.py services
 - Изменена обработка -restart в script.sh
 
 ## Что удалено
