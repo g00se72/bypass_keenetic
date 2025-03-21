@@ -32,34 +32,27 @@ def save_bypass_list(filepath, sites):
 
 def log_error(message):
     # Функция для записи ошибок в файл
-    try:
-        with open(config.paths["error_log"], "a") as fl:
-            fl.write(f"{time.strftime('%Y-%m-%d %H:%M:%S')} - {message}\n")
-    except Exception as e:
-        print(f"Ошибка при записи в log файл: {e}")
+    with open(config.paths["error_log"], "a") as fl:
+        fl.write(f"{time.strftime('%Y-%m-%d %H:%M:%S')} - {message}\n")
 
 def write_pid(pid_file):
     # Функция для записи PID в файл
-    try:
-        pid = os.getpid()
-        if os.path.exists(pid_file):
-            with open(pid_file, "r") as f:
-                existing_pid = f.read().strip()
-                try:
-                    os.kill(int(existing_pid), 9)
-                    log_error(f"Ошибка: бот с PID {existing_pid} уже запущен")
-                    return False
-                except ProcessLookupError:
-                    log_error(f"Процесс с PID {existing_pid} не найден, удаляем старый PID-файл и продолжаем")
-                    os.remove(pid_file)
+    pid = os.getpid()
+    if os.path.exists(pid_file):
+        with open(pid_file, "r") as f:
+            existing_pid = f.read().strip()
+            try:
+                os.kill(int(existing_pid), 9)
+                log_error(f"Ошибка: бот с PID {existing_pid} уже запущен")
+                return False
+            except ProcessLookupError:
+                log_error(f"Процесс с PID {existing_pid} не найден, удаляем старый PID-файл и продолжаем")
+                os.remove(pid_file)
 
-        with open(pid_file, "w") as f:
-            f.write(str(pid))
-        log_error(f"PID {pid} записан в файл {pid_file}")
-        return True
-    except Exception as e:
-        log_error(f"Ошибка при записи в файл PID: {e}")
-        return False
+    with open(pid_file, "w") as f:
+        f.write(str(pid))
+    log_error(f"PID {pid} записан в файл {pid_file}")
+    return True
 
 def cleanup_pid(pid_file):
     # Функция для очистки файла PID при завершении работы
