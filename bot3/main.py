@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-# ВЕРСИЯ СКРИПТА 3.2.2
+# ВЕРСИЯ СКРИПТА 3.2.3
 
 import sys
 import signal
