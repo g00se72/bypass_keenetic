@@ -1,7 +1,9 @@
 # [3.2.3](https://github.com/g00se72/bypass_keenetic/releases/tag/3.2.3) - 21 Марта 2025
 
 ## Что изменено
-- Использование os.system() заменено на subprocess.run() без параметра shell=True
+- Использование os.system() заменено на subprocess.run()
+- Subprocess.run() вызывается без параметра shell=True, внесены небольшие изменения в bot_config.py service
+- Изменена обработка -restart в script.sh
 
 ## Что удалено
 - Убраны несколько оберток try-except в utils.py
