@@ -2,19 +2,21 @@
 # ВЕРСИЯ СКРИПТА 3.2.2
 
 import sys
+import signal
 import time
 import telebot
 from handlers import setup_handlers
-from utils import log_error, write_pid, cleanup_pid, check_restart
+from utils import log_error, write_pid, cleanup_pid, check_restart, signal_handler
 import bot_config as config
-
-restart_count = 0
 
 if not config.token or config.token.strip() == "" or ":" not in config.token or len(config.token) < 10:
     log_error("Ошибка: Токен не указан или имеет неверный формат в bot_config.py")
     sys.exit(1)
 
 bot = telebot.TeleBot(config.token)
+restart_count = 0
+signal.signal(signal.SIGINT, signal_handler)  # Для Ctrl+C
+signal.signal(signal.SIGTERM, signal_handler)  # Для kill -TERM
 
 if __name__ == "__main__":
     # Проверяем можно ли запустить бот
@@ -38,8 +40,8 @@ if __name__ == "__main__":
                 restart_count += 1
                 time.sleep(config.RESTART_DELAY)
         log_error("Бот остановлен после достижения максимального количества попыток перезапуска")
-    except KeyboardInterrupt:
-        log_error("Бот остановлен пользователем")
+    except (KeyboardInterrupt, SystemExit):
+        log_error("Бот завершил работу")
     finally:
-        # Удаляем PID-файл при завершении работы
+        restart_count = 0
         cleanup_pid(config.paths["pid_path"])
