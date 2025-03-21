@@ -69,7 +69,7 @@ def setup_handlers(bot):
         save_bypass_list(filepath, mylist)
         if k != len(mylist):
             bot.send_message(message.chat.id, "✅ Успешно добавлено, применяю изменения...")
-            os.system(config.services["unblock_update"])
+            subprocess.run(config.services["unblock_update"], check=True)
         else:
             bot.send_message(message.chat.id, "❕Было добавлено ранее")
         set_menu_and_reply(message.chat.id, MENU_BYPASS_LIST, "Меню " + state.selected_file)
@@ -82,7 +82,7 @@ def setup_handlers(bot):
         save_bypass_list(filepath, mylist)
         if k != len(mylist):
             bot.send_message(message.chat.id, "✅ Успешно удалено, применяю изменения...")
-            os.system(config.services["unblock_update"])
+            subprocess.run(config.services["unblock_update"], check=True)
         else:
             bot.send_message(message.chat.id, "❕Не найдено в списке")
         set_menu_and_reply(message.chat.id, MENU_BYPASS_LIST, "Меню " + state.selected_file)
@@ -100,7 +100,7 @@ def setup_handlers(bot):
     def update_service(chat_id, service_name, config_func, restart_cmd):
         try:
             config_func()
-            result = subprocess.run(restart_cmd, shell=True, capture_output=True, text=True)
+            result = subprocess.run(restart_cmd, capture_output=True, text=True, check=True)
             if result.returncode == 0:
                 bot.send_message(chat_id, f'✅ Сервис {service_name} успешно перезапущен')
                 return True
@@ -150,14 +150,14 @@ def setup_handlers(bot):
     def toggle_dns_override(chat_id, enable: bool):
         command = config.services["dns_override_on"] if enable else config.services["dns_override_off"]
         status_text = "включен" if enable else "выключен"
-        os.system(command)
-        os.system(config.services["save_config"])
+        subprocess.run(command, check=True)
+        subprocess.run(config.services["save_config"], check=True)
         bot.send_message(
             chat_id,
             f'{"✅" if enable else "❌"} DNS Override {status_text}!\n⏳ Роутер будет перезапущен!\nЭто займет около 2 минут',
             reply_markup=MENU_SERVICE.markup
         )
-        os.system(config.services["router_reboot"])
+        subprocess.run(config.services["router_reboot"], check=True)
 
     def handle_restart(chat_id):
         bot.send_message(chat_id, "⏳ Бот будет перезапущен!\nЭто займет около 15-30 секунд", reply_markup=MENU_SERVICE.markup)
@@ -181,7 +181,7 @@ def setup_handlers(bot):
         '🤖 Перезапуск бота': lambda chat_id: handle_restart(chat_id),
         '⛔ Перезапуск роутера': lambda chat_id: (
             bot.send_message(chat_id, "⏳ Роутер будет перезапущен!\nЭто займет около 2 минут", reply_markup=MENU_SERVICE.markup),
-            os.system(config.services["router_reboot"])
+            subprocess.run(config.services["router_reboot"], check=True)
         ),
         '⁉️ DNS Override': lambda chat_id: set_menu_and_reply(chat_id, MENU_DNS_OVERRIDE),
         '✅ DNS Override ВКЛ': lambda chat_id: toggle_dns_override(chat_id, True),
