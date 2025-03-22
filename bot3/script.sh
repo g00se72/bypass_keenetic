@@ -191,7 +191,7 @@ if [ "$1" = "-install" ]; then
            -e "s/10810/${localportvless}/g" \
            -e "s/10829/${localporttrojan}/g" \
            /opt/etc/ndm/netfilter.d/100-redirect.sh && \
-    echo "Установлено перенаправление пакетов с адресатами из unblock в Tor, Shadowsocks, VPN, Trojan, Xray"
+    echo "Установлено перенаправление пакетов с адресатами из unblock в Tor, Shadowsocks, VPN, Trojan, Vless"
     chmod 755 /opt/etc/ndm/netfilter.d/100-redirect.sh || chmod +x /opt/etc/ndm/netfilter.d/100-redirect.sh
 
     # VPN script
@@ -217,9 +217,16 @@ if [ "$1" = "-install" ]; then
     curl -o /opt/etc/crontab https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/crontab || exit 1
     echo "Добавлены задачи в cron для периодического обновления содержимого множества"
     chmod 644 /opt/etc/crontab
-    /opt/bin/unblock_update.sh
-    echo "Установлены все изначальные скрипты и скрипты разблокировок, выполнена основная настройка бота"
     
+    /opt/bin/unblock_update.sh
+
+    # KeenSnap
+    mkdir -p /opt/root/KeenSnap
+    curl -o /opt/root/KeenSnap/keensnap.sh https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/KeenSnap/keensnap.sh || exit 1
+    chmod 755 /opt/root/KeenSnap/keensnap.sh
+    echo "Установлен скрипт для создания бекапов через telegram"
+    
+    echo "Выполнена основная настройка бота"
     exit 0
 fi
 
@@ -255,9 +262,11 @@ if [ "$1" = "-update" ]; then
     curl -s -o /opt/etc/bot/menu.py https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/bot3/menu.py || exit 1
     curl -s -o /opt/etc/bot/utils.py https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/bot3/utils.py || exit 1
     curl -s -o /opt/etc/bot/handlers.py https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/bot3/handlers.py || exit 1
+    curl -o /opt/root/KeenSnap/keensnap.sh https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/KeenSnap/keensnap.sh || exit 1
     echo "Обновления загружены, применяем права"
     chmod 755 /opt/etc/bot
     chmod 644 /opt/etc/bot/*.py
+    chmod 755 /opt/root/KeenSnap/keensnap.sh
 
     #/opt/etc/init.d/S56dnsmasq restart > /dev/null 2>&1 || echo "Ошибка при перезапуске dnsmasq"
     #/opt/etc/init.d/S22shadowsocks start > /dev/null 2>&1 || echo "S22shadowsocks не запущен, проверьте конфигурацию, пропускаем остановку"
