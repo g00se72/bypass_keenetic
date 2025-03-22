@@ -262,7 +262,7 @@ if [ "$1" = "-update" ]; then
     curl -s -o /opt/etc/bot/menu.py https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/bot3/menu.py || exit 1
     curl -s -o /opt/etc/bot/utils.py https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/bot3/utils.py || exit 1
     curl -s -o /opt/etc/bot/handlers.py https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/bot3/handlers.py || exit 1
-    curl -o /opt/root/KeenSnap/keensnap.sh https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/KeenSnap/keensnap.sh || exit 1
+    curl -s -o /opt/root/KeenSnap/keensnap.sh https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/KeenSnap/keensnap.sh || exit 1
     echo "Обновления загружены, применяем права"
     chmod 755 /opt/etc/bot
     chmod 644 /opt/etc/bot/*.py
