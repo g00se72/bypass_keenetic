@@ -1,4 +1,4 @@
-# ВЕРСИЯ СКРИПТА 3.2.3
+# ВЕРСИЯ СКРИПТА 3.2.4
 
 # Настройки бота
 token = 'MyBotFatherToken'  # Ключ api бота
@@ -28,10 +28,29 @@ paths = {
     "trojan_config": "/opt/etc/trojan/config.json",
     "vless_config": "/opt/etc/xray/config.json",
     "error_log": "/opt/etc/bot/error.log",
+    "log_bu": "/opt/root/KeenSnap/backup.log",
     "script_sh": "/opt/root/script.sh",
+    "script_bu": "/opt/root/KeenSnap/keensnap.sh",
     "pid_path": "/opt/var/run/bot.pid",
     "chat_id_path": "/opt/var/run/bot_chat_id.txt",
     "templates_dir": "/opt/etc/bot/templates/"
+}
+
+# Настройка бэкапа
+# скриптом будет автоматически выбран ntfs накопитель в SELECT DRIVE
+backup_settings = {
+    "LOG_FILE": paths["log_bu"],
+    "SELECTED_DRIVE": "",
+    "BACKUP_STARTUP_CONFIG": False,
+    "BACKUP_FIRMWARE": False,
+    "BACKUP_ENTWARE": False,
+    "BACKUP_CUSTOM_FILES": False,
+    "CUSTOM_BACKUP_PATHS":" ".join([
+        "/opt/etc/bot",
+        paths["vless_config"],
+        paths["tor_config"],
+    ]),
+    "DELETE_ARCHIVE_AFTER_BACKUP": False
 }
 
 # Команды для перезапуска сервисов
