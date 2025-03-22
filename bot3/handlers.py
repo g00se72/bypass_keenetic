@@ -201,7 +201,7 @@ def setup_handlers(bot):
             'Стартовый конфиг': lambda chat_id: (backup_files(bot, chat_id, "BACKUP_STARTUP_CONFIG"), set_menu_and_reply(chat_id, MENU_SERVICE)),
             'Прошивка': lambda chat_id: (backup_files(bot, chat_id, "BACKUP_FIRMWARE"), set_menu_and_reply(chat_id, MENU_SERVICE)),
             'Entware': lambda chat_id: (backup_files(bot, chat_id, "BACKUP_ENTWARE"), set_menu_and_reply(chat_id, MENU_SERVICE)),
-            'Бот': lambda chat_id: (backup_files(bot, chat_id, "BACKUP_CUSTOM_FILES"), set_menu_and_reply(chat_id, MENU_SERVICE)),    
+            'Бот': lambda chat_id: (backup_files(bot, chat_id, "BACKUP_CUSTOM_FILES"), set_menu_and_reply(chat_id, MENU_SERVICE)),
     }
 
     LEVEL_HANDLERS = {
