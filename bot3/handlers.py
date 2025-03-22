@@ -8,11 +8,11 @@ import bot_config as config
 from menu import (
     MENU_MAIN, MENU_BYPASS_FILES, MENU_BYPASS_LIST, MENU_ADD_BYPASS, MENU_REMOVE_BYPASS,
     MENU_KEYS_BRIDGES, MENU_TOR, MENU_SHADOWSOCKS, MENU_VLESS, MENU_TROJAN,
-    MENU_SERVICE, MENU_DNS_OVERRIDE, MENU_INSTALL_REMOVE, create_bypass_files_menu
+    MENU_SERVICE, MENU_DNS_OVERRIDE, MENU_INSTALL_REMOVE, MENU_BACKUP, create_bypass_files_menu
 )
 from utils import (
     download_script, load_bypass_list, save_bypass_list, vless_config, trojan_config,
-    shadowsocks_config, tor_config
+    shadowsocks_config, tor_config, backup_files
 )
 
 class BotState:
@@ -171,7 +171,7 @@ def setup_handlers(bot):
         set_menu_and_reply(chat_id, next(
             (m for m in [MENU_MAIN, MENU_BYPASS_FILES, MENU_BYPASS_LIST, MENU_ADD_BYPASS, MENU_REMOVE_BYPASS,
                          MENU_KEYS_BRIDGES, MENU_TOR, MENU_SHADOWSOCKS, MENU_VLESS, MENU_TROJAN,
-                         MENU_SERVICE, MENU_DNS_OVERRIDE, MENU_INSTALL_REMOVE]
+                         MENU_SERVICE, MENU_DNS_OVERRIDE, MENU_INSTALL_REMOVE, MENU_BACKUP]
              if m.level == state.current_menu.back_level), MENU_MAIN))
         ),
         '📑 Списки обхода': go_to_bypass_files,
@@ -197,6 +197,11 @@ def setup_handlers(bot):
         '📲 Установка и удаление': lambda chat_id: set_menu_and_reply(chat_id, MENU_INSTALL_REMOVE),
         '📲 Установка': lambda chat_id: handle_install(chat_id),
         '🗑 Удаление': lambda chat_id: handle_remove(chat_id),
+        '📋 Бэкап': lambda chat_id: set_menu_and_reply(chat_id, MENU_BACKUP),
+        'Стартовый конфиг': lambda chat_id: (backup_files(bot, chat_id, "BACKUP_STARTUP_CONFIG"), set_menu_and_reply(chat_id, MENU_SERVICE)),
+        'Прошивка': lambda chat_id: (backup_files(bot, chat_id, "BACKUP_FIRMWARE"), set_menu_and_reply(chat_id, MENU_SERVICE)),
+        'Entware': lambda chat_id: (backup_files(bot, chat_id, "BACKUP_ENTWARE"), set_menu_and_reply(chat_id, MENU_SERVICE)),
+        'Бот': lambda chat_id: (backup_files(bot, chat_id, "BACKUP_CUSTOM_FILES"), set_menu_and_reply(chat_id, MENU_SERVICE)),    
     }
 
     LEVEL_HANDLERS = {
