@@ -43,7 +43,7 @@ MENU_TROJAN = Menu("Trojan", create_menu([["🔙 Назад"]]), 11, 5)
 
 MENU_SERVICE = Menu("⚙️ Сервисное меню!", create_menu([
     ["🤖 Перезапуск бота", "⛔ Перезапуск роутера", "🚦 Перезапуск сервисов"],
-    ["⁉️ DNS Override", "🔄 Обновления"],
+    ["⁉️ DNS Override", "🔄 Обновления", "📋 Бэкап"],
     ["🔙 Назад"]
 ]), 6, 0)
 
@@ -56,6 +56,12 @@ MENU_INSTALL_REMOVE = Menu("📲 Установка и удаление", create
     ["📲 Установка", "🗑 Удаление"],
     ["🔙 Назад"]
 ]), 12, 0)
+
+MENU_BACKUP = Menu("📋 Выберите для бэкапа:", create_menu([
+    ["Стартовый конфиг", "Прошивка"],
+    ["Entware", "Бот"],
+    ["🔙 Назад"]
+]), 13, 6)
 
 def create_bypass_files_menu():
     dirname = config.paths["unblock_dir"]
