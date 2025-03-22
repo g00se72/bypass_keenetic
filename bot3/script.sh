@@ -1,17 +1,17 @@
 #!/bin/sh
 
-# читаем переменные
-lanip=$(ip addr show br0 | grep -Po "(?<=inet ).*(?=/)" | awk '{print $1}')
-localportsh=$(grep "localportsh" /opt/etc/bot/bot_config.py | grep -Eo "[0-9]{1,5}")
-#dnsporttor=$(grep "dnsporttor" /opt/etc/bot/bot_config.py | grep -Eo "[0-9]{1,5}")
-localporttor=$(grep "localporttor" /opt/etc/bot/bot_config.py | grep -Eo "[0-9]{1,5}")
-localportvless=$(grep "localportvless" /opt/etc/bot/bot_config.py | grep -Eo "[0-9]{1,5}")
-localporttrojan=$(grep "localporttrojan" /opt/etc/bot/bot_config.py | grep -Eo "[0-9]{1,5}")
-dnsovertlsport=$(grep "dnsovertlsport" /opt/etc/bot/bot_config.py | grep -Eo "[0-9]{1,5}")
-dnsoverhttpsport=$(grep "dnsoverhttpsport" /opt/etc/bot/bot_config.py | grep -Eo "[0-9]{1,5}")
+# Читаем переменные
+PID_FILE=$(awk -F'"' '/"pid_path":/ {print $4}' /opt/etc/bot/bot_config.py)
+lanip=$(ip addr show br0 | awk '/inet / {print $2}' | cut -d'/' -f1)
+localportsh=$(grep "localportsh" /opt/etc/bot/bot_config.py | awk -F'=' '{print $2}' | awk '{print $1}')
+#dnsporttor=$(grep "dnsporttor" /opt/etc/bot/bot_config.py | awk -F'=' '{print $2}' | awk '{print $1}')
+localporttor=$(grep "localporttor" /opt/etc/bot/bot_config.py | awk -F'=' '{print $2}' | awk '{print $1}')
+localportvless=$(grep "localportvless" /opt/etc/bot/bot_config.py | awk -F'=' '{print $2}' | awk '{print $1}')
+localporttrojan=$(grep "localporttrojan" /opt/etc/bot/bot_config.py | awk -F'=' '{print $2}' | awk '{print $1}')
+dnsovertlsport=$(grep "dnsovertlsport" /opt/etc/bot/bot_config.py | awk -F'=' '{print $2}' | awk '{print $1}')
+dnsoverhttpsport=$(grep "dnsoverhttpsport" /opt/etc/bot/bot_config.py | awk -F'=' '{print $2}' | awk '{print $1}')
 keen_os_full=$(curl -s localhost:79/rci/show/version/title | tr -d \",)
 keen_os_short=$(echo "$keen_os_full" | cut -b 1)
-PID_FILE="/opt/var/run/bot.pid"
 
 if [ "$1" = "-restart" ]; then
     [ -f "$PID_FILE" ] && bot_pid=$(cat "$PID_FILE") && kill -0 "$bot_pid" 2>/dev/null && echo "Останавливаем бота..." && kill "$bot_pid"
@@ -291,8 +291,6 @@ if [ "$1" = "-help" ]; then
     echo "-version узнать версию KeenOS"
     echo "-restart перезапустить бота"
 fi
-
-
 if [ -z "$1" ]; then
     echo "-help посмотреть список доступных аргументов"
 fi
