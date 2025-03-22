@@ -1,6 +1,16 @@
 #!/bin/sh
 
-source /opt/root/KeenSnap/config.sh
+for arg in "$@"; do
+    case "$arg" in
+        LOG_FILE=*) LOG_FILE="${arg#*=}" ;;
+        SELECTED_DRIVE=*) SELECTED_DRIVE="${arg#*=}" ;;
+        BACKUP_STARTUP_CONFIG=*) BACKUP_STARTUP_CONFIG="${arg#*=}" ;;
+        BACKUP_FIRMWARE=*) BACKUP_FIRMWARE="${arg#*=}" ;;
+        BACKUP_ENTWARE=*) BACKUP_ENTWARE="${arg#*=}" ;;
+        BACKUP_CUSTOM_FILES=*) BACKUP_CUSTOM_FILES="${arg#*=}" ;;
+        CUSTOM_BACKUP_PATHS=*) CUSTOM_BACKUP_PATHS="${arg#*=}" ;;
+    esac
+done
 
 date="backup$(date +%Y-%m-%d_%H-%M)"
 
@@ -43,7 +53,7 @@ detect_drive() {
     local uuid=""
     local fstype=""
     local free_bytes=""
-    local min_space_mb=100
+    local min_space_mb=200
 
     while IFS= read -r line; do
         case "$line" in
@@ -73,7 +83,7 @@ detect_drive() {
 $media_output
 EOF
 
-    error "Не найден NTFS-накопитель с достаточным местом (>= ${min_space_mb}MB)"
+    error "Недостаточно свободного места (>= ${min_space_mb}MB)"
     return 1
 }
 
@@ -87,16 +97,26 @@ backup_startup_config() {
 
 backup_entware() {
     local item_name="Entware"
-    local backup_file="$SELECTED_DRIVE/$date/$(get_architecture)_$item_name.tar.gz"
+    local backup_file="$SELECTED_DRIVE/$date/$(get_architecture)-installer.tar.gz"
     tar cvzf "$backup_file" -C /opt . 2>&1 | tail -n 2 | grep -iq "error\|no space left on device" \
         && error "Ошибка при сохранении $item_name" || success "$item_name сохранён"
 }
 
-backup_wg_private_key() {
-    local item_name="WireGuard-Private-Key"
-    local folder_path="$SELECTED_DRIVE/$date"
-    local backup_file="$folder_path/$item_name.txt"
-    wg show all private-key >"$backup_file" && success "$item_name сохранён" || error "Ошибка при сохранении $item_name"
+backup_custom_files() {
+    local item_name="custom-files"
+    local device_uuid=$(echo "$SELECTED_DRIVE" | awk -F'/' '{print $NF}')
+    local folder_path="$device_uuid:/$date"
+    
+    if [ -z "$CUSTOM_BACKUP_PATHS" ]; then
+        error "Переменная CUSTOM_BACKUP_PATHS не задана в bot_config.py"
+        return 1
+    fi
+
+    for path in $CUSTOM_BACKUP_PATHS; do
+        cp -r "$path" "$SELECTED_DRIVE/$date/" 2>/dev/null || { error "Ошибка при копировании $path"; return 1; }
+    done
+    
+    success "$item_name сохранён"
 }
 
 backup_firmware() {
@@ -109,7 +129,7 @@ backup_firmware() {
 
 create_backup() {
     if [ -z "$SELECTED_DRIVE" ] && ! detect_drive; then
-        error "Не удалось определить NTFS-накопитель для бэкапа"
+        error "Не удалось определить накопитель для бэкапа"
         return 1
     fi
 
@@ -119,7 +139,7 @@ create_backup() {
     [ "$BACKUP_STARTUP_CONFIG" = "true" ] && { backup_startup_config; backup_performed=1; }
     [ "$BACKUP_FIRMWARE" = "true" ] && { backup_firmware; backup_performed=1; }
     [ "$BACKUP_ENTWARE" = "true" ] && { backup_entware; backup_performed=1; }
-    [ "$BACKUP_WG_PRIVATE_KEY" = "true" ] && { backup_wg_private_key; backup_performed=1; }
+    [ "$BACKUP_CUSTOM_FILES" = "true" ] && { backup_custom_files; backup_performed=1; }
 
     if [ "$backup_performed" -eq 0 ]; then
         error "Ни один из вариантов бэкапа не выбран"
@@ -127,7 +147,7 @@ create_backup() {
     fi
 
     local archive_path="$SELECTED_DRIVE/${DEVICE_ID}_$date.tar.gz"
-    tar -czf "$archive_path" -C "$SELECTED_DRIVE" "$date" && success "Архив создан" || { error "Ошибка при создании архива"; return 1; }
+    tar -czf "$archive_path" -C "$SELECTED_DRIVE" "$date" && success "Архив создан" || { error "Ошибка при создания архива"; return 1; }
     echo "$(date '+%Y-%m-%d %H:%M:%S') [INFO] Архив сохранён: $archive_path" >> "$LOG_FILE"
     rm -rf "$SELECTED_DRIVE/$date"
 }
