@@ -4,6 +4,7 @@ import time
 import subprocess
 import json
 import re
+import tarfile
 from urllib.parse import urlparse, parse_qs
 import base64
 import bot_config as config
@@ -64,7 +65,7 @@ def cleanup_pid(pid_file):
         log_error(f"Ошибка при удалении PID файла: {e}")
 
 def check_restart(bot):
-    #Проверка перезапуска бота
+    # Проверка перезапуска бота
     chat_id_path = config.paths["chat_id_path"]
     if os.path.exists(chat_id_path):
         with open(chat_id_path, 'r') as f:
@@ -249,3 +250,57 @@ def tor_config(bridges, bot=None, chat_id=None):
         if bot and chat_id:
             bot.send_message(chat_id, f"❌ Ошибка в мостах Tor: {str(e)}")
         raise
+
+def update_config(backup_type):
+    # Функция обновления настроек бекапа
+    backup_types = ["BACKUP_STARTUP_CONFIG", "BACKUP_FIRMWARE", "BACKUP_ENTWARE", "BACKUP_CUSTOM_FILES"]
+    for opt_var in backup_types:
+        config.backup_settings[opt_var] = (opt_var == backup_type)
+
+def backup_files(bot, chat_id, backup_type):
+    # Функция создания бэкапа
+    log_path = config.paths["log_bu"]
+    MAX_SIZE = 40 * 1024 * 1024
+    update_config(backup_type)
+    args = [config.paths["script_bu"]]
+    for key, value in config.backup_settings.items():
+        if isinstance(value, bool):
+            args.append(f"{key}={str(value).lower()}")
+        else:
+            args.append(f"{key}={value}")
+            
+    bot.send_message(chat_id, f"Выбран бэкап: {backup_type}...")
+    subprocess.run(args, capture_output=True, text=True)
+    with open(log_path, "r") as f:
+        log_lines = f.readlines()
+        log_tail = "".join(log_lines[-5:])
+    
+    archive_path = None
+    for line in log_lines[-5:]:
+        if "Архив сохранён:" in line:
+            archive_path = line.split("Архив сохранён: ")[1].strip()
+
+    if "[SUCCESS] Архив создан" in log_tail and archive_path and os.path.exists(archive_path):
+        archive_size = os.path.getsize(archive_path)
+        
+        if archive_size <= MAX_SIZE:
+            with open(archive_path, "rb") as f:
+                bot.send_document(chat_id, f, caption=f"✅ Бэкап создан: {backup_type}")
+        else:
+            bot.send_message(chat_id, f"❕Архив слишком большой ({archive_size // 1024 // 1024} MB), разбиваю на части...")
+            split_prefix = f"{archive_path}_part_"
+            subprocess.run(["split", "-b", str(MAX_SIZE), archive_path, split_prefix], check=True)
+            
+            part_files = [f for f in os.listdir(os.path.dirname(archive_path)) if f.startswith(os.path.basename(split_prefix))]
+            for part_file in sorted(part_files):
+                part_path = os.path.join(os.path.dirname(archive_path), part_file)
+                with open(part_path, "rb") as f:
+                    bot.send_document(chat_id, f, caption=f"✅ Часть бэкапа создана: {backup_type} ({part_file})")
+                os.remove(part_path)
+            
+            bot.send_message(chat_id, f"✅ Бэкап создан: Все части бэкапа отправлены. Для восстановления объедините их с помощью: cat {os.path.basename(archive_path)}_part_* > {os.path.basename(archive_path)}")
+
+        if config.backup_settings["DELETE_ARCHIVE_AFTER_BACKUP"]:
+            os.remove(archive_path)
+    else:
+        bot.send_message(chat_id, f"❌ Ошибка при создании бэкапа: {backup_type}\nЛог:\n{log_tail}")
