@@ -38,7 +38,7 @@ fi
 
 if [ "$1" = "-remove" ]; then
     echo "Начинаем удаление"
-    for pkg in tor tor-geoip bind-dig cron dnsmasq-full ipset iptables obfs4 shadowsocks-libev-ss-redir shadowsocks-libev-config xray trojan; do
+    for pkg in tor tor-geoip bind-dig cron dnsmasq-full ipset iptables obfs4 shadowsocks-libev-ss-redir shadowsocks-libev-config xray trojan coreutils-split; do
     if opkg list-installed | grep -q "^$pkg "; then
         echo "Удаляем пакет: $pkg"
         opkg remove "$pkg" #--force-removal-of-dependent-packages
@@ -94,7 +94,7 @@ fi
 if [ "$1" = "-install" ]; then
     echo "Начинаем установку"
     echo "Ваша версия KeenOS" "${keen_os_full}"
-    for pkg in curl tor tor-geoip bind-dig cron dnsmasq-full ipset iptables obfs4 shadowsocks-libev-ss-redir shadowsocks-libev-config xray trojan; do
+    for pkg in curl tor tor-geoip bind-dig cron dnsmasq-full ipset iptables obfs4 shadowsocks-libev-ss-redir shadowsocks-libev-config xray trojan coreutils-split; do
         if opkg list-installed | grep -q "^$pkg "; then
             echo "Пакет $pkg уже установлен, пропускаем..."
         else
