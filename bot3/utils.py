@@ -269,7 +269,7 @@ def backup_files(bot, chat_id, backup_type):
         else:
             args.append(f"{key}={value}")
             
-    bot.send_message(chat_id, f"Выбран бэкап: {backup_type}...")
+    bot.send_message(chat_id, f"⏳ Выбран бэкап: {backup_type}...")
     subprocess.run(args, capture_output=True, text=True)
     with open(log_path, "r") as f:
         log_lines = f.readlines()
@@ -295,7 +295,7 @@ def backup_files(bot, chat_id, backup_type):
             for part_file in sorted(part_files):
                 part_path = os.path.join(os.path.dirname(archive_path), part_file)
                 with open(part_path, "rb") as f:
-                    bot.send_document(chat_id, f, caption=f"✅ Часть бэкапа создана: {backup_type} ({part_file})")
+                    bot.send_document(chat_id, f, caption=f"⏳ Часть бэкапа создана: {backup_type} ({part_file})")
                 os.remove(part_path)
             
             bot.send_message(chat_id, f"✅ Бэкап создан: Все части бэкапа отправлены. Для восстановления объедините их с помощью: cat {os.path.basename(archive_path)}_part_* > {os.path.basename(archive_path)}")
