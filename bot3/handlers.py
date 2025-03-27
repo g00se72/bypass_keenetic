@@ -294,19 +294,19 @@ def setup_handlers(bot):
     
     @bot.callback_query_handler(func=lambda call: call.data == "dns_override_on")
     def handle_dns_override_on(call):
-        toggle_dns_override(call.message.chat.id, True)
         bot.edit_message_reply_markup(chat_id=call.message.chat.id, message_id=call.message.message_id, reply_markup=None)
+        toggle_dns_override(call.message.chat.id, True)
 
     @bot.callback_query_handler(func=lambda call: call.data == "dns_override_off")
     def handle_dns_override_off(call):
-        toggle_dns_override(call.message.chat.id, False)
         bot.edit_message_reply_markup(chat_id=call.message.chat.id, message_id=call.message.message_id, reply_markup=None)
+        toggle_dns_override(call.message.chat.id, False)
     
     @bot.callback_query_handler(func=lambda call: call.data == "trigger_update")
     def handle_update(call):
         chat_id = call.message.chat.id
-        download_script()
         bot.edit_message_reply_markup(chat_id=chat_id, message_id=call.message.message_id, reply_markup=None)
+        download_script()
         bot.send_message(chat_id, '⏳ Устанавливаются обновления, подождите!')
         with open(config.paths["chat_id_path"], 'w') as f:
             f.write(str(chat_id))
@@ -317,6 +317,7 @@ def setup_handlers(bot):
     @bot.callback_query_handler(func=lambda call: call.data == "install")
     def handle_install_callback(call):
         chat_id = call.message.chat.id
+        bot.edit_message_reply_markup(chat_id=chat_id, message_id=call.message.message_id, reply_markup=None)
         download_script()
         bot.send_message(chat_id, '⏳ Начинаем установку, подождите!')
         process = subprocess.Popen([config.paths['script_sh'], '-install'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, bufsize=1)
@@ -331,6 +332,7 @@ def setup_handlers(bot):
     @bot.callback_query_handler(func=lambda call: call.data == "remove")
     def handle_remove_callback(call):
         chat_id = call.message.chat.id
+        bot.edit_message_reply_markup(chat_id=chat_id, message_id=call.message.message_id, reply_markup=None)
         download_script()
         bot.send_message(chat_id, '⏳ Начинаем удаление, подождите!')
         process = subprocess.Popen([config.paths['script_sh'], '-remove'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, bufsize=1)
