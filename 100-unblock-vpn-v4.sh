@@ -1,13 +1,5 @@
 #!/bin/sh
 
-# 2023. Keenetic DNS bot /  Проект: bypass_keenetic / Автор: tas_unn
-# GitHub: https://github.com/tas-unn/bypass_keenetic
-# Данный бот предназначен для управления обхода блокировок на роутерах Keenetic
-# Демо-бот: https://t.me/keenetic_dns_bot
-#
-# Файл: 100-unblock-vpn-v4.sh, Версия 2.2.0, последнее изменение: 01.10.2023, 18:58
-# Автор файла: NetworK (https://github.com/ziwork)
-
 TAG="100-unblock-vpn.sh"
 
 sleep 1
@@ -24,11 +16,10 @@ touch /opt/etc/iproute2/rt_tables
 chmod 755 /opt/etc/iproute2/rt_tables
 
 for vpn in $vpn_check ; do
-#logger -t "$TAG" "$vpn"
+
 if [ "$1" = "hook" ] && [ "$change" = "connected" ] && [ "$id" = "$vpn" ]; then
 
-# shellcheck disable=SC2060
-vpn_table=$(echo "$vpn" | tr [:upper:] [:lower:]) # sed 's/[A-Z]/\L&/g'
+vpn_table=$(echo "$vpn" | tr [:upper:] [:lower:])
   if grep -q "$vpn_table" /opt/etc/iproute2/rt_tables; then
       echo "Таблица уже есть"
   else
@@ -52,8 +43,6 @@ vpn_table=$(echo "$vpn" | tr [:upper:] [:lower:]) # sed 's/[A-Z]/\L&/g'
       ip -4 route flush table "$vpn_table_id"
       type=iptable table=nat /opt/etc/ndm/netfilter.d/100-redirect.sh
 
-      #cat /dev/null >| /opt/etc/iproute2/rt_tables
-      #sed -i '/"$vpn_table_file"/d' /opt/etc/iproute2/rt_tables
   fi
 
   sleep 2
@@ -83,12 +72,8 @@ vpn_table=$(echo "$vpn" | tr [:upper:] [:lower:]) # sed 's/[A-Z]/\L&/g'
       fi
       type=iptable table=nat /opt/etc/ndm/netfilter.d/100-redirect.sh
 
-      #/opt/bin/unblock_update.sh
-      #log="$(ip route show table 1001 | wc -l) ips added to route table 1000"
-      #echo "$log"
-      #logger "$log"
   fi
-fi # hook
+fi
 done
 
 exit 0
