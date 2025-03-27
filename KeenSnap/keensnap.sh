@@ -150,7 +150,7 @@ create_backup() {
     local backup_performed=0
     local backup_failed=0
 
-	[ "$BACKUP_STARTUP_CONFIG" = "true" ] && { backup_startup_config && backup_performed=1 || backup_failed=1; }
+    [ "$BACKUP_STARTUP_CONFIG" = "true" ] && { backup_startup_config && backup_performed=1 || backup_failed=1; }
     [ "$BACKUP_FIRMWARE" = "true" ] && { backup_firmware && backup_performed=1 || backup_failed=1; }
     [ "$BACKUP_ENTWARE" = "true" ] && { backup_entware && backup_performed=1 || backup_failed=1; }
     [ "$BACKUP_CUSTOM_FILES" = "true" ] && { backup_custom_files && backup_performed=1 || backup_failed=1; }
