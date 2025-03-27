@@ -289,11 +289,11 @@ if [ "$1" = "-update" ]; then
     curl -s -o "$BOT_DIR/menu.py" "$BOT_URL/menu.py" || exit 1
     curl -s -o "$BOT_DIR/utils.py" "$BOT_URL/utils.py" || exit 1
     curl -s -o "$BOT_DIR/handlers.py" "$BOT_URL/handlers.py" || exit 1
-    #curl -s -o "$SCRIPT_BU" "$BASE_URL/KeenSnap/keensnap.sh" || exit 1
+    curl -s -o "$SCRIPT_BU" "$BASE_URL/KeenSnap/keensnap.sh" || exit 1
     echo "Обновления загружены, применяем права"
     chmod 755 "$BOT_DIR"
     chmod 644 "$BOT_DIR"/*.py
-    #chmod 755 "$SCRIPT_BU"
+    chmod 755 "$SCRIPT_BU"
 
     #"$INIT_DNSMASQ" restart > /dev/null 2>&1 || echo "❌ Ошибка при перезапуске dnsmasq"
     #"$INIT_SHADOWSOCKS" start > /dev/null 2>&1 || echo "❕S22shadowsocks не запущен, проверьте конфигурацию"
