@@ -305,9 +305,9 @@ def setup_handlers(bot):
     @bot.callback_query_handler(func=lambda call: call.data == "trigger_update")
     def handle_update(call):
         chat_id = call.message.chat.id
+        download_script()
         bot.edit_message_reply_markup(chat_id=chat_id, message_id=call.message.message_id, reply_markup=None)
         bot.send_message(chat_id, '⏳ Устанавливаются обновления, подождите!')
-        download_script()
         with open(config.paths["chat_id_path"], 'w') as f:
             f.write(str(chat_id))
         process = subprocess.Popen([config.paths['script_sh'], '-update'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, bufsize=1)
