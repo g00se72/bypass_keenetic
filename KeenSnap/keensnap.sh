@@ -70,7 +70,23 @@ backup_startup_config() {
     local device_uuid=$(echo "$SELECTED_DRIVE" | awk -F'/' '{print $NF}')
     local folder_path="$device_uuid:/$date"
     local backup_file="$folder_path/${DEVICE_ID}_${FW_VERSION}_$item_name.txt"
-    if ! ndmc -c "copy $item_name $backup_file" 2>>"$LOG_FILE"; then
+    if ! ndmc -c "copy $item_name $backup_file" >/dev/null 2>>"$LOG_FILE"; then
+        error "Ошибка при сохранении $item_name, см. $LOG_FILE"
+        return 1
+    fi
+    return 0
+}
+
+backup_firmware() {
+    local item_name="firmware"
+    local device_uuid=$(echo "$SELECTED_DRIVE" | awk -F'/' '{print $NF}')
+    local folder_path="$device_uuid:/$date"
+    local backup_file="$folder_path/${DEVICE_ID}_${FW_VERSION}_$item_name.bin"
+    local source_size_kb=20480
+    
+    check_free_space "$source_size_kb" "$item_name" 1 || return 1
+
+    if ! ndmc -c "copy flash:/$item_name $backup_file" >/dev/null 2>>"$LOG_FILE"; then
         error "Ошибка при сохранении $item_name, см. $LOG_FILE"
         return 1
     fi
@@ -116,22 +132,6 @@ backup_custom_files() {
             return 1
         fi
     done
-    return 0
-}
-
-backup_firmware() {
-    local item_name="firmware"
-    local device_uuid=$(echo "$SELECTED_DRIVE" | awk -F'/' '{print $NF}')
-    local folder_path="$device_uuid:/$date"
-    local backup_file="$folder_path/${DEVICE_ID}_${FW_VERSION}_$item_name.bin"
-    local source_size_kb=20480
-    
-    check_free_space "$source_size_kb" "$item_name" 1 || return 1
-
-    if ! ndmc -c "copy flash:/$item_name $backup_file" 2>>"$LOG_FILE"; then
-        error "Ошибка при сохранении $item_name, см. $LOG_FILE"
-        return 1
-    fi
     return 0
 }
 
