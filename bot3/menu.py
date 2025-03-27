@@ -83,7 +83,7 @@ def create_dns_override_menu():
 def create_updates_menu(need_update):
     markup = types.InlineKeyboardMarkup()
     if need_update:
-        markup.add(create_button("🔄 Обновить", "trigger_update"))
+        markup.add(create_button("🆕 Обновить", "trigger_update"))
     markup.add(create_button("🔙 Назад", "menu_service"))
     return markup
 
