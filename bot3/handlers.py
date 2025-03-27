@@ -205,7 +205,7 @@ def setup_handlers(bot):
             subprocess.run(config.services["router_reboot"], check=True)
         ),
         '⁉️ DNS Override': lambda chat_id: handle_dns_override(chat_id),
-        '♻️ Перезапуск сервисов': lambda chat_id: (
+        '🔁 Перезапуск сервисов': lambda chat_id: (
             bot.send_message(chat_id, '⏳ Сервисы будут перезапущены!\nЭто займет около 10-15 секунд'),
             update_service(chat_id, "Shadowsocks", lambda: None, config.services["shadowsocks_restart"]),
             update_service(chat_id, "Tor", lambda: None, config.services["tor_restart"]),
@@ -215,7 +215,7 @@ def setup_handlers(bot):
         ),
         '🆕 Обновления': lambda chat_id: handle_updates(chat_id),
         '📲 Установка и удаление': lambda chat_id: handle_install_remove(chat_id),
-        '📋 Бэкап': lambda chat_id: handle_backup(chat_id)
+        '💾 Бэкап': lambda chat_id: handle_backup(chat_id)
     }
 
     LEVEL_HANDLERS = {
