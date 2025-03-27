@@ -206,7 +206,7 @@ if [ "$1" = "-install" ]; then
     echo "Установлен скрипт для заполнения множеств unblock IP-адресами заданного списка доменов"
     chmod 755 "$UNBLOCK_IPSET" || chmod +x "$UNBLOCK_IPSET"
 
-    curl -o "$UNBLOCK_DNSMASQ" "$BASE_URL/unblock.dnsmasq.sh" || exit 1
+    curl -o "$UNBLOCK_DNSMASQ" "$BASE_URL/unblock_dnsmasq.sh" || exit 1
     sed -i "s/40500/${dnsovertlsport}/g" "$UNBLOCK_DNSMASQ" && \
     echo "Установлен скрипт для формирования дополнительного конфигурационного файла dnsmasq из заданного списка доменов и его запуск"
     chmod 755 "$UNBLOCK_DNSMASQ" || chmod +x "$UNBLOCK_DNSMASQ"
