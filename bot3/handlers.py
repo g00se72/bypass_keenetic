@@ -200,7 +200,7 @@ def setup_handlers(bot):
         '🔑 Ключи и мосты': lambda chat_id: set_menu_and_reply(chat_id, MENU_KEYS_BRIDGES),
         '⚙️ Сервис': lambda chat_id: set_menu_and_reply(chat_id, MENU_SERVICE),
         '🤖 Перезапуск бота': lambda chat_id: handle_restart(chat_id),
-        '⛔ Перезапуск роутера': lambda chat_id: (
+        '🔌 Перезапуск роутера': lambda chat_id: (
             bot.send_message(chat_id, "⏳ Роутер будет перезапущен!\nЭто займет около 2 минут", reply_markup=MENU_SERVICE.markup),
             subprocess.run(config.services["router_reboot"], check=True)
         ),
@@ -213,7 +213,7 @@ def setup_handlers(bot):
             update_service(chat_id, "Trojan", lambda: None, config.services["trojan_restart"]),
             bot.send_message(chat_id, '❕ Перезапуск сервисов завершен', reply_markup=MENU_MAIN.markup)
         ),
-        '🔄 Обновления': lambda chat_id: handle_updates(chat_id),
+        '🆕 Обновления': lambda chat_id: handle_updates(chat_id),
         '📲 Установка и удаление': lambda chat_id: handle_install_remove(chat_id),
         '📋 Бэкап': lambda chat_id: handle_backup(chat_id)
     }
