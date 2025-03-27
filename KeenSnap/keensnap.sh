@@ -70,7 +70,11 @@ backup_startup_config() {
     local device_uuid=$(echo "$SELECTED_DRIVE" | awk -F'/' '{print $NF}')
     local folder_path="$device_uuid:/$date"
     local backup_file="$folder_path/${DEVICE_ID}_${FW_VERSION}_$item_name.txt"
-    ndmc -c "copy $item_name $backup_file" >/dev/null 2>&1 || error "Ошибка при сохранении $item_name"
+    if ! ndmc -c "copy $item_name $backup_file" 2>>"$LOG_FILE"; then
+        error "Ошибка при сохранении $item_name, см. $LOG_FILE"
+        return 1
+    fi
+    return 0
 }
 
 backup_entware() {
@@ -80,10 +84,11 @@ backup_entware() {
     local source_size_kb=$(du -s /opt | awk '{print $1}')
     check_free_space "$source_size_kb" "$item_name" 1 || return 1
 
-    if ! tar cvzf "$backup_file" -C /opt . >/dev/null 2>/dev/null; then
-        error "Ошибка при сохранении $item_name"
+    if ! tar czf "$backup_file" -C /opt . 2>>"$LOG_FILE"; then
+        error "Ошибка при сохранении $item_name, см. $LOG_FILE"
         return 1
     fi
+    return 0
 }
 
 backup_custom_files() {
@@ -106,8 +111,12 @@ backup_custom_files() {
     check_free_space "$source_size_kb" "$item_name" 1 || return 1
 
     for path in $CUSTOM_BACKUP_PATHS; do
-        cp -r "$path" "$SELECTED_DRIVE/$date/" 2>/dev/null || { error "Ошибка при копировании $path"; return 1; }
+        if ! cp -r "$path" "$SELECTED_DRIVE/$date/" 2>>"$LOG_FILE"; then
+            error "Ошибка при копировании $path, см. $LOG_FILE"
+            return 1
+        fi
     done
+    return 0
 }
 
 backup_firmware() {
@@ -119,7 +128,11 @@ backup_firmware() {
     
     check_free_space "$source_size_kb" "$item_name" 1 || return 1
 
-    ndmc -c "copy flash:/$item_name $backup_file" >/dev/null 2>&1 || { error "Ошибка при сохранении $item_name"; return 1; }
+    if ! ndmc -c "copy flash:/$item_name $backup_file" 2>>"$LOG_FILE"; then
+        error "Ошибка при сохранении $item_name, см. $LOG_FILE"
+        return 1
+    fi
+    return 0
 }
 
 create_backup() {
@@ -135,27 +148,30 @@ create_backup() {
 
     mkdir -p "$SELECTED_DRIVE/$date"
     local backup_performed=0
+    local backup_failed=0
 
-    [ "$BACKUP_STARTUP_CONFIG" = "true" ] && { backup_startup_config && backup_performed=1; }
-    [ "$BACKUP_FIRMWARE" = "true" ] && { backup_firmware && backup_performed=1; }
-    [ "$BACKUP_ENTWARE" = "true" ] && { backup_entware && backup_performed=1; }
-    [ "$BACKUP_CUSTOM_FILES" = "true" ] && { backup_custom_files && backup_performed=1; }
+	[ "$BACKUP_STARTUP_CONFIG" = "true" ] && { backup_startup_config && backup_performed=1 || backup_failed=1; }
+    [ "$BACKUP_FIRMWARE" = "true" ] && { backup_firmware && backup_performed=1 || backup_failed=1; }
+    [ "$BACKUP_ENTWARE" = "true" ] && { backup_entware && backup_performed=1 || backup_failed=1; }
+    [ "$BACKUP_CUSTOM_FILES" = "true" ] && { backup_custom_files && backup_performed=1 || backup_failed=1; }
 
-    if [ "$backup_performed" -eq 0 ]; then
-        error "Ни один из вариантов бэкапа не выбран"
-        echo "{\"status\": \"error\", \"message\": \"Ни один из вариантов бэкапа не выбран\"}"
+    if [ "$backup_failed" -eq 1 ]; then
+        error "Один или несколько бэкапов завершились с ошибкой"
+        echo "{\"status\": \"error\", \"message\": \"Один или несколько бэкапов завершились с ошибкой\"}" >>"$LOG_FILE"
+        rm -rf "$SELECTED_DRIVE/$date"
         return 1
     fi
 
     local total_size_kb=$(du -s "$SELECTED_DRIVE/$date" | awk '{print $1}')
-    check_free_space "$total_size_kb" "финального архива" 2 || return 1
+    check_free_space "$total_size_kb" "финального архива" 2 || { rm -rf "$SELECTED_DRIVE/$date"; return 1; }
 
     local archive_path="$SELECTED_DRIVE/${DEVICE_ID}_$date.tar.gz"
-    if tar -czf "$archive_path" -C "$SELECTED_DRIVE" "$date" 2>/dev/null; then
+    if tar -czf "$archive_path" -C "$SELECTED_DRIVE" "$date" 2>>"$LOG_FILE"; then
         echo "{\"status\": \"success\", \"archive_path\": \"$archive_path\"}"
     else
-        error "Ошибка при создании архива"
-        echo "{\"status\": \"error\", \"message\": \"Ошибка при создании архива\"}"
+        error "Ошибка при создании архива, см. $LOG_FILE"
+        echo "{\"status\": \"error\", \"message\": \"Ошибка при создании архива\"}" >>"$LOG_FILE"
+        rm -rf "$SELECTED_DRIVE/$date"
         return 1
     fi
     rm -rf "$SELECTED_DRIVE/$date"
