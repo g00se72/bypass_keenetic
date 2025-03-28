@@ -302,27 +302,26 @@ def setup_handlers(bot):
         bot.edit_message_reply_markup(chat_id=call.message.chat.id, message_id=call.message.message_id, reply_markup=None)
         toggle_dns_override(call.message.chat.id, False)
     
-    @bot.callback_query_handler(func=lambda call: call.data == "trigger_update")
     def handle_update(call):
         chat_id = call.message.chat.id
+        #download_script()
         bot.edit_message_reply_markup(chat_id=chat_id, message_id=call.message.message_id, reply_markup=None)
-        download_script()
-        bot.send_message(chat_id, '⏳ Устанавливаются обновления, подождите!')
+        msg = bot.send_message(chat_id, '⏳ Устанавливаются обновления, подождите!')
         with open(config.paths["chat_id_path"], 'w') as f:
             f.write(str(chat_id))
         process = subprocess.Popen([config.paths['script_sh'], '-update'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, bufsize=1)
         for line in process.stdout:
-            bot.send_message(chat_id, line.strip())
+            bot.edit_message_text(f"⏳ {line.strip()}", chat_id, msg.message_id)
 
     @bot.callback_query_handler(func=lambda call: call.data == "install")
     def handle_install_callback(call):
         chat_id = call.message.chat.id
+        #download_script()
         bot.edit_message_reply_markup(chat_id=chat_id, message_id=call.message.message_id, reply_markup=None)
-        download_script()
-        bot.send_message(chat_id, '⏳ Начинаем установку, подождите!')
+        msg = bot.send_message(chat_id, '⏳ Начинаем установку, подождите!')
         process = subprocess.Popen([config.paths['script_sh'], '-install'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, bufsize=1)
         for line in process.stdout:
-            bot.send_message(chat_id, line.strip())
+            bot.edit_message_text(f"⏳ {line.strip()}", chat_id, msg.message_id)
         process.wait()
         if process.returncode == 0:
             bot.send_message(chat_id, '✅ Установка завершена', reply_markup=MENU_MAIN.markup)
@@ -333,11 +332,11 @@ def setup_handlers(bot):
     def handle_remove_callback(call):
         chat_id = call.message.chat.id
         bot.edit_message_reply_markup(chat_id=chat_id, message_id=call.message.message_id, reply_markup=None)
-        download_script()
-        bot.send_message(chat_id, '⏳ Начинаем удаление, подождите!')
+        #download_script()
+        msg = bot.send_message(chat_id, '⏳ Начинаем удаление, подождите!')
         process = subprocess.Popen([config.paths['script_sh'], '-remove'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, bufsize=1)
         for line in process.stdout:
-            bot.send_message(chat_id, line.strip())
+            bot.edit_message_text(f"⏳ {line.strip()}", chat_id, msg.message_id)
         process.wait()
         if process.returncode == 0:
             bot.send_message(chat_id, '✅ Удаление завершено', reply_markup=MENU_MAIN.markup)
