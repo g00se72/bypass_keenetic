@@ -240,7 +240,7 @@ def tor_config(bridges, bot=None, chat_id=None):
     config_data = config_data.replace("{{bridges}}", bridges.replace("obfs4", "Bridge obfs4"))
     ConfigWriter.write_config(config.paths["tor_config"], config_data, format='text')
 
-def create_backup_with_params(bot, chat_id, backup_state, selected_drive):
+def create_backup_with_params(bot, chat_id, backup_state, selected_drive, progress_msg_id):
     args = [config.paths["script_bu"]]
     max_size = config.backup_settings.get("MAX_SIZE_MB") * 1024 * 1024
     args.extend([
@@ -254,8 +254,6 @@ def create_backup_with_params(bot, chat_id, backup_state, selected_drive):
     if backup_state.custom_files and 'CUSTOM_BACKUP_PATHS' in config.backup_settings:
         args.append(f"CUSTOM_BACKUP_PATHS={config.backup_settings['CUSTOM_BACKUP_PATHS']}")
 
-    msg = bot.send_message(chat_id, "⏳ Начинаем создание бекапа, подождите!")
-
     process = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, bufsize=1, universal_newlines=True)
     final_result = None
 
@@ -266,7 +264,7 @@ def create_backup_with_params(bot, chat_id, backup_state, selected_drive):
         try:
             data = json.loads(line)
             if data.get("type") == "progress":
-                bot.edit_message_text(f"⏳ {data['message']}", chat_id, msg.message_id)
+                bot.edit_message_text(f"⏳ {data['message']}", chat_id, progress_msg_id)
             elif "status" in data:
                 final_result = data
         except json.JSONDecodeError:
@@ -279,12 +277,12 @@ def create_backup_with_params(bot, chat_id, backup_state, selected_drive):
         if os.path.exists(archive_path):
             archive_size = os.path.getsize(archive_path)
             if archive_size <= max_size:
-                bot.edit_message_text("✅ Бэкап создан, отправляю файл...", chat_id, msg.message_id)
+                bot.edit_message_text("✅ Бэкап создан, отправляю файл...", chat_id, progress_msg_id)
                 with open(archive_path, "rb") as f:
                     bot.send_document(chat_id, f, caption=f"✅ Бэкап создан:\n{', '.join(backup_state.get_selected_types())}")
-                bot.edit_message_text(f"✅ Бэкап успешно завершен: {', '.join(backup_state.get_selected_types())}", chat_id, msg.message_id)
+                bot.edit_message_text(f"✅ Бэкап успешно завершен: {', '.join(backup_state.get_selected_types())}", chat_id, progress_msg_id)
             else:
-                bot.edit_message_text(f"❕ Архив слишком большой ({archive_size // 1024 // 1024} MB), разбиваю на части...", chat_id, msg.message_id)
+                bot.edit_message_text(f"❕ Архив слишком большой ({archive_size // 1024 // 1024} MB), разбиваю на части...", chat_id, progress_msg_id)
                 split_prefix = f"{archive_path}_part_"
                 try:
                     subprocess.run(["split", "-b", str(max_size), archive_path, split_prefix], check=True)
@@ -297,18 +295,18 @@ def create_backup_with_params(bot, chat_id, backup_state, selected_drive):
                     bot.edit_message_text(f"✅ Бэкап создан и разбит на части:\n{', '.join(backup_state.get_selected_types())}\n"
                                         f"Для восстановления объедините части:\n"
                                         f"cat {os.path.basename(archive_path)}_part_* > {os.path.basename(archive_path)}", 
-                                        chat_id, msg.message_id)
+                                        chat_id, progress_msg_id)
                 except subprocess.CalledProcessError as e:
                     log_error(f"Ошибка при разбиении архива {archive_path} на части: {str(e)}")
-                    bot.edit_message_text("❌ Не удалось разбить архив на части", chat_id, msg.message_id)
-            if config.backup_settings.get("DELETE_ARCHIVE_AFTER_BACKUP"):
+                    bot.edit_message_text("❌ Не удалось разбить архив на части", chat_id, progress_msg_id)
+            if backup_state.delete_archive:
                 os.remove(archive_path)
         else:
-            bot.edit_message_text("❌ Ошибка: архив не найден после создания", chat_id, msg.message_id)
+            bot.edit_message_text("❌ Ошибка: архив не найден после создания", chat_id, progress_msg_id)
     elif final_result:
-        bot.edit_message_text(f"❌ Ошибка при создании бэкапа: {final_result.get('message', 'Неизвестная ошибка')}", chat_id, msg.message_id)
+        bot.edit_message_text(f"❌ Ошибка при создании бэкапа: {final_result.get('message', 'Неизвестная ошибка')}", chat_id, progress_msg_id)
     else:
-        bot.edit_message_text("❌ Ошибка: скрипт завершился без результата", chat_id, msg.message_id)
+        bot.edit_message_text("❌ Ошибка: скрипт завершился без результата", chat_id, progress_msg_id)
 
 def get_available_drives():
     # Получение списка доступных дисков
