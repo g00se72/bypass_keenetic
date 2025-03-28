@@ -121,6 +121,5 @@ backup_settings = {
         paths["tor_config"],
         paths["script_sh"],
         paths["script_bu"],
-    ]),
-    "DELETE_ARCHIVE_AFTER_BACKUP": True
+    ])
 }
