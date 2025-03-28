@@ -308,7 +308,7 @@ if [ "$1" = "-update" ]; then
     sleep 2
     sed -i "s/${bot_old_version}/${bot_new_version}/g" "$BOT_DIR/bot_config.py"
     echo "✅ Обновление выполнено"
-    echo "⏳ Бот будет перезапущен! Это займет около 15-30 секунд"
+    echo "Бот будет перезапущен! Это займет около 15-30 секунд"
     sleep 2
     "$INIT_BOT" restart
 
