@@ -15,6 +15,8 @@ class BackupState:
         self.firmware = False
         self.entware = False
         self.custom_files = False
+        self.selected_drive = None
+        self.delete_archive = False
 
     def get_selected_count(self):
         return sum([self.startup_config, self.firmware, self.entware, self.custom_files])
@@ -69,6 +71,14 @@ def create_drive_selection_menu(drives):
         button_text = f"💽 {drive['label']} ({drive['size']} GB свободно)"
         markup.add(create_button(button_text, f"backup_drive_{drive['uuid']}"))
     markup.add(create_button("🔙 Назад", "backup_menu"))
+    return markup
+
+def create_delete_archive_menu():
+    markup = types.InlineKeyboardMarkup(row_width=2)
+    markup.add(
+        create_button("❌ Да", "backup_delete_yes"),
+        create_button("✅ Нет", "backup_delete_no")
+    )
     return markup
 
 def create_dns_override_menu():
