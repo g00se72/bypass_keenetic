@@ -9,7 +9,8 @@ from menu import (
     MENU_MAIN, MENU_BYPASS_FILES, MENU_SERVICE, MENU_KEYS_BRIDGES,
     MENU_BYPASS_LIST, MENU_ADD_BYPASS, MENU_REMOVE_BYPASS,
     MENU_TOR, MENU_SHADOWSOCKS, MENU_VLESS, MENU_TROJAN,
-    create_bypass_files_menu, create_backup_menu, BackupState, create_drive_selection_menu, create_dns_override_menu, create_updates_menu, create_install_remove_menu
+    create_bypass_files_menu, create_backup_menu, BackupState, create_drive_selection_menu, create_delete_archive_menu,
+    create_dns_override_menu, create_updates_menu, create_install_remove_menu
 )
 from utils import (
     download_script, load_bypass_list, save_bypass_list, vless_config, trojan_config,
@@ -267,15 +268,16 @@ def setup_handlers(bot):
         elif backup_type == "custom":
             backup_state.custom_files = not backup_state.custom_files
         bot.edit_message_reply_markup(call.message.chat.id, call.message.message_id, reply_markup=create_backup_menu(backup_state))
-    
+            
     @bot.callback_query_handler(func=lambda call: call.data == "backup_create")
     def handle_backup_create(call):
         drives = get_available_drives()
         if not drives:
             bot.answer_callback_query(call.id, "❌ Нет доступных дисков для бэкапа", show_alert=True)
             return
-        bot.edit_message_text("Выберите диск для сохранения бэкапа:", call.message.chat.id, call.message.message_id, reply_markup=create_drive_selection_menu(drives))
-    
+        msg = bot.edit_message_text("Выберите диск для сохранения бэкапа:", call.message.chat.id, call.message.message_id, reply_markup=create_drive_selection_menu(drives))
+        backup_state.selection_msg_id = msg.message_id
+                    
     @bot.callback_query_handler(func=lambda call: call.data.startswith("backup_drive_"))
     def handle_backup_drive_select(call):
         drive_uuid = call.data.replace("backup_drive_", "")
@@ -284,8 +286,21 @@ def setup_handlers(bot):
         if not selected_drive:
             bot.answer_callback_query(call.id, "❌ Выбранный диск недоступен", show_alert=True)
             return
-        bot.edit_message_reply_markup(chat_id=call.message.chat.id, message_id=call.message.message_id, reply_markup=None)
-        create_backup_with_params(bot, call.message.chat.id, backup_state, selected_drive)
+        backup_state.selected_drive = selected_drive
+        bot.edit_message_text(f"☑️ Выбран диск: {selected_drive['label']}\nХотите ли вы удалить архив с диска после создания бэкапа?", call.message.chat.id, backup_state.selection_msg_id, reply_markup=create_delete_archive_menu())
+
+    @bot.callback_query_handler(func=lambda call: call.data in ["backup_delete_yes", "backup_delete_no"])
+    def handle_delete_archive_choice(call):
+        if call.data == "backup_delete_yes":
+            backup_state.delete_archive = True
+            choice_text = "Да"
+        elif call.data == "backup_delete_no":
+            backup_state.delete_archive = False
+            choice_text = "Нет"
+        bot.edit_message_text(
+            f"☑️ Выбран диск: {backup_state.selected_drive['label']}\n☑️ Удалить архив: {choice_text}", call.message.chat.id, backup_state.selection_msg_id)
+        progress_msg = bot.send_message(call.message.chat.id, "⏳ Начинаем создание бэкапа, подождите!")
+        create_backup_with_params(bot, call.message.chat.id, backup_state, backup_state.selected_drive, progress_msg.message_id)
         backup_state.__init__()
 
     @bot.callback_query_handler(func=lambda call: call.data == "backup_menu")
