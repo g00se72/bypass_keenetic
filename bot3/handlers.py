@@ -301,7 +301,8 @@ def setup_handlers(bot):
     def handle_dns_override_off(call):
         bot.edit_message_reply_markup(chat_id=call.message.chat.id, message_id=call.message.message_id, reply_markup=None)
         toggle_dns_override(call.message.chat.id, False)
-    
+        
+    @bot.callback_query_handler(func=lambda call: call.data == "trigger_update")
     def handle_update(call):
         chat_id = call.message.chat.id
         download_script()
