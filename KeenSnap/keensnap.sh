@@ -14,6 +14,10 @@ done
 
 date="backup$(date +%Y-%m-%d_%H-%M)"
 
+progress() {
+    echo "{\"type\": \"progress\", \"message\": \"$*\"}"
+}
+
 error() {
     echo "$(date '+%Y-%m-%d %H:%M:%S') [ERROR] $*" >> "$LOG_FILE"
 }
@@ -62,6 +66,7 @@ check_free_space() {
         error "Недостаточно места для $backup_name (нужно $((required_size_kb / 1024)) MB, доступно $((available_size_kb / 1024)) MB)"
         return 1
     fi
+	progress "Для $backup_name (нужно $((required_size_kb / 1024)) MB, доступно $((available_size_kb / 1024)) MB)"
     return 0
 }
 
@@ -70,6 +75,8 @@ backup_startup_config() {
     local device_uuid=$(echo "$SELECTED_DRIVE" | awk -F'/' '{print $NF}')
     local folder_path="$device_uuid:/$date"
     local backup_file="$folder_path/${DEVICE_ID}_${FW_VERSION}_$item_name.txt"
+	progress "Начинаю бэкап $item_name в $backup_file"
+	
     if ! ndmc -c "copy $item_name $backup_file" >/dev/null 2>>"$LOG_FILE"; then
         error "Ошибка при сохранении $item_name, см. $LOG_FILE"
         return 1
@@ -83,8 +90,8 @@ backup_firmware() {
     local folder_path="$device_uuid:/$date"
     local backup_file="$folder_path/${DEVICE_ID}_${FW_VERSION}_$item_name.bin"
     local source_size_kb=20480
-    
     check_free_space "$source_size_kb" "$item_name" 1 || return 1
+    progress "Создаю бекап $item_name в $backup_file"
 
     if ! ndmc -c "copy flash:/$item_name $backup_file" >/dev/null 2>>"$LOG_FILE"; then
         error "Ошибка при сохранении $item_name, см. $LOG_FILE"
@@ -96,9 +103,9 @@ backup_firmware() {
 backup_entware() {
     local item_name="Entware"
     local backup_file="$SELECTED_DRIVE/$date/$(get_architecture)-installer.tar.gz"
-    
     local source_size_kb=$(du -s /opt | awk '{print $1}')
     check_free_space "$source_size_kb" "$item_name" 1 || return 1
+    progress "Создаю бекап $item_name в $backup_file"
 
     if ! tar czf "$backup_file" -C /opt . 2>>"$LOG_FILE"; then
         error "Ошибка при сохранении $item_name, см. $LOG_FILE"
@@ -118,14 +125,17 @@ backup_custom_files() {
     fi
 
     local source_size_kb=0
+	
     for path in $CUSTOM_BACKUP_PATHS; do
         if [ -e "$path" ]; then
             local path_size_kb=$(du -s "$path" | awk '{print $1}')
             source_size_kb=$((source_size_kb + path_size_kb))
         fi
     done
+    
     check_free_space "$source_size_kb" "$item_name" 1 || return 1
-
+    progress "Создаю бекап: $CUSTOM_BACKUP_PATHS в $folder_pah"
+    
     for path in $CUSTOM_BACKUP_PATHS; do
         if ! cp -r "$path" "$SELECTED_DRIVE/$date/" 2>>"$LOG_FILE"; then
             error "Ошибка при копировании $path, см. $LOG_FILE"
@@ -146,6 +156,8 @@ create_backup() {
         return 1
     fi
 
+    progress "Выбран диск: $SELECTED_DRIVE"
+    progress "Создаю временную папку: $SELECTED_DRIVE/$date"
     mkdir -p "$SELECTED_DRIVE/$date"
     local backup_performed=0
     local backup_failed=0
@@ -157,23 +169,31 @@ create_backup() {
 
     if [ "$backup_failed" -eq 1 ]; then
         error "Один или несколько бэкапов завершились с ошибкой"
-        echo "{\"status\": \"error\", \"message\": \"Один или несколько бэкапов завершились с ошибкой\"}" >>"$LOG_FILE"
+        echo "{\"status\": \"error\", \"message\": \"Один или несколько бэкапов завершились с ошибкой\"}"
         rm -rf "$SELECTED_DRIVE/$date"
         return 1
     fi
 
+    progress "Все бэкапы завершены"
     local total_size_kb=$(du -s "$SELECTED_DRIVE/$date" | awk '{print $1}')
-    check_free_space "$total_size_kb" "финального архива" 2 || { rm -rf "$SELECTED_DRIVE/$date"; return 1; }
-
+    check_free_space "$total_size_kb" "финального архива" 2 || { 
+        rm -rf "$SELECTED_DRIVE/$date"
+        echo "{\"status\": \"error\", \"message\": \"Недостаточно места для финального архива\"}"
+        return 1
+    }
     local archive_path="$SELECTED_DRIVE/${DEVICE_ID}_$date.tar.gz"
+	progress "Создаю финальный архив в $archive_path"
+	
     if tar -czf "$archive_path" -C "$SELECTED_DRIVE" "$date" 2>>"$LOG_FILE"; then
+        progress "Архив успешно создан: $archive_path"
         echo "{\"status\": \"success\", \"archive_path\": \"$archive_path\"}"
     else
         error "Ошибка при создании архива, см. $LOG_FILE"
-        echo "{\"status\": \"error\", \"message\": \"Ошибка при создании архива\"}" >>"$LOG_FILE"
+        echo "{\"status\": \"error\", \"message\": \"Ошибка при создании архива\"}"
         rm -rf "$SELECTED_DRIVE/$date"
         return 1
     fi
+	progress "Удаляю временную папку $SELECTED_DRIVE/$date"
     rm -rf "$SELECTED_DRIVE/$date"
 }
 
