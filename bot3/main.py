@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-# ВЕРСИЯ СКРИПТА 3.3.5
+# ВЕРСИЯ СКРИПТА 3.3.6
 
 import os
 import sys
