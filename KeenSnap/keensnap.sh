@@ -75,7 +75,7 @@ backup_startup_config() {
     local device_uuid=$(echo "$SELECTED_DRIVE" | awk -F'/' '{print $NF}')
     local folder_path="$device_uuid:/$date"
     local backup_file="$folder_path/${DEVICE_ID}_${FW_VERSION}_$item_name.txt"
-	progress "Начинаю бэкап $item_name в $backup_file"
+	progress "Создаю бэкап $item_name в $backup_file"
 	
     if ! ndmc -c "copy $item_name $backup_file" >/dev/null 2>>"$LOG_FILE"; then
         error "Ошибка при сохранении $item_name, см. $LOG_FILE"
