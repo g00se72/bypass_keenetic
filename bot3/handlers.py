@@ -304,7 +304,7 @@ def setup_handlers(bot):
     
     def handle_update(call):
         chat_id = call.message.chat.id
-        #download_script()
+        download_script()
         bot.edit_message_reply_markup(chat_id=chat_id, message_id=call.message.message_id, reply_markup=None)
         msg = bot.send_message(chat_id, '⏳ Устанавливаются обновления, подождите!')
         with open(config.paths["chat_id_path"], 'w') as f:
@@ -316,7 +316,7 @@ def setup_handlers(bot):
     @bot.callback_query_handler(func=lambda call: call.data == "install")
     def handle_install_callback(call):
         chat_id = call.message.chat.id
-        #download_script()
+        download_script()
         bot.edit_message_reply_markup(chat_id=chat_id, message_id=call.message.message_id, reply_markup=None)
         msg = bot.send_message(chat_id, '⏳ Начинаем установку, подождите!')
         process = subprocess.Popen([config.paths['script_sh'], '-install'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, bufsize=1)
@@ -332,7 +332,7 @@ def setup_handlers(bot):
     def handle_remove_callback(call):
         chat_id = call.message.chat.id
         bot.edit_message_reply_markup(chat_id=chat_id, message_id=call.message.message_id, reply_markup=None)
-        #download_script()
+        download_script()
         msg = bot.send_message(chat_id, '⏳ Начинаем удаление, подождите!')
         process = subprocess.Popen([config.paths['script_sh'], '-remove'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, bufsize=1)
         for line in process.stdout:
