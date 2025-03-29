@@ -12,27 +12,21 @@
 **!Реализация сделана исключительно для себя, под свои нужды!**
 
 ## Скриншоты
-<div align="center">
-  <img src="https://raw.githubusercontent.com/g00se72/bypass_keenetic/e6698361cfea854c4eb049accd524c012df2c9a6/screens/MENU_MAIN.png" alt="Главное меню" width="240">
-  <img src="https://raw.githubusercontent.com/g00se72/bypass_keenetic/e6698361cfea854c4eb049accd524c012df2c9a6/screens/install_remove_menu.png" alt="Установка и удаление" width="240">
-  <img src="https://raw.githubusercontent.com/g00se72/bypass_keenetic/e6698361cfea854c4eb049accd524c012df2c9a6/screens/MENU_VLESS.png" alt="Ключи и мосты" width="240">
-  <img src="https://raw.githubusercontent.com/g00se72/bypass_keenetic/e6698361cfea854c4eb049accd524c012df2c9a6/screens/MENU_BYPASS_FILES.png" alt="Списки обхода" width="240">
-</div>
+| Главное меню | Ключи и мосты | Списки обхода | Установка и удаление |
+|--------------|---------------|---------------|----------------------|
+| ![Главное меню](https://raw.githubusercontent.com/g00se72/bypass_keenetic/e6698361cfea854c4eb049accd524c012df2c9a6/screens/MENU_MAIN.png) | ![Ключи и мосты](https://raw.githubusercontent.com/g00se72/bypass_keenetic/e6698361cfea854c4eb049accd524c012df2c9a6/screens/MENU_VLESS.png) | ![Списки обхода](https://raw.githubusercontent.com/g00se72/bypass_keenetic/e6698361cfea854c4eb049accd524c012df2c9a6/screens/MENU_BYPASS_FILES.png) | ![Установка и удаление](https://raw.githubusercontent.com/g00se72/bypass_keenetic/e6698361cfea854c4eb049accd524c012df2c9a6/screens/install_remove_menu.png) |
 
-<div align="center">
-  <img src="https://raw.githubusercontent.com/g00se72/bypass_keenetic/e6698361cfea854c4eb049accd524c012df2c9a6/screens/MENU_SERVICE.png" alt="Сервисное меню" width="240">
-  <img src="https://raw.githubusercontent.com/g00se72/bypass_keenetic/e6698361cfea854c4eb049accd524c012df2c9a6/screens/updates_menu.png" alt="Обвновления" width="240">
-  <img src="https://raw.githubusercontent.com/g00se72/bypass_keenetic/e6698361cfea854c4eb049accd524c012df2c9a6/screens/updates_menu(need_update).png" alt="Обновления" width="240">
-  <img src="https://raw.githubusercontent.com/g00se72/bypass_keenetic/e6698361cfea854c4eb049accd524c012df2c9a6/screens/dns_override_menu.png" alt="DNS Override" width="240">
-</div>
+---
 
-<div align="center">
-  <img src="https://raw.githubusercontent.com/g00se72/bypass_keenetic/e6698361cfea854c4eb049accd524c012df2c9a6/screens/backup_menu.png" alt="Бэкап" width="190">
-  <img src="https://raw.githubusercontent.com/g00se72/bypass_keenetic/e6698361cfea854c4eb049accd524c012df2c9a6/screens/backup_menu(backup_state).png" alt="Бэкап" width="190">
-  <img src="https://raw.githubusercontent.com/g00se72/bypass_keenetic/e6698361cfea854c4eb049accd524c012df2c9a6/screens/drive_selection_menu.png" alt="Бэкап" width="190">
-  <img src="https://raw.githubusercontent.com/g00se72/bypass_keenetic/e6698361cfea854c4eb049accd524c012df2c9a6/screens/delete_archive_menu.png" alt="Бэкап" width="190">
-  <img src="https://raw.githubusercontent.com/g00se72/bypass_keenetic/e6698361cfea854c4eb049accd524c012df2c9a6/screens/backup_done.png" alt="Бэкап" width="190">
-</div>
+| Сервисное меню | Обновлений нет | Обновления | DNS Override |
+|----------------|------------|------------------------|--------------|
+| ![Сервисное меню](https://raw.githubusercontent.com/g00se72/bypass_keenetic/e6698361cfea854c4eb049accd524c012df2c9a6/screens/MENU_SERVICE.png) | ![Обновления](https://raw.githubusercontent.com/g00se72/bypass_keenetic/e6698361cfea854c4eb049accd524c012df2c9a6/screens/updates_menu.png) | ![Обновления (состояние)](https://raw.githubusercontent.com/g00se72/bypass_keenetic/e6698361cfea854c4eb049accd524c012df2c9a6/screens/updates_menu(need_update).png) | ![DNS Override](https://raw.githubusercontent.com/g00se72/bypass_keenetic/e6698361cfea854c4eb049accd524c012df2c9a6/screens/dns_override_menu.png) |
+
+---
+
+| Бекап меню | Создать бекап | Выбор диска | Удаление архива | Бекап завершен |
+|------------|---------------|-------------|-----------------|----------------|
+| ![Бекап меню](https://raw.githubusercontent.com/g00se72/bypass_keenetic/e6698361cfea854c4eb049accd524c012df2c9a6/screens/backup_menu.png) | ![Создать бекап](https://raw.githubusercontent.com/g00se72/bypass_keenetic/e6698361cfea854c4eb049accd524c012df2c9a6/screens/backup_menu(backup_state).png) | ![Выбор диска](https://raw.githubusercontent.com/g00se72/bypass_keenetic/e6698361cfea854c4eb049accd524c012df2c9a6/screens/drive_selection_menu.png) | ![Удаление архива](https://raw.githubusercontent.com/g00se72/bypass_keenetic/e6698361cfea854c4eb049accd524c012df2c9a6/screens/delete_archive_menu.png) | ![Бекап завершен](https://raw.githubusercontent.com/g00se72/bypass_keenetic/e6698361cfea854c4eb049accd524c012df2c9a6/screens/backup_done.png) |
 
 ## Установка
 
