@@ -1,4 +1,4 @@
-# g00se72_bypass_keenetic
+# g00se72/bypass_keenetic
 ![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/g00se72/bypass_keenetic)
 ![GitHub Release Date - Published_At](https://img.shields.io/github/release-date/g00se72/bypass_keenetic)
 ![GitHub repo size](https://img.shields.io/github/repo-size/g00se72/bypass_keenetic)
