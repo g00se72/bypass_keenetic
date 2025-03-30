@@ -17,10 +17,15 @@ def signal_handler(sig, frame):
 def clean_log(log_file):
     if not os.path.exists(log_file):
         open(log_file, 'a').close()
-    with open(log_file, 'r') as f:
-        lines = f.readlines()
-    with open(log_file, 'w') as f:
-        f.writelines(lines[-50:])
+        return
+
+    file_size = os.path.getsize(log_file)
+    max_size = 524288
+    if file_size > max_size:
+        with open(log_file, 'r') as f:
+            lines = f.readlines()
+        with open(log_file, 'w') as f:
+            f.writelines(lines[-50:])
 
 def log_error(message):
     # Функция для записи ошибок в файл
