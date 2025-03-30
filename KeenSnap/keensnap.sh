@@ -24,15 +24,14 @@ error() {
 
 clean_log() {
     local log_file="$1"
-    local max_size=524288
     if [ ! -f "$log_file" ]; then
         touch "$log_file"
         return
     fi
 	
     local file_size=$(wc -c < "$log_file")
-
-	if [ "$file_size" -gt "$max_size" ]; then
+    local max_size=524288
+    if [ "$file_size" -gt "$max_size" ]; then
         tail -n 50 "$log_file" >"$log_file.tmp" && mv "$log_file.tmp" "$log_file"
     fi
 }
