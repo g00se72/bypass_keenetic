@@ -1,4 +1,4 @@
-# [3.3.6](https://github.com/g00se72/bypass_keenetic/releases/tag/3.3.6) - 28 Марта 2025
+# [3.3.6](https://github.com/g00se72/bypass_keenetic/main/CHANGELOG.md) - 28 Марта 2025
 ## Что нового
 - Добавлено в меню подтверждение удаление архива после бекапа с диска
 
@@ -6,7 +6,7 @@
 - Другие незначительные изменения
 
 
-# [3.3.5](https://github.com/g00se72/bypass_keenetic/releases/tag/3.3.5) - 28 Марта 2025
+# [3.3.5](https://github.com/g00se72/bypass_keenetic/main/CHANGELOG.md) - 28 Марта 2025
 ## Что нового
 - Добавлен прогресс при создании архива
 
@@ -14,7 +14,7 @@
 - Построчный вывод прогресса процессов Обновления, Установки, Удаления и Бекапа изменен на редактирование последнего сообщения
 
 
-# [3.3.4](https://github.com/g00se72/bypass_keenetic/releases/tag/3.3.4) - 27 Марта 2025
+# [3.3.4](https://github.com/g00se72/bypass_keenetic/main/CHANGELOG.md) - 27 Марта 2025
 ## Что нового
 - Добавлен сервис xray (vless)
 - Добавлен парсинг конфига vless из ссылки
