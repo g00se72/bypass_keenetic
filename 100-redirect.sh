@@ -20,7 +20,7 @@ done
 if [ -z "$(iptables-save 2>/dev/null | grep unblocksh)" ]; then
     ipset create unblocksh hash:net -exist 2>/dev/null
 	
-	# Для работы на всех интерфейсах (br0, br1, sstp0, sstp2, etc)
+    # Для работы на всех интерфейсах (br0, br1, sstp0, sstp2, etc)
     iptables -I PREROUTING -w -t nat -p tcp -m set --match-set unblocksh dst -j REDIRECT --to-port 1082
     iptables -I PREROUTING -w -t nat -p udp -m set --match-set unblocksh dst -j REDIRECT --to-port 1082
 
