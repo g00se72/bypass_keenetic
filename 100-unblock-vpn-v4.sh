@@ -3,13 +3,13 @@
 TAG="100-unblock-vpn.sh"
 
 sleep 1
-check_allow_vpn_in_config=$(grep "vpn_allowed" /opt/etc/bot/bot_config.py | head -1 | sed 's/=/ /g' | tr -d '"' | awk '{print $2}')
+check_allow_vpn_in_config=$(grep "vpn_allowed" /opt/etc/bot/bot_config.py | head -1 | sed 's/=/ /g' | tr -d '\"' | awk '{print $2}')
 if [ -z "${check_allow_vpn_in_config}" ]; then
     vpn_services="IKE|SSTP|OpenVPN|Wireguard|L2TP"
 else
     vpn_services=$(echo "$check_allow_vpn_in_config")
 fi
-vpn_check=$(curl -s localhost:79/rci/show/interface | grep -E "$vpn_services" | grep id | awk '{print $2}' | tr -d ", | uniq -u)
+vpn_check=$(curl -s localhost:79/rci/show/interface | grep -E "$vpn_services" | grep id | awk '{print $2}' | tr -d \", | uniq -u)
 
 mkdir -p /opt/etc/iproute2
 touch /opt/etc/iproute2/rt_tables
@@ -28,7 +28,7 @@ for vpn in $vpn_check; do
             else
                 counter_new=$((1000 + 1))
             fi
-            vpn_table_file=$(echo "$counter_new $vpn_table")
+            vpn_table_file=$(echo "$counter_new" "$vpn_table")
             echo "$vpn_table_file" >> /opt/etc/iproute2/rt_tables
         fi
 
@@ -50,14 +50,14 @@ for vpn in $vpn_check; do
 
         if [ "$vpn_link_up" = "yes" ]; then
             sleep 3
-            vpn_ip=$(curl -s localhost:79/rci/show/interface/"$vpn"/address | tr -d '"')
+            vpn_ip=$(curl -s localhost:79/rci/show/interface/"$vpn"/address | tr -d \")
             vpn_type=$(ifconfig | grep "$vpn_ip" -B1 | head -1 | cut -d " " -f1)
-            vpn_name=$(curl -s localhost:79/rci/show/interface/"$vpn"/description | tr -d '"')
+            vpn_name=$(curl -s localhost:79/rci/show/interface/"$vpn"/description | tr -d \")
             unblockvpn=$(echo unblockvpn-"$vpn_name"-"$vpn")
 
             ip -4 route add table "$vpn_table_id" default via "$vpn_ip" dev "$vpn_type" 2>/dev/null
             ip -4 route show table main | grep -Ev ^default | while read -r ROUTE; do
-                ip -4 route add table "$vpn_table_id" $ROUTE 2>/dev/null
+                ip -4 route add table "$vpn_table_id" "$ROUTE" 2>/dev/null
             done
             ip -4 rule add fwmark "$get_fwmark_id" lookup "$vpn_table_id" priority 1778 2>/dev/null
             ip -4 route flush cache
