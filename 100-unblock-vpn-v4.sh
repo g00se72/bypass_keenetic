@@ -62,7 +62,7 @@ for vpn in $vpn_check; do
             ip -4 rule add fwmark "$get_fwmark_id" lookup "$vpn_table_id" priority 1778 2>/dev/null
             ip -4 route flush cache
             touch /opt/etc/unblock/vpn-"$vpn_name"-"$vpn".txt
-            chmod 0755 /opt/etc/unblock/vpn-"$vpn_name"-"$vpn".txt
+            chmod 0644 /opt/etc/unblock/vpn-"$vpn_name"-"$vpn".txt
 
             info=$(echo VPN "$vpn" ON: "$vpn_name" "$vpn_ip" via "$vpn_type")
             logger -t "$TAG" "$info"
