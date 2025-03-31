@@ -158,7 +158,7 @@ def setup_handlers(bot):
 
     def handle_dns_override(chat_id):
         inline_keyboard = create_dns_override_menu()
-        bot.send_message(chat_id, "⁉️ DNS Override", reply_markup=inline_keyboard)
+        bot.send_message(chat_id, "Выберите действие:", reply_markup=inline_keyboard)
 
     def handle_updates(chat_id):
         response = requests.get(config.download_urls["version_md"])
@@ -287,7 +287,7 @@ def setup_handlers(bot):
             bot.answer_callback_query(call.id, "❌ Выбранный диск недоступен", show_alert=True)
             return
         backup_state.selected_drive = selected_drive
-        bot.edit_message_text(f"☑️ Выбран диск: {selected_drive['label']}\nХотите ли вы удалить архив с диска после создания бэкапа?", call.message.chat.id, backup_state.selection_msg_id, reply_markup=create_delete_archive_menu())
+        bot.edit_message_text(f"☑️ Выбран диск: {selected_drive['label']}\nУдалить архив с диска после создания бэкапа?", call.message.chat.id, backup_state.selection_msg_id, reply_markup=create_delete_archive_menu())
 
     @bot.callback_query_handler(func=lambda call: call.data in ["backup_delete_yes", "backup_delete_no"])
     def handle_delete_archive_choice(call):
