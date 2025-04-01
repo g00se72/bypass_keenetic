@@ -158,6 +158,7 @@ if [ "$1" = "-install" ]; then
     sed -i "s/hash:net/${set_type}/g" "$IPSET_SCRIPT" && \
     echo "Созданы файлы под множества"
     chmod 755 "$IPSET_SCRIPT" || chmod +x "$IPSET_SCRIPT"
+    "$IPSET_SCRIPT"
 
     # Создание директории и шаблонов конфигов
     mkdir -p "$TEMPLATES_DIR"
