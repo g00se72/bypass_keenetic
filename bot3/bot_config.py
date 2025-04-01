@@ -85,10 +85,6 @@ services = {
     "vless_restart": [paths["init_xray"], "restart"],
     "service_script": [paths["init_bot"], "restart"],
     "unblock_update": [paths["unblock_update"]],
-    "router_reboot": ["ndmc", "-c", "system", "reboot"],
-    "dns_override_on": ["ndmc", "-c", "opkg dns-override"],
-    "dns_override_off": ["ndmc", "-c", "no opkg dns-override"],
-    "save_config": ["ndmc", "-c", "system configuration save"],
 }
 
 # URL-адреса для скачиваемых файлов
