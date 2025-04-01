@@ -85,6 +85,10 @@ chmod 644 /opt/etc/bot/*.py
 Заполнить ключ api бота и другие данные для авторизации в telegram через nano или любым другим способом, сохранить файл
 
 ```bash
+opkg install nano
+```
+
+```bash
 nano /opt/etc/bot/bot_config.py
 ```
 
