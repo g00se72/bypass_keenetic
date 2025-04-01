@@ -48,15 +48,11 @@ opkg install curl python3 python3-pip
 ```
 
 ```bash
-curl -O https://bootstrap.pypa.io/get-pip.py
+pip3 install --upgrade pip
 ```
 
 ```bash
-python get-pip.py
-```
-
-```bash
-pip install pyTelegramBotAPI telethon pathlib
+pip3 install pyTelegramBotAPI telethon pathlib
 ```
 
 Загрузить бота
