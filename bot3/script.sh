@@ -154,7 +154,7 @@ if [ "$1" = "-install" ]; then
     [ "$set_type" = "hash:net" ] && echo "✔️ Поддержка множества типа hash:net есть" || echo "❕Поддержка множества типа hash:net отсутствует"
     
     # Установка скрипта для маршрутизации с помощью ipset
-    curl -o "$IPSET_SCRIPT" "$BASE_URL/100-ipset.sh" || exit 1
+    curl -s -o "$IPSET_SCRIPT" "$BASE_URL/100-ipset.sh" || exit 1
     sed -i "s/hash:net/${set_type}/g" "$IPSET_SCRIPT" && \
     echo "Созданы файлы под множества"
     chmod 755 "$IPSET_SCRIPT" || chmod +x "$IPSET_SCRIPT"
@@ -162,7 +162,7 @@ if [ "$1" = "-install" ]; then
     # Создание директории и шаблонов конфигов
     mkdir -p "$TEMPLATES_DIR"
     for template in tor_template.torrc vless_template.json trojan_template.json shadowsocks_template.json; do
-        curl -o "$TEMPLATES_DIR$template" "$BASE_URL/$template"
+        curl -s -o "$TEMPLATES_DIR$template" "$BASE_URL/$template"
     done
     echo "Загружены темплейты конфигураций для Tor, Shadowsocks, Vless, Trojan"
 
@@ -185,8 +185,8 @@ if [ "$1" = "-install" ]; then
     # Создание unblock папки и файлов
     mkdir -p "$UNBLOCK_DIR"
     # если не нужны списки с git строки ниже можно закомментировать, если нужны - оставить
-    curl -o "${UNBLOCK_DIR}vless.txt" "$BASE_URL/unblockvless.txt"
-    curl -o "${UNBLOCK_DIR}tor.txt" "$BASE_URL/unblocktor.txt"
+    curl -s -o "${UNBLOCK_DIR}vless.txt" "$BASE_URL/unblockvless.txt"
+    curl -s -o "${UNBLOCK_DIR}tor.txt" "$BASE_URL/unblocktor.txt"
     # Создание пустых файлов если их нет, команда touch не изменит содержимое файлов, если они есть, изменится только метка времени
     for file in \
         "$HOSTS_FILE" \
@@ -201,32 +201,32 @@ if [ "$1" = "-install" ]; then
     echo "Созданы файлы под домены и ip-адреса"
 
     # Установка скриптов для заполнения множеств unblock, для формирования конфигурации dnsmasq, скрипт обновления системы после редактирования списка доменов
-    curl -o "$UNBLOCK_IPSET" "$BASE_URL/unblock_ipset.sh" || exit 1
+    curl -s -o "$UNBLOCK_IPSET" "$BASE_URL/unblock_ipset.sh" || exit 1
     sed -i "s/40500/${dnsovertlsport}/g" "$UNBLOCK_IPSET" && \
     echo "Установлен скрипт для заполнения множеств unblock IP-адресами заданного списка доменов"
     chmod 755 "$UNBLOCK_IPSET" || chmod +x "$UNBLOCK_IPSET"
 
-    curl -o "$UNBLOCK_DNSMASQ" "$BASE_URL/unblock_dnsmasq.sh" || exit 1
+    curl -s -o "$UNBLOCK_DNSMASQ" "$BASE_URL/unblock_dnsmasq.sh" || exit 1
     sed -i "s/40500/${dnsovertlsport}/g" "$UNBLOCK_DNSMASQ" && \
     echo "Установлен скрипт для формирования дополнительного конфигурационного файла dnsmasq из заданного списка доменов и его запуск"
     chmod 755 "$UNBLOCK_DNSMASQ" || chmod +x "$UNBLOCK_DNSMASQ"
     "$UNBLOCK_DNSMASQ"
 
-    curl -o "$UNBLOCK_UPDATE" "$BASE_URL/unblock_update.sh" || exit 1
+    curl -s -o "$UNBLOCK_UPDATE" "$BASE_URL/unblock_update.sh" || exit 1
     echo "Установлен скрипт ручного принудительного обновления системы после редактирования списка доменов"
     chmod 755 "$UNBLOCK_UPDATE" || chmod +x "$UNBLOCK_UPDATE"
 
     # Установка скриптов инициализации
-    curl -o "$INIT_UNBLOCK" "$BOT_URL/S99unblock" || exit 1
+    curl -s -o "$INIT_UNBLOCK" "$BOT_URL/S99unblock" || exit 1
     echo "Установлен cкрипт автоматического заполнения множества unblock при загрузке маршрутизатора"
     chmod 755 "$INIT_UNBLOCK" || chmod +x "$INIT_UNBLOCK"
 
-    curl -o "$INIT_BOT" "$BOT_URL/S99telegram_bot" || exit 1
+    curl -s -o "$INIT_BOT" "$BOT_URL/S99telegram_bot" || exit 1
     echo "Установлен cкрипт автоматического запуска бота при загрузке маршрутизатора"
     chmod 755 "$INIT_BOT" || chmod +x "$INIT_BOT"
 
     # Установка скрипта перенаправления
-    curl -o "$REDIRECT_SCRIPT" "$BASE_URL/100-redirect.sh" || exit 1
+    curl -s -o "$REDIRECT_SCRIPT" "$BASE_URL/100-redirect.sh" || exit 1
     sed -i -e "s/hash:net/${set_type}/g" \
            -e "s/192.168.1.1/${lanip}/g" \
            -e "s/1082/${localportsh}/g" \
@@ -250,19 +250,19 @@ if [ "$1" = "-install" ]; then
 
     # Настройка dnsmasq и crontab
     rm -f "$DNSMASQ_CONF"
-    curl -o "$DNSMASQ_CONF" "$BASE_URL/dnsmasq.conf" || exit 1
+    curl -s -o "$DNSMASQ_CONF" "$BASE_URL/dnsmasq.conf" || exit 1
     sed -i -e "s/192.168.1.1/${lanip}/g" -e "s/40500/${dnsovertlsport}/g" -e "s/40508/${dnsoverhttpsport}/g" "$DNSMASQ_CONF" && \
     echo "Подключен дополнительный конфигурационный файл к dnsmasq"
 
     rm -f "$CRONTAB"
-    curl -o "$CRONTAB" "$BASE_URL/crontab" || exit 1
+    curl -s -o "$CRONTAB" "$BASE_URL/crontab" || exit 1
     echo "Добавлены задачи в cron для периодического обновления содержимого множества"
     
     "$UNBLOCK_UPDATE"
 
     # Установка скрипта для создания бекапов через telegram
     mkdir -p "$KEENSNAP_DIR"
-    curl -o "$SCRIPT_BU" "$BASE_URL/KeenSnap/keensnap.sh" || exit 1
+    curl -s -o "$SCRIPT_BU" "$BASE_URL/KeenSnap/keensnap.sh" || exit 1
     chmod 755 "$SCRIPT_BU"
     
     echo "Установлен скрипт для создания бекапов через telegram"
