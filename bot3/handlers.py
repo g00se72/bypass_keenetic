@@ -180,13 +180,13 @@ def setup_handlers(bot):
         bot.send_message(chat_id, service_update_info, reply_markup=inline_keyboard)
 
     def toggle_dns_override(chat_id, enable: bool):
-        command = config.services["dns_override_on"] if enable else config.services["dns_override_off"]
+        command = ["ndmc", "-c", "opkg dns-override"] if enable else ["ndmc", "-c", "no opkg dns-override"]
         status_text = "включен" if enable else "выключен"
         subprocess.run(command, check=True)
-        subprocess.run(config.services["save_config"], check=True)
+        subprocess.run(["ndmc", "-c", "system configuration save"], check=True)
         message_text = f'{"✅" if enable else "✖️"} DNS Override {status_text}!\n⏳ Роутер будет перезапущен!\nЭто займет около 2 минут'
         bot.send_message(chat_id, message_text)
-        subprocess.run(config.services["router_reboot"], check=True)
+        subprocess.run(["ndmc", "-c", "system reboot"], check=True)
     
     # Словарь переходов и действий
     MENU_TRANSITIONS = {
@@ -203,7 +203,7 @@ def setup_handlers(bot):
         '🤖 Перезапуск бота': lambda chat_id: handle_restart(chat_id),
         '🔌 Перезапуск роутера': lambda chat_id: (
             bot.send_message(chat_id, "⏳ Роутер будет перезапущен!\nЭто займет около 2 минут", reply_markup=MENU_SERVICE.markup),
-            subprocess.run(config.services["router_reboot"], check=True)
+            subprocess.run(["ndmc", "-c", "system reboot"], check=True)
         ),
         '⁉️ DNS Override': lambda chat_id: handle_dns_override(chat_id),
         '🔁 Перезапуск сервисов': lambda chat_id: (
