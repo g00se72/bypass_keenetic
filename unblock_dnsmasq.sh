@@ -12,8 +12,8 @@ while read -r line || [ -n "$line" ]; do
     host=$(echo "${host}" | sed 's/\*//;')
     echo "ipset=/*.${host}/unblocksh" >> /opt/etc/unblock.dnsmasq
     echo "server=/*.${host}/127.0.0.1#40500" >> /opt/etc/unblock.dnsmasq
-	echo "ipset=/${host}/unblocksh" >> /opt/etc/unblock.dnsmasq
-	echo "server=/${host}/127.0.0.1#40500" >> /opt/etc/unblock.dnsmasq
+    echo "ipset=/${host}/unblocksh" >> /opt/etc/unblock.dnsmasq
+    echo "server=/${host}/127.0.0.1#40500" >> /opt/etc/unblock.dnsmasq
   else
     echo "ipset=/$line/unblocksh" >> /opt/etc/unblock.dnsmasq
     echo "server=/$line/127.0.0.1#40500" >> /opt/etc/unblock.dnsmasq
