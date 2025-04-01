@@ -186,7 +186,7 @@ def setup_handlers(bot):
         subprocess.run(["ndmc", "-c", "system configuration save"], check=True)
         message_text = f'{"✅" if enable else "✖️"} DNS Override {status_text}!\n⏳ Роутер будет перезапущен!\nЭто займет около 2 минут'
         bot.send_message(chat_id, message_text)
-        subprocess.run(["ndmc", "-c", "system reboot"], check=True)
+        subprocess.run(["ndmc", "-c", "system reboot"])
     
     # Словарь переходов и действий
     MENU_TRANSITIONS = {
@@ -203,7 +203,7 @@ def setup_handlers(bot):
         '🤖 Перезапуск бота': lambda chat_id: handle_restart(chat_id),
         '🔌 Перезапуск роутера': lambda chat_id: (
             bot.send_message(chat_id, "⏳ Роутер будет перезапущен!\nЭто займет около 2 минут", reply_markup=MENU_SERVICE.markup),
-            subprocess.run(["ndmc", "-c", "system reboot"], check=True)
+            subprocess.run(["ndmc", "-c", "system reboot"])
         ),
         '⁉️ DNS Override': lambda chat_id: handle_dns_override(chat_id),
         '🔁 Перезапуск сервисов': lambda chat_id: (
