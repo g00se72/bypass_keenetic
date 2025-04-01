@@ -179,14 +179,14 @@ def setup_handlers(bot):
         inline_keyboard = create_updates_menu(need_update)
         bot.send_message(chat_id, service_update_info, reply_markup=inline_keyboard)
 
-        def toggle_dns_override(chat_id, enable: bool):
-            command = config.services["dns_override_on"] if enable else config.services["dns_override_off"]
-            status_text = "включен" if enable else "выключен"
-            subprocess.run(command, check=True)
-            subprocess.run(config.services["save_config"], check=True)
-            message_text = f'{"✅" if enable else "✖️"} DNS Override {status_text}!\n⏳ Роутер будет перезапущен!\nЭто займет около 2 минут'
-            bot.send_message(chat_id, message_text)
-            subprocess.run(config.services["router_reboot"], check=True)
+    def toggle_dns_override(chat_id, enable: bool):
+        command = config.services["dns_override_on"] if enable else config.services["dns_override_off"]
+        status_text = "включен" if enable else "выключен"
+        subprocess.run(command, check=True)
+        subprocess.run(config.services["save_config"], check=True)
+        message_text = f'{"✅" if enable else "✖️"} DNS Override {status_text}!\n⏳ Роутер будет перезапущен!\nЭто займет около 2 минут'
+        bot.send_message(chat_id, message_text)
+        subprocess.run(config.services["router_reboot"], check=True)
     
     # Словарь переходов и действий
     MENU_TRANSITIONS = {
