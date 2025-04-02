@@ -87,25 +87,9 @@ services = {
     "unblock_update": [paths["unblock_update"]],
 }
 
-# URL-адреса для скачиваемых файлов
+# Базоые URL-адреса для скачиваемых файлов
 base_url = "https://raw.githubusercontent.com/g00se72/bypass_keenetic/main"
 bot_url = f"{base_url}/bot3"
-
-download_urls = {
-    "script_sh": f"{bot_url}/script.sh",
-    "version_md": f"{bot_url}/version.md",
-    "dnsmasq_conf": f"{base_url}/dnsmasq.conf",
-    "crontab": f"{base_url}/crontab",
-    "redirect_script": f"{base_url}/100-redirect.sh",
-    "vpn_script_v3": f"{base_url}/100-unblock-vpn.sh",
-    "vpn_script_v4": f"{base_url}/100-unblock-vpn-v4.sh",
-    "ipset_script": f"{base_url}/100-ipset.sh",
-    "keensnap_script": f"{base_url}/KeenSnap/keensnap.sh",
-    "tor_template": f"{base_url}/tor_template.torrc",
-    "vless_template": f"{base_url}/vless_template.json",
-    "trojan_template": f"{base_url}/trojan_template.json",
-    "shadowsocks_template": f"{base_url}/shadowsocks_template.json"
-}
 
 # Настройка бэкапа
 backup_settings = {
