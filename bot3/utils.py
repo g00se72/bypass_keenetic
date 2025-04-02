@@ -322,22 +322,36 @@ def create_backup_with_params(bot, chat_id, backup_state, selected_drive, progre
         bot.edit_message_text("❌ Ошибка: скрипт завершился без результата", chat_id, progress_msg_id)
 
 def get_available_drives():
-    # Получение списка доступных дисков для бекапа
+    # Получение списка доступных дисков для бекапа без swap раздела
     drives = []
     try:
         media_output = subprocess.check_output(["ndmc", "-c", "show media"], text=True)
         current_drive = {}
+        current_manufacturer = ""
         for line in media_output.splitlines():
-            if "uuid:" in line:
+            if "manufacturer:" in line:
+                current_manufacturer = line.split(':')[1].strip()
+            elif "uuid:" in line:
                 if current_drive:
                     drives.append(current_drive)
                 uuid = line.split(':')[1].strip()
                 current_drive = {'uuid': uuid, 'path': f"/tmp/mnt/{uuid}"}
             elif "label:" in line and current_drive:
                 current_drive['label'] = line.split(':')[1].strip()
+            elif "fstype:" in line and current_drive:
+                fstype = line.split(':')[1].strip()
+                if fstype == "swap":
+                    current_drive = {}
+                    continue
             elif "free:" in line and current_drive:
                 size_gb = round(int(line.split(':')[1].strip()) / (1024 * 1024 * 1024), 1)
                 current_drive['size'] = size_gb
+                if 'label' in current_drive and current_drive['label']:
+                    current_drive['display_name'] = current_drive['label']
+                elif current_manufacturer:
+                    current_drive['display_name'] = current_manufacturer
+                else:
+                    current_drive['display_name'] = "Unknown"
         if current_drive:
             drives.append(current_drive)
     except subprocess.CalledProcessError:
