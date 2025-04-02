@@ -15,6 +15,7 @@ def signal_handler(sig, frame):
     raise SystemExit
 
 def clean_log(log_file):
+    # Очистка лога
     if not os.path.exists(log_file):
         open(log_file, 'a').close()
         return
@@ -68,6 +69,7 @@ def check_restart(bot):
 class ConfigWriter:
     @staticmethod
     def write_config(file_path, config_data, format='json'):
+    # Сохранить как json или как текст
         with open(file_path, 'w', encoding='utf-8') as f:
             if format == 'json':
                 json.dump(json.loads(config_data), f, ensure_ascii=False, indent=2)
@@ -76,6 +78,7 @@ class ConfigWriter:
 
 def notify_on_error():
     def decorator(func):
+    # Декоратор для обработки ошибок
         def wrapper(key, bot=None, chat_id=None, *args, **kwargs):
             try:
                 return func(key, bot, chat_id, *args, **kwargs)
@@ -92,6 +95,7 @@ def notify_on_error():
 
 @notify_on_error()
 def parse_vless_key(key, bot=None, chat_id=None):
+    # Парсинг vless
     vless_pattern = re.compile(
         r"^vless://[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}"
         r"@(?:\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|\[[0-9a-fA-F:]*\]|[a-zA-Z0-9.-]+)"
@@ -126,6 +130,7 @@ def parse_vless_key(key, bot=None, chat_id=None):
 
 @notify_on_error()
 def parse_trojan_key(key, bot=None, chat_id=None):
+    # Парсинг trojan
     trojan_pattern = re.compile(
         r"^trojan://[^@]+@(?:\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|\[[0-9a-fA-F:]*\]|[a-zA-Z0-9.-]+)"
         r":\d{1,5}(?:\?.*)?(?:#.*)?$"
@@ -151,6 +156,7 @@ def parse_trojan_key(key, bot=None, chat_id=None):
 
 @notify_on_error()
 def parse_shadowsocks_key(key, bot=None, chat_id=None):
+    # Парсинг ss
     ss_pattern = re.compile(
         r"^ss://[A-Za-z0-9+/=]+@(?:\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|\[[0-9a-fA-F:]*\]|[a-zA-Z0-9.-]+)"
         r":\d{1,5}(?:#.*)?$"
@@ -174,6 +180,7 @@ def parse_shadowsocks_key(key, bot=None, chat_id=None):
     return {'server': server, 'port': port_num, 'password': password, 'method': method}
 
 def generate_config(key, template_file, config_path, replacements, parse_func, bot=None, chat_id=None):
+    # Создание конфигурационных файлов
     params = parse_func(key, bot, chat_id)
     with open(os.path.join(config.paths["templates_dir"], template_file), 'r', encoding='utf-8') as f:
         template = f.read()
@@ -246,6 +253,7 @@ def tor_config(bridges, bot=None, chat_id=None):
     ConfigWriter.write_config(config.paths["tor_config"], config_data, format='text')
 
 def create_backup_with_params(bot, chat_id, backup_state, selected_drive, progress_msg_id):
+    # Функция создания бекапа
     args = [config.paths["script_bu"]]
     max_size = config.backup_settings.get("MAX_SIZE_MB") * 1024 * 1024
     args.extend([
@@ -314,7 +322,7 @@ def create_backup_with_params(bot, chat_id, backup_state, selected_drive, progre
         bot.edit_message_text("❌ Ошибка: скрипт завершился без результата", chat_id, progress_msg_id)
 
 def get_available_drives():
-    # Получение списка доступных дисков
+    # Получение списка доступных дисков для бекапа
     drives = []
     try:
         media_output = subprocess.check_output(["ndmc", "-c", "show media"], text=True)
