@@ -121,7 +121,7 @@ if [ "$1" = "-remove" ]; then
         "$TOR_TMP_DIR" \
         "$TOR_DIR" \
         "$XRAY_DIR" \
-	"$TEMPLATES_DIR"\
+	"$TEMPLATES_DIR" \
         "$TROJAN_DIR"
     do
         [ -e "$file" ] && rm -rf "$file" && echo "Удалён файл или директория: \"$file\""
