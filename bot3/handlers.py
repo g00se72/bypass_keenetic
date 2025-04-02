@@ -72,7 +72,7 @@ def setup_handlers(bot):
         save_bypass_list(filepath, mylist)
         if k != len(mylist):
             bot.send_message(message.chat.id, "✅ Успешно добавлено, применяю изменения...")
-            subprocess.run(config.services["unblock_update"], check=True)
+            subprocess.run(config.services["unblock_update"])
         else:
             bot.send_message(message.chat.id, "❕Было добавлено ранее")
         set_menu_and_reply(message.chat.id, MENU_BYPASS_LIST, "Меню " + state.selected_file)
@@ -85,7 +85,7 @@ def setup_handlers(bot):
         save_bypass_list(filepath, mylist)
         if k != len(mylist):
             bot.send_message(message.chat.id, "✅ Успешно удалено, применяю изменения...")
-            subprocess.run(config.services["unblock_update"], check=True)
+            subprocess.run(config.services["unblock_update"])
         else:
             bot.send_message(message.chat.id, "❕Не найдено в списке")
         set_menu_and_reply(message.chat.id, MENU_BYPASS_LIST, "Меню " + state.selected_file)
@@ -103,7 +103,7 @@ def setup_handlers(bot):
     def update_service(chat_id, service_name, config_func, restart_cmd):
         try:
             config_func()
-            result = subprocess.run(restart_cmd, capture_output=True, text=True, check=True)
+            result = subprocess.run(restart_cmd, capture_output=True, text=True)
             if result.returncode == 0:
                 bot.send_message(chat_id, f'✅ Сервис {service_name} успешно перезапущен')
                 return True, None
@@ -161,7 +161,7 @@ def setup_handlers(bot):
         bot.send_message(chat_id, "Выберите действие:", reply_markup=inline_keyboard)
 
     def handle_updates(chat_id):
-        response = requests.get(config.download_urls["version_md"])
+        response = requests.get(f"{config.bot_url}/version.md")
         bot_new_version = response.text.strip() if response.status_code == 200 else "N/A"
         main_file_path = os.path.join(os.path.dirname(__file__), "main.py")
         with open(main_file_path, encoding='utf-8') as file:
@@ -182,8 +182,8 @@ def setup_handlers(bot):
     def toggle_dns_override(chat_id, enable: bool):
         command = ["ndmc", "-c", "opkg dns-override"] if enable else ["ndmc", "-c", "no opkg dns-override"]
         status_text = "включен" if enable else "выключен"
-        subprocess.run(command, check=True)
-        subprocess.run(["ndmc", "-c", "system configuration save"], check=True)
+        subprocess.run(command)
+        subprocess.run(["ndmc", "-c", "system configuration save"])
         message_text = f'{"✅" if enable else "✖️"} DNS Override {status_text}!\n⏳ Роутер будет перезапущен!\nЭто займет около 2 минут'
         bot.send_message(chat_id, message_text)
         subprocess.run(["ndmc", "-c", "system reboot"])
