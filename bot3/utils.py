@@ -34,7 +34,7 @@ def log_error(message):
 
 def download_script():
     # Загрузка скрипта с установкой прав
-    subprocess.run(["curl", "-s", "-o", config.paths["script_sh"], config.download_urls["script_sh"]])
+    subprocess.run(["curl", "-s", "-o", config.paths["script_sh"], f"{config.bot_url}/script.sh"])
     os.chmod(config.paths["script_sh"], 0o0755)
 
 def load_bypass_list(filepath):
