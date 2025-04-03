@@ -112,11 +112,13 @@ backup_entware() {
     local source_size_kb=$(du -s /opt | awk '{print $1}')
     check_free_space "$source_size_kb" "$item_name" 1 || return 1
     progress "Создаю бекап $item_name в $backup_file"
-
-    if ! tar czf "$backup_file" -C /opt . 2>>"$LOG_FILE"; then
+    local exclude_file=$(mktemp)
+    echo "$backup_file" > "$exclude_file"
+    if ! tar czf "$backup_file" -X "$exclude_file" -C /opt . 2>>"$LOG_FILE"; then
         error "Ошибка при сохранении $item_name"
         return 1
     fi
+	rm -f "$exclude_file"
     return 0
 }
 
