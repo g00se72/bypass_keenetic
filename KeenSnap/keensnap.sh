@@ -118,7 +118,7 @@ backup_entware() {
         error "Ошибка при сохранении $item_name"
         return 1
     fi
-	rm -f "$exclude_file"
+    rm -f "$exclude_file"
     return 0
 }
 
