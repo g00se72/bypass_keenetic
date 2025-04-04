@@ -304,9 +304,10 @@ if [ "$1" = "-update" ]; then
     #"$INIT_TROJAN" start > /dev/null 2>&1 || echo "❕S22trojan не запущен, проверьте конфигурацию"
     #"$INIT_TOR" start > /dev/null 2>&1 || echo "❕S35tor не запущен, проверьте конфигурацию"
 
+    bot_old_version=$(cat "$BOT_DIR/version.md")
     curl -s "$BOT_URL/version.md" > "$BOT_DIR/version.md"
     bot_new_version=$(cat "$BOT_DIR/version.md")
-    echo "Версия бота обновлена до \"${bot_new_version}\""
+    echo "Версия бота \"${bot_old_version}\" обновлена до \"${bot_new_version}\""
     sleep 2
     echo "✅ Обновление выполнено"
     echo "Бот будет перезапущен! Это займет около 15-30 секунд"
