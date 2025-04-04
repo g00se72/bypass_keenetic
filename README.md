@@ -46,7 +46,7 @@
 > ssh-keygen -b 4096
 > ```
 >
-> Создать файл authorized_keys и скопироватьтуда публичную часть ключа
+> Создать файл authorized_keys и скопировать туда публичную часть ключа
 > ```bash
 > touch /opt/etc/dropbear/authorized_keys
 > ```
