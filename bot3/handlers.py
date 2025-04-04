@@ -175,7 +175,7 @@ def setup_handlers(bot):
     def handle_updates(chat_id):
         bot_new_version = get_remote_version(config.bot_url)
         bot_version = get_local_version()        
-        service_update_info = f"*Установленная версия:* {bot_version}\n*Доступная на git версия:* {bot_new_version}"
+        service_update_info = f"Установленная версия: {bot_version}\nДоступная на git версия: {bot_new_version}"
         need_update = False
         if bot_version != "N/A" and bot_new_version != "N/A":
             try:
@@ -367,3 +367,9 @@ def setup_handlers(bot):
             bot.send_message(chat_id, '✅ Удаление завершено', reply_markup=MENU_MAIN.markup)
         else:
             bot.send_message(chat_id, '❌ Ошибка при удалении', reply_markup=MENU_MAIN.markup)
+
+    @bot.callback_query_handler(func=lambda call: call.data == "menu_main")
+    def handle_back_to_main(call):
+        state.current_menu = MENU_MAIN
+        bot.delete_message(call.message.chat.id, call.message.message_id)
+        bot.send_message(call.message.chat.id, MENU_MAIN.name, reply_markup=MENU_MAIN.markup)
