@@ -160,12 +160,21 @@ def setup_handlers(bot):
         inline_keyboard = create_dns_override_menu()
         bot.send_message(chat_id, "Выберите действие:", reply_markup=inline_keyboard)
 
+    def get_local_version():
+        version_file = os.path.join(os.path.dirname(__file__), "version.md")
+        try:
+            with open(version_file, "r", encoding="utf-8") as f:
+                return f.read().strip()
+        except FileNotFoundError:
+            return "N/A"
+
+    def get_remote_version(bot_url):
+        response = requests.get(f"{bot_url}/version.md")
+        return response.text.strip() if response.status_code == 200 else "N/A"
+
     def handle_updates(chat_id):
-        response = requests.get(f"{config.bot_url}/version.md")
-        bot_new_version = response.text.strip() if response.status_code == 200 else "N/A"
-        main_file_path = os.path.join(os.path.dirname(__file__), "main.py")
-        with open(main_file_path, encoding='utf-8') as file:
-            bot_version = next((line.replace('# ВЕРСИЯ СКРИПТА', '').strip() for line in file if line.startswith('# ВЕРСИЯ СКРИПТА')), "N/A")
+        bot_new_version = get_remote_version(config.bot_url)
+        bot_version = get_local_version()        
         service_update_info = f"*Установленная версия:* {bot_version}\n*Доступная на git версия:* {bot_new_version}"
         need_update = False
         if bot_version != "N/A" and bot_new_version != "N/A":
