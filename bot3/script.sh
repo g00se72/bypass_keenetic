@@ -303,12 +303,10 @@ if [ "$1" = "-update" ]; then
     #"$INIT_TROJAN" start > /dev/null 2>&1 || echo "❕S22trojan не запущен, проверьте конфигурацию"
     #"$INIT_TOR" start > /dev/null 2>&1 || echo "❕S35tor не запущен, проверьте конфигурацию"
 
-    bot_old_version=$(grep "ВЕРСИЯ" "$BOT_DIR/bot_config.py" | grep -Eo "[0-9]+(\.[0-9]+)*" | tr -d '\n\r')
-    bot_new_version=$(grep "ВЕРСИЯ" "$BOT_DIR/main.py" | grep -Eo "[0-9]+(\.[0-9]+)*" | tr -d '\n\r')
-
-    echo "Версия бота \"${bot_old_version}\" обновлена до \"${bot_new_version}\""
+    curl -s "$BOT_URL/version.md" > "$BOT_DIR/version.md"
+    bot_new_version=$(cat "$BOT_DIR/version.md")
+    echo "Версия бота обновлена до \"${bot_new_version}\""
     sleep 2
-    sed -i "s/${bot_old_version}/${bot_new_version}/g" "$BOT_DIR/bot_config.py"
     echo "✅ Обновление выполнено"
     echo "Бот будет перезапущен! Это займет около 15-30 секунд"
     sleep 2
