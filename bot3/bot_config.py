@@ -1,5 +1,3 @@
-# ВЕРСИЯ СКРИПТА 3.3.7
-
 # Настройки бота
 token = 'MyBotFatherToken'  # Ключ api бота
 usernames = ['MySuperLogin']  # Ваш логин в телеграмме без @
