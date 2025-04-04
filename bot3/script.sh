@@ -81,7 +81,7 @@ if [ "$1" = "-remove" ]; then
     for pkg in $PACKAGES; do
         if echo "$installed_packages" | grep -q "^$pkg$"; then
             echo "Удаляем пакет: $pkg"
-            opkg remove "$pkg" #--force-removal-of-dependent-packages
+            opkg remove "$pkg" --force-removal-of-dependent-packages
         else
             echo "❕Пакет $pkg не установлен, пропускаем..."
         fi
@@ -152,7 +152,7 @@ if [ "$1" = "-install" ]; then
 
     # Проверяем есть ли поддержка множества hash:net
     set_type=$(ipset --help 2>/dev/null | grep -q "hash:net" && echo "hash:net" || echo "hash:ip")
-    [ "$set_type" = "hash:net" ] && echo "✔️ Поддержка множества типа hash:net есть" || echo "❕Поддержка множества типа hash:net отсутствует"
+    [ "$set_type" = "hash:net" ] && echo "☑️ Поддержка множества типа hash:net есть" || echo "❕Поддержка множества типа hash:net отсутствует"
     
     # Установка скрипта для маршрутизации с помощью ipset
     curl -s -o "$IPSET_SCRIPT" "$BASE_URL/100-ipset.sh" || exit 1
