@@ -131,6 +131,6 @@ nano /opt/etc/bot/bot_config.py
 
 
 >[!NOTE]
->## Ссылки на исходные репозитории
+> Ссылки на исходные репозитории
 >[https://github.com/ziwork/bypass_keenetic](https://github.com/ziwork/bypass_keenetic "https://github.com/ziwork/bypass_keenetic")\
 >[https://github.com/tas-unn/bypass_keenetic](https://github.com/tas-unn/bypass_keenetic "https://github.com/tas-unn/bypass_keenetic")
