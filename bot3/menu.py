@@ -79,6 +79,7 @@ def create_delete_archive_menu():
         create_button("Да", "backup_delete_yes"),
         create_button("Нет", "backup_delete_no")
     )
+    markup.add(create_button("🔙 Назад", "backup_create"))
     return markup
 
 def create_dns_override_menu():
