@@ -104,7 +104,7 @@ def create_install_remove_menu():
         create_button("📲 Установка", "install"),
         create_button("🗑 Удаление", "remove")
     )
-    markup.add(create_button("🔙 Назад", "menu_service"))
+    markup.add(create_button("🔙 Назад", "menu_main"))
     return markup
 
 MENU_MAIN = Menu("🤖 Добро пожаловать в меню!", create_menu([
