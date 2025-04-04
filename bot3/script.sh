@@ -278,9 +278,10 @@ fi
 
 
 if [ "$1" = "-update" ]; then
-    echo "ℹ️ Ваша версия KeenOS" "${keen_os_full}"
+    #echo "ℹ️ Ваша версия KeenOS" "${keen_os_full}"
     
     #opkg update > /dev/null 2>&1 && echo "Пакеты обновлены"
+    
     #"$INIT_SHADOWSOCKS" stop > /dev/null 2>&1 || echo "❕S22shadowsocks не найден, пропускаем остановку"
     #"$INIT_XRAY" stop > /dev/null 2>&1 || echo "S❕24xray не найден, пропускаем остановку"
     #"$INIT_TROJAN" stop > /dev/null 2>&1 || echo "❕S22trojan не найден, пропускаем остановку"
