@@ -76,8 +76,8 @@ def create_drive_selection_menu(drives):
 def create_delete_archive_menu():
     markup = types.InlineKeyboardMarkup(row_width=2)
     markup.add(
-        create_button("❌ Да", "backup_delete_yes"),
-        create_button("✅ Нет", "backup_delete_no")
+        create_button("☑️ Да", "backup_delete_yes"),
+        create_button("✖ Нет", "backup_delete_no")
     )
     return markup
 
