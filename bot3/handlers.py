@@ -1,6 +1,7 @@
 import subprocess
 import requests
 import os
+import time
 from telebot import types
 from urllib.parse import urlparse, parse_qs
 import base64
@@ -192,9 +193,11 @@ def setup_handlers(bot):
         command = ["ndmc", "-c", "opkg dns-override"] if enable else ["ndmc", "-c", "no opkg dns-override"]
         status_text = "включен" if enable else "выключен"
         subprocess.run(command)
+        time.sleep(2)
         subprocess.run(["ndmc", "-c", "system configuration save"])
         message_text = f'{"✅" if enable else "✖️"} DNS Override {status_text}!\n⏳ Роутер будет перезапущен!\nЭто займет около 2 минут'
         bot.send_message(chat_id, message_text)
+        time.sleep(5)
         subprocess.run(["ndmc", "-c", "system reboot"])
     
     # Словарь переходов и действий
