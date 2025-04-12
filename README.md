@@ -117,10 +117,7 @@ nano /opt/etc/bot/bot_config.py
 Запустить бота
 
 ```bash
-curl -o /opt/etc/init.d/S99telegram_bot https://raw.githubusercontent.com/g00se72/bypass_keenetic/main/bot3/S99telegram_bot
-```
-```bash
-/opt/etc/init.d/S99telegram_bot start
+/opt/etc/bot/main.py &
 ```
 
 Зайти в свой телеграм-бот, нажать `/start`
