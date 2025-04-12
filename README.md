@@ -35,6 +35,13 @@
 
 ## Установка
 
+Подготавливаем USB-накопитель по [инструкции](https://help.keenetic.com/hc/ru/articles/360000184259-%D0%9A%D0%B0%D0%BA-%D0%BF%D0%BE%D0%B4%D0%B3%D0%BE%D1%82%D0%BE%D0%B2%D0%B8%D1%82%D1%8C-USB-%D0%BD%D0%B0%D0%BA%D0%BE%D0%BF%D0%B8%D1%82%D0%B5%D0%BB%D1%8C-%D0%B4%D0%BB%D1%8F-%D0%B8%D1%81%D0%BF%D0%BE%D0%BB%D1%8C%D0%B7%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D1%8F-%D0%B2-%D0%BA%D0%B0%D1%87%D0%B5%D1%81%D1%82%D0%B2%D0%B5-%D1%85%D1%80%D0%B0%D0%BD%D0%B8%D0%BB%D0%B8%D1%89%D0%B0-%D0%B8-%D0%BE%D0%B4%D0%BD%D0%BE%D0%B2%D1%80%D0%B5%D0%BC%D0%B5%D0%BD%D0%BD%D0%BE-%D1%80%D0%B0%D1%81%D1%88%D0%B8%D1%80%D0%B5%D0%BD%D0%B8%D1%8F-%D0%BE%D0%B1%D1%8A%D0%B5%D0%BC%D0%B0-%D0%BE%D0%BF%D0%B5%D1%80%D0%B0%D1%82%D0%B8%D0%B2%D0%BD%D0%BE%D0%B9-%D0%BF%D0%B0%D0%BC%D1%8F%D1%82%D0%B8-%D0%B8%D0%BD%D1%82%D0%B5%D1%80%D0%BD%D0%B5%D1%82-%D1%86%D0%B5%D0%BD%D1%82%D1%80%D0%B0)
+
+> [!TIP]
+> Во избежании проблем с нехваткой памяти рекомендую именно эту инструкцию с созданием SWAP-раздела. Если у вас "хорошее" железо и вы уверены, что создание SWAP-раздела не нужно, просто пропустите этот шаг
+
+Устанавливаем Entware по [инструкции](https://help.keenetic.com/hc/ru/articles/360021214160-%D0%A3%D1%81%D1%82%D0%B0%D0%BD%D0%BE%D0%B2%D0%BA%D0%B0-%D1%81%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D1%8B-%D0%BF%D0%B0%D0%BA%D0%B5%D1%82%D0%BE%D0%B2-%D1%80%D0%B5%D0%BF%D0%BE%D0%B7%D0%B8%D1%82%D0%BE%D1%80%D0%B8%D1%8F-Entware-%D0%BD%D0%B0-USB-%D0%BD%D0%B0%D0%BA%D0%BE%D0%BF%D0%B8%D1%82%D0%B5%D0%BB%D1%8C)
+
 > [!TIP]
 > При первом подключении по ssh рекомендуется изменить дефолтный пароль командой
 > ```bash
@@ -131,6 +138,13 @@ nano /opt/etc/bot/bot_config.py
 
 
 >[!NOTE]
+>
+> Для восстановления настроек из бекапа:
+> 1) Конфигурация. Откройте веб-конфигуратор роутера, перейдите в меню `Управление` -> `Параметры системы`. В разделе `Системные файлы` загрузите бекап файла конфигурации в устройство
+> 2) Прошивка. Откройте веб-конфигуратор роутера, перейдите в меню `Управление` -> `Параметры системы`. В разделе `Системные файлы` загрузите бекап файла прошивки в устройство
+> 3) Entware. Воспользуйтесь [инструкцией](https://help.keenetic.com/hc/ru/articles/360021214160-%D0%A3%D1%81%D1%82%D0%B0%D0%BD%D0%BE%D0%B2%D0%BA%D0%B0-%D1%81%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D1%8B-%D0%BF%D0%B0%D0%BA%D0%B5%D1%82%D0%BE%D0%B2-%D1%80%D0%B5%D0%BF%D0%BE%D0%B7%D0%B8%D1%82%D0%BE%D1%80%D0%B8%D1%8F-Entware-%D0%BD%D0%B0-USB-%D0%BD%D0%B0%D0%BA%D0%BE%D0%BF%D0%B8%D1%82%D0%B5%D0%BB%D1%8C). На шаге №3 инструкции вместо `mipsel-installer.tar.gz` `mips-installer.tar.gz` `aarch64-installer.tar.gz` из инструкции используйте ваш файл бекапа Entware
+>
+>
 > Ссылки на исходные репозитории
 >
 >[https://github.com/ziwork/bypass_keenetic](https://github.com/ziwork/bypass_keenetic "https://github.com/ziwork/bypass_keenetic")\
