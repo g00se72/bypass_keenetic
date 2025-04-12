@@ -117,7 +117,7 @@ nano /opt/etc/bot/bot_config.py
 Запустить бота
 
 ```bash
-/opt/etc/bot/main.py &
+python3 /opt/etc/bot/main.py &
 ```
 
 Зайти в свой телеграм-бот, нажать `/start`
