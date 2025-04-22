@@ -85,7 +85,7 @@ services = {
     "unblock_update": [paths["unblock_update"]],
 }
 
-# Базоые URL-адреса для скачиваемых файлов
+# Базовые URL-адреса для скачиваемых файлов
 base_url = "https://raw.githubusercontent.com/g00se72/bypass_keenetic/main"
 bot_url = f"{base_url}/bot3"
 
