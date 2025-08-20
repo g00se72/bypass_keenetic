@@ -9,7 +9,7 @@ ip4t() {
     fi
 }
 
-local_ip=$(ip addr | grep br0 | grep 'inet' | awk '{print $2}' | grep -Eo '[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}')
+local_ip=$(ip -4 addr show br0 | awk '/inet/ {print $2}' | cut -d/ -f1)
 
 for protocol in udp tcp; do
     if [ -z "$(iptables-save 2>/dev/null | grep "$protocol --dport 53 -j DNAT")" ]; then
