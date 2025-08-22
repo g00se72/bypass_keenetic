@@ -71,7 +71,7 @@
 opkg update
 ```
 ```bash
-opkg install curl python3 python3-pip python3-dev
+opkg install curl python3 python3-pip gcc python3-dev
 ```
 ```bash
 pip3 install --upgrade pip
