@@ -338,41 +338,59 @@ def create_backup_with_params(bot, chat_id, backup_state, selected_drive, progre
         bot.edit_message_text("❌ Ошибка: скрипт завершился без результата", chat_id, progress_msg_id)
 
 def get_available_drives():
-    # Получение списка доступных дисков для бекапа без swap раздела
+    # Получение списка доступных дисков для бэкапа без swap разделов
     drives = []
+    current_drive = None
+    current_manufacturer = None
+
     try:
-        media_output = subprocess.check_output(["ndmc", "-c", "show media"], text=True)
-        current_drive = {}
-        current_manufacturer = ""
-        for line in media_output.splitlines():
-            if "manufacturer:" in line:
-                current_manufacturer = line.split(':')[1].strip()
-            elif "uuid:" in line:
-                if current_drive:
-                    drives.append(current_drive)
-                uuid = line.split(':')[1].strip()
-                current_drive = {'uuid': uuid, 'path': f"/tmp/mnt/{uuid}"}
-            elif "label:" in line and current_drive:
-                current_drive['label'] = line.split(':')[1].strip()
-            elif "fstype:" in line and current_drive:
-                fstype = line.split(':')[1].strip()
-                if fstype == "swap":
-                    current_drive = {}
-                    continue
-            elif "free:" in line and current_drive:
-                size_gb = round(int(line.split(':')[1].strip()) / (1024 * 1024 * 1024), 1)
-                current_drive['size'] = size_gb
-                if 'label' in current_drive and current_drive['label']:
-                    current_drive['display_name'] = current_drive['label']
-                elif current_manufacturer:
-                    current_drive['display_name'] = current_manufacturer
-                else:
-                    current_drive['display_name'] = "Unknown"
-        if current_drive:
-            drives.append(current_drive)
+        media_output = subprocess.check_output(
+            ["ndmc", "-c", "show media"],
+            text=True,
+            stderr=subprocess.STDOUT
+        )
     except subprocess.CalledProcessError:
-        pass
+        return []
+    except Exception:
+        return []
+
+    for raw_line in media_output.splitlines():
+        stripped = raw_line.strip()
+
+        if stripped.startswith("manufacturer:"):
+            current_manufacturer = stripped.split(":", 1)[1].strip()
+
+        elif stripped.startswith("uuid:"):
+            if current_drive:
+                drives.append(current_drive)
+            uuid = stripped.split(":", 1)[1].strip()
+            current_drive = {'uuid': uuid, 'path': f"/tmp/mnt/{uuid}"}
+
+        elif stripped.startswith("label:") and current_drive is not None:
+            current_drive['label'] = stripped.split(":", 1)[1].strip()
+
+        elif stripped.startswith("fstype:") and current_drive is not None:
+            fstype = stripped.split(":", 1)[1].strip()
+            if fstype == "swap":
+                current_drive = None
+            else:
+                current_drive['fstype'] = fstype
+
+        elif stripped.startswith("free:") and current_drive is not None:
+            val = stripped.split(":", 1)[1].strip()
+            try:
+                size_gb = round(int(val) / (1024 * 1024 * 1024), 1)
+            except Exception:
+                size_gb = None
+            current_drive['size'] = size_gb
+            if current_drive.get('label'):
+                current_drive['display_name'] = current_drive['label']
+            elif current_manufacturer:
+                current_drive['display_name'] = current_manufacturer
+            else:
+                current_drive['display_name'] = "Unknown"
+
+    if current_drive:
+        drives.append(current_drive)
+
     return drives
-
-
-
