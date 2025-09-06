@@ -71,13 +71,13 @@
 opkg update
 ```
 ```bash
-opkg install curl python3 python3-pip gcc python3-dev
+opkg install curl python3 python3-pip
 ```
 ```bash
 pip3 install --upgrade pip
 ```
 ```bash
-pip3 install pyTelegramBotAPI telethon pathlib
+pip3 install pyTelegramBotAPI==4.27.0
 ```
 
 4) Загрузить бота
