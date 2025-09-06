@@ -238,8 +238,9 @@ def tor_config(bridges, bot=None, chat_id=None):
         parts = line.split()
         if not parts:
             raise ValueError(f"Некорректный мост: '{line}'")
-        
+            
         transport_type = parts[0] if parts[0] in valid_transports else None
+        
         if transport_type:
             if len(parts) < 2:
                 raise ValueError(f"Указан транспорт '{parts[0]}', но нет IP:порт или параметров в '{line}'")
@@ -248,21 +249,15 @@ def tor_config(bridges, bot=None, chat_id=None):
             bridge_data = parts[0]
         
         if transport_type == "webtunnel":
-            # Проверяем IP:порт
             if not ip_port_pattern.match(bridge_data):
                 raise ValueError(f"Некорректный формат IP:порт в '{line}'")
-            # Ищем параметр url=... в строке
-            url_match = None
-            for part in parts:
-                if part.startswith("url="):
-                    url_match = part[4:]  # Извлекаем значение после url=
-                    break
+            url_match = next((part[4:] for part in parts if part.startswith("url=")), None)
+            
             if not url_match:
                 raise ValueError(f"Отсутствует параметр url= в webtunnel мосту: '{line}'")
             if not url_pattern.match(url_match):
                 raise ValueError(f"Некорректный формат URL в webtunnel: '{url_match}' в строке '{line}'")
         else:
-            # Для obfs4 и других проверяем IP:порт
             if not ip_port_pattern.match(bridge_data):
                 raise ValueError(f"Некорректный формат IP:порт в '{line}'")
 
@@ -378,5 +373,6 @@ def get_available_drives():
     except subprocess.CalledProcessError:
         pass
     return drives
+
 
 
