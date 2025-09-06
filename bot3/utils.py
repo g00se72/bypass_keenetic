@@ -227,8 +227,10 @@ def shadowsocks_config(key, bot=None, chat_id=None):
 @notify_on_error()
 def tor_config(bridges, bot=None, chat_id=None):
     bridge_lines = bridges.strip().split('\n')
-    valid_transports = {"obfs4", "obfs3", "meek", "scramblesuit"}
+    valid_transports = {"obfs4", "webtunnel"}
     ip_port_pattern = re.compile(r"^(?:(?:\d{1,3}\.){3}\d{1,3}|\[[0-9a-fA-F:]*\]):\d{1,5}$")
+    url_pattern = re.compile(r"^https?://[^\s/$.?#].\S*$")
+    
     for line in bridge_lines:
         line = line.strip()
         if not line:
@@ -238,18 +240,23 @@ def tor_config(bridges, bot=None, chat_id=None):
             raise ValueError(f"Некорректный мост: '{line}'")
         if parts[0] in valid_transports:
             if len(parts) < 2:
-                raise ValueError(f"Указан транспорт '{parts[0]}', но нет IP:порт в '{line}'")
-            ip_port = parts[1]
+                raise ValueError(f"Указан транспорт '{parts[0]}', но нет IP:порт или URL в '{line}'")
+            bridge_data = parts[1]
         else:
-            ip_port = parts[0]
-        if not ip_port_pattern.match(ip_port):
-            raise ValueError(f"Некорректный формат IP:порт в '{line}'")
+            bridge_data = parts[0]
+        
+        if parts[0] == "webtunnel":
+            if not url_pattern.match(bridge_data):
+                raise ValueError(f"Некорректный формат URL для webtunnel в '{line}'")
+        else:
+            if not ip_port_pattern.match(bridge_data):
+                raise ValueError(f"Некорректный формат IP:порт в '{line}'")
 
     with open(os.path.join(config.paths["templates_dir"], "tor_template.torrc"), 'r', encoding='utf-8') as f:
         config_data = f.read()
-    config_data = config_data.replace("{{localporttor}}", str(config.localporttor))
-    config_data = config_data.replace("{{dnsporttor}}", str(config.dnsporttor))
-    config_data = config_data.replace("{{bridges}}", bridges.replace("obfs4", "Bridge obfs4"))
+        config_data = config_data.replace("{{localporttor}}", str(config.localporttor))
+        config_data = config_data.replace("{{dnsporttor}}", str(config.dnsporttor))
+        config_data = config_data.replace("{{bridges}}", bridges.replace("obfs4", "Bridge obfs4").replace("webtunnel", "Bridge webtunnel"))
     ConfigWriter.write_config(config.paths["tor_config"], config_data, format='text')
 
 def create_backup_with_params(bot, chat_id, backup_state, selected_drive, progress_msg_id):
@@ -357,3 +364,4 @@ def get_available_drives():
     except subprocess.CalledProcessError:
         pass
     return drives
+
