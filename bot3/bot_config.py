@@ -29,6 +29,7 @@ packages = [
     "ipset",
     "iptables",
     "obfs4",
+    "webtunnel-client",
     "shadowsocks-libev-ss-redir",
     "shadowsocks-libev-config",
     "xray",
