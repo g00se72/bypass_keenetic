@@ -164,7 +164,7 @@ if [ "$1" = "-install" ]; then
     # Создание директории и шаблонов конфигов
     mkdir -p "$TEMPLATES_DIR"
     for template in tor_template.torrc vless_template.json trojan_template.json shadowsocks_template.json; do
-        curl -s -o "$TEMPLATES_DIR$template" "$BASE_URL/$template"
+        curl -s -o "$TEMPLATES_DIR/$template" "$BASE_URL/$template"
     done
     echo "Загружены темплейты конфигураций для Tor, Shadowsocks, Vless, Trojan"
 
@@ -278,26 +278,29 @@ fi
 
 
 if [ "$1" = "-update" ]; then
-    #echo "ℹ️ Ваша версия KeenOS" "${keen_os_full}"
-    
-    #opkg update > /dev/null 2>&1 && echo "Пакеты обновлены"
+    echo "ℹ️ Ваша версия KeenOS" "${keen_os_full}"
+    opkg update > /dev/null 2>&1 && echo "Пакеты обновлены"
+	(opkg install webtunnel-client && echo "Webtunnel-client установлен") || echo "❌ Ошибка при установке Webtunnel-client"
     
     #"$INIT_SHADOWSOCKS" stop > /dev/null 2>&1 || echo "❕S22shadowsocks не найден, пропускаем остановку"
     #"$INIT_XRAY" stop > /dev/null 2>&1 || echo "S❕24xray не найден, пропускаем остановку"
     #"$INIT_TROJAN" stop > /dev/null 2>&1 || echo "❕S22trojan не найден, пропускаем остановку"
-    #"$INIT_TOR" stop > /dev/null 2>&1 || echo "❕S35tor не найден, пропускаем остановку"
-    #echo "Сервисы остановлены"
-
+    "$INIT_TOR" stop > /dev/null 2>&1 || echo "❕S35tor не найден, пропускаем остановку"
+    echo "S35 tor остановлен"
+    #rm -rf "$TOR_TMP_DIR"/* при пустой переменной будет катастрофа так что лучше ручками
+	
     # Что нужно обновить
     #curl -s -o "$BOT_DIR/main.py" "$BOT_URL/main.py" || exit 1
     #curl -s -o "$BOT_DIR/menu.py" "$BOT_URL/menu.py" || exit 1
-    #curl -s -o "$BOT_DIR/utils.py" "$BOT_URL/utils.py" || exit 1
+	curl -s -o "$TEMPLATES_DIR/tor_template.torrc" "$BASE_URL/tor_template.torrc"
+    cp "$TEMPLATES_DIR/tor_template.torrc" "$TOR_CONFIG" && echo "Базовые настройки Tor обновлены"
+    curl -s -o "$BOT_DIR/utils.py" "$BOT_URL/utils.py" || exit 1
     #curl -s -o "$BOT_DIR/handlers.py" "$BOT_URL/handlers.py" || exit 1
     #curl -s -o "$SCRIPT_BU" "$BASE_URL/KeenSnap/keensnap.sh" || exit 1
 	curl -s -o "$REDIRECT_SCRIPT" "$BASE_URL/100-redirect.sh" || exit 1
-    echo "Обновления загружены, применяем права"
-    #chmod 755 "$BOT_DIR"
-    #chmod 644 "$BOT_DIR"/*.py
+    echo "Обновления для бота загружены, применяем права"
+    chmod 755 "$BOT_DIR"
+    chmod 644 "$BOT_DIR"/*.py
     #chmod 755 "$SCRIPT_BU"
 
     #"$INIT_DNSMASQ" restart > /dev/null 2>&1 || echo "❌ Ошибка при перезапуске dnsmasq"
@@ -312,7 +315,7 @@ if [ "$1" = "-update" ]; then
     echo "Версия бота \"${bot_old_version}\" обновлена до \"${bot_new_version}\""
     sleep 2
     echo "✅ Обновление выполнено"
-    #echo "Бот будет перезапущен! Это займет около 15-30 секунд"
+    echo "Введите ключи Tor! Теперь поддерживаются obfs4 и webtunnel ключи!"
     #sleep 2
     #"$INIT_BOT" restart
 
