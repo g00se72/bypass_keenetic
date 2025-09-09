@@ -11,8 +11,8 @@ proxy1port = 1080  # Локальный порт для xray/sing-box
 proxy1interface = Proxy1  # Название интерфейса
 
 # Настройки клиента vless
-vless-client = sing-box # Клиент для установки sing-box или xray
-client-mode = socks5 # Режим работы sing-box tun (с gvisor) или socks5, для xray - всегда socks5
+vless_client = sing-box # Клиент для установки sing-box или xray
+client_mode = socks5 # Режим работы sing-box tun (с gvisor) или socks5, для xray - всегда socks5
 
 # Список пакетов
 packages = [
