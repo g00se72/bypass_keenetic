@@ -149,14 +149,14 @@ if [ "$1" = "-install" ]; then
         case "$CLIENT_MODE" in
         "tun")
             cp "$TEMPLATES_DIR/sing-box2_template.json" "$SINGBOX_CONFIG" && \
-            echo "Установлены настройки Sing-box (Tun режим)"
+            echo "Установлены базовые настройки Sing-box (Tun режим)"
             ;;
         "socks5")
             cp "$TEMPLATES_DIR/sing-box1_template.json" "$SINGBOX_CONFIG" && \
-            echo "Установлены настройки Sing-box (SOCKS5 режим)"
+            echo "Установлены базовые настройки Sing-box (SOCKS5 режим)"
             ;;
         *)
-            echo "Ошибка: неизвестный режим клиента: $CLIENT_MODE"
+            echo "Ошибка: неизвестный режим Sing-box $CLIENT_MODE"
             ;;
         esac
     fi
