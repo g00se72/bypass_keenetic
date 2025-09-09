@@ -95,7 +95,7 @@ if [ "$1" = "-install" ]; then
     
     wget -qO- "$MT_URL" && echo "Репозиторий MagiTrickle добавлен в пакетный менеджер"
 	
-	  # Установка пакетов
+    # Установка пакетов
     opkg update > /dev/null 2>&1 && echo "Пакеты обновлены"
     for pkg in $PACKAGES; do
         if echo "$installed_packages" | grep -q "^$pkg$"; then
@@ -110,6 +110,7 @@ if [ "$1" = "-install" ]; then
     done
     sleep 3
     echo "Установка пакетов завершена. Продолжаем установку"
+	
     # Создадим прокси-подключение для Xray или Sing-box в режиме socks5
     if [ "$VLESS_CLIENT" = "sing-box" ] && [ "$CLIENT_MODE" = "tun" ]; then
         echo "Прокси-подключение не будет создано так как выбран Sing-box в режиме tun"
@@ -119,7 +120,7 @@ if [ "$1" = "-install" ]; then
         ndmc -c interface "$PROXY1INTERFACE" proxy socks5-udp && \
         ndmc -c interface "$PROXY1INTERFACE" proxy upstream 127.0.0.1 "$PROXY1PORT" && \
         ndmc -c interface "$PROXY1INTERFACE" up && \
-		    ndmc -c system configuration save
+		ndmc -c system configuration save
         echo "Прокси-подключение для $VLESS_CLIENT создано"
     fi
 
@@ -191,7 +192,7 @@ if [ "$1" = "-update" ]; then
     # Что нужно обновить
     # curl -s -o "$BOT_DIR/main.py" "$BOT_URL/main.py" || exit 1
     # curl -s -o "$BOT_DIR/menu.py" "$BOT_URL/menu.py" || exit 1
-	  # curl -s -o "$TEMPLATES_DIR/tor_template.torrc" "$BOT_URL/tor_template.torrc"
+	# curl -s -o "$TEMPLATES_DIR/tor_template.torrc" "$BOT_URL/tor_template.torrc"
     # cp "$TEMPLATES_DIR/tor_template.torrc" "$TOR_CONFIG" && echo "Базовые настройки Tor обновлены"
     # curl -s -o "$BOT_DIR/utils.py" "$BOT_URL/utils.py" || exit 1
     # curl -s -o "$BOT_DIR/handlers.py" "$BOT_URL/handlers.py" || exit 1
@@ -226,18 +227,18 @@ if [ "$1" = "-var" ]; then
     echo -e "\n=== URL-адреса для скачиваемых файлов ==="
     echo "BASE_URL: $BASE_URL"
     echo "BOT_URL: $BOT_URL"
-	  echo "MT_URL: $MT_URL"
+	echo "MT_URL: $MT_URL"
     echo -e "\n=== Версия прошивки ==="
     echo "Ваша версия KeenOS" "${keen_os_full}"
     echo "Ваша версия KeenOS" "${keen_os_short}"
     echo -e "\n=== Настройки прокси ==="
     echo "PROXY0PORT: $PROXY0PORT"
-	  echo "PROXY0INTERFACE: $PROXY0INTERFACE"
-	  echo "PROXY1PORT: $PROXY1PORT"
-	  echo "PROXY1INTERFACE: $PROXY1INTERFACE"
-	  echo -e "\n=== Настройки vless клиента ==="
-	  echo "VLESS_CLIENT: $VLESS_CLIENT"
-	  echo "CLIENT_MODE: $CLIENT_MODE"
+	echo "PROXY0INTERFACE: $PROXY0INTERFACE"
+    echo "PROXY1PORT: $PROXY1PORT"
+	echo "PROXY1INTERFACE: $PROXY1INTERFACE"
+    echo -e "\n=== Настройки vless клиента ==="
+	echo "VLESS_CLIENT: $VLESS_CLIENT"
+    echo "CLIENT_MODE: $CLIENT_MODE"
     echo -e "\n=== Пути из paths ==="
     echo "TOR_CONFIG: $TOR_CONFIG"
     echo "SINGBOX_CONFIG: $SINGBOX_CONFIG"
@@ -253,7 +254,7 @@ if [ "$1" = "-var" ]; then
     echo "INIT_XRAY: $INIT_XRAY"
     echo "INIT_TOR: $INIT_TOR"
     echo "INIT_BOT: $INIT_BOT"
-	  echo "INIT_MT: $INIT_MT"
+	echo "INIT_MT: $INIT_MT"
     echo -e "\n=== Пакеты ==="
     echo "PACKAGES: $PACKAGES"
 fi
