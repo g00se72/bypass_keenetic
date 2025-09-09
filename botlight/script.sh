@@ -32,16 +32,16 @@ read_path() {
 
 # Чтение путей из paths
 TOR_CONFIG=$(read_path "tor_config")
-SINGBOX_CONFIG=$(read_path "sing-box_config")
+SINGBOX_CONFIG=$(read_path "singbox_config")
 XRAY_CONFIG=$(read_path "xray_config")
 TEMPLATES_DIR=$(read_path "templates_dir")
 KEENSNAP_DIR=$(read_path "keensnap_dir")
 SCRIPT_BU=$(read_path "keensnap")
 BOT_DIR=$(read_path "bot_dir")
 TOR_DIR=$(read_path "tor_dir")
-SINGBOX_DIR=$(read_path "sing-box_dir")
+SINGBOX_DIR=$(read_path "singbox_dir")
 XRAY_DIR=$(read_path "xray_dir")
-INIT_SINGBOX=$(read_path "init_sing-box")
+INIT_SINGBOX=$(read_path "init_singbox")
 INIT_XRAY=$(read_path "init_xray")
 INIT_TOR=$(read_path "init_tor")
 INIT_BOT=$(read_path "init_bot")
@@ -49,13 +49,13 @@ INIT_MT=$(read_path "init_MT")
 
 # Чтение пакетов
 installed_packages=$(opkg list-installed | awk '{print $1}')
-PACKAGES=$(awk -v client=$VLESS_CLIENT '
+PACKAGES=$(awk -v client="$VLESS_CLIENT" '
 /^packages = \[/,/\]/ {
     if ($0 ~ /".*"/) {
         gsub(/^[[:space:]]*"|".*$/, "")
         package = $0
         if (package == "xray" && client != "xray") next
-        if (package == "sing-box-go" && client != "sing-box") next
+        if (package == "singbox-go" && client != "singbox") next
         printf "%s ", package
     }
 }' "$BOT_CONFIG")
@@ -110,7 +110,7 @@ if [ "$1" = "-install" ]; then
     echo "Установка пакетов завершена. Продолжаем установку"
 	
     # Создадим прокси-подключение для Xray или Sing-box в режиме socks5
-    if [ $VLESS_CLIENT = "sing-box" ] && [ "$CLIENT_MODE" = "tun" ]; then
+    if [ "$VLESS_CLIENT" = "singbox" ] && [ "$CLIENT_MODE" = "tun" ]; then
         echo "Прокси-подключение не будет создано так как выбран Sing-box в режиме tun"
     else
         ndmc -c interface "$PROXY1INTERFACE" && \
@@ -133,7 +133,7 @@ if [ "$1" = "-install" ]; then
 
     # Создание шаблонов
     mkdir -p "$TEMPLATES_DIR"
-    for template in tor_template.torrc xray_template.json sing-box1_template.json sing-box2_template.json; do
+    for template in tor_template.torrc xray_template.json singbox1_template.json singbox2_template.json; do
         curl -s -o "$TEMPLATES_DIR/$template" "$BOT_URL/$template" || exit 1
     done
     echo "Загружены шаблоны конфигураций для Tor, Xray и Sing-box"
@@ -142,17 +142,17 @@ if [ "$1" = "-install" ]; then
     cp "$TEMPLATES_DIR/tor_template.torrc" "$TOR_CONFIG" && \
     echo "Установлены базовые настройки Tor"
 
-    if [ $VLESS_CLIENT = "xray" ]; then
+    if [ "$VLESS_CLIENT" = "xray" ]; then
         cp "$TEMPLATES_DIR/xray_template.json" "$XRAY_CONFIG" && \
         echo "Установлены базовые настройки Xray"
     else
         case "$CLIENT_MODE" in
         "tun")
-            cp "$TEMPLATES_DIR/sing-box2_template.json" "$SINGBOX_CONFIG" && \
+            cp "$TEMPLATES_DIR/singbox2_template.json" "$SINGBOX_CONFIG" && \
             echo "Установлены базовые настройки Sing-box (Tun режим)"
             ;;
         "socks5")
-            cp "$TEMPLATES_DIR/sing-box1_template.json" "$SINGBOX_CONFIG" && \
+            cp "$TEMPLATES_DIR/singbox1_template.json" "$SINGBOX_CONFIG" && \
             echo "Установлены базовые настройки Sing-box (SOCKS5 режим)"
             ;;
         *)
