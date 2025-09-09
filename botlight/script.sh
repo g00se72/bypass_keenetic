@@ -15,8 +15,8 @@ PROXY0PORT=$(grep "proxy0port" "$BOT_CONFIG" | awk -F'=' '{print $2}' | awk '{pr
 PROXY0INTERFACE=$(grep "proxy0interface" "$BOT_CONFIG" | awk -F'=' '{print $2}' | awk '{print $1}')
 PROXY1PORT=$(grep "proxy1port" "$BOT_CONFIG" | awk -F'=' '{print $2}' | awk '{print $1}')
 PROXY1INTERFACE=$(grep "proxy1interface" "$BOT_CONFIG" | awk -F'=' '{print $2}' | awk '{print $1}')
-VLESS_CLIENT=$(grep "vless-client" "$BOT_CONFIG" | awk -F'=' '{print $2}' | awk '{print $1}')
-CLIENT_MODE=$(grep "client-mode" "$BOT_CONFIG" | awk -F'=' '{print $2}' | awk '{print $1}')
+VLESS_CLIENT=$(grep "vless_client" "$BOT_CONFIG" | awk -F'=' '{print $2}' | awk '{print $1}')
+CLIENT_MODE=$(grep "client_mode" "$BOT_CONFIG" | awk -F'=' '{print $2}' | awk '{print $1}')
 
 # Чтение версии прошивки
 if [ -f /proc/version ]; then
