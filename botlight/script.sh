@@ -34,16 +34,16 @@ read_path() {
 
 # Чтение путей из paths
 TOR_CONFIG=$(read_path "tor_config")
-SING_BOX_CONFIG=$(read_path "sing-box_config")
+SINGBOX_CONFIG=$(read_path "sing-box_config")
 XRAY_CONFIG=$(read_path "xray_config")
 TEMPLATES_DIR=$(read_path "templates_dir")
 KEENSNAP_DIR=$(read_path "keensnap_dir")
 SCRIPT_BU=$(read_path "keensnap")
 BOT_DIR=$(read_path "bot_dir")
 TOR_DIR=$(read_path "tor_dir")
-SING_BOX_DIR=$(read_path "sing-box_dir")
+SINGBOX_DIR=$(read_path "sing-box_dir")
 XRAY_DIR=$(read_path "xray_dir")
-INIT_SING-BOX=$(read_path "init_sing-box")
+INIT_SINGBOX=$(read_path "init_sing-box")
 INIT_XRAY=$(read_path "init_xray")
 INIT_TOR=$(read_path "init_tor")
 INIT_BOT=$(read_path "init_bot")
@@ -79,7 +79,7 @@ if [ "$1" = "-remove" ]; then
     # Список для удаления того, что не удаляется через remove
     for file in \
         "$TOR_DIR" \
-        "$SING_BOX_DIR" \
+        "$SINGBOX_DIR" \
         "$XRAY_DIR" \
         "$TEMPLATES_DIR"
     do
@@ -149,11 +149,11 @@ if [ "$1" = "-install" ]; then
     else
         case "$CLIENT_MODE" in
         "tun")
-            cp "$TEMPLATES_DIR/sing-box2_template.json" "$SING_BOX_CONFIG" && \
+            cp "$TEMPLATES_DIR/sing-box2_template.json" "$SINGBOX_CONFIG" && \
             echo "Установлены настройки Sing-box (Tun режим)"
             ;;
         "socks5")
-            cp "$TEMPLATES_DIR/sing-box1_template.json" "$SING_BOX_CONFIG" && \
+            cp "$TEMPLATES_DIR/sing-box1_template.json" "$SINGBOX_CONFIG" && \
             echo "Установлены настройки Sing-box (SOCKS5 режим)"
             ;;
         *)
@@ -201,7 +201,7 @@ if [ "$1" = "-update" ]; then
     # chmod 644 "$BOT_DIR"/*.py
     # chmod 755 "$SCRIPT_BU"
 
-    # "$INIT_SING-BOX" restart > /dev/null 2>&1 || echo "❕Sing-box не запустился, проверьте конфигурацию"
+    # "$INIT_SINGBOX" restart > /dev/null 2>&1 || echo "❕Sing-box не запустился, проверьте конфигурацию"
     # "$INIT_XRAY" restart > /dev/null 2>&1 || echo "❕Xray не запустился, проверьте конфигурацию"
     # "$INIT_TOR" restart > /dev/null 2>&1 || echo "❕Tor не запуcтился, проверьте конфигурацию"
     # "$INIT_MT" restart > /dev/null 2>&1 || echo "❕MagiTrickle не запустился, проверьте конфигурацию"
@@ -240,16 +240,16 @@ if [ "$1" = "-var" ]; then
 	  echo "CLIENT_MODE: $CLIENT_MODE"
     echo -e "\n=== Пути из paths ==="
     echo "TOR_CONFIG: $TOR_CONFIG"
-    echo "SING_BOX_CONFIG: $SING_BOX_CONFIG"
+    echo "SINGBOX_CONFIG: $SINGBOX_CONFIG"
     echo "XRAY_CONFIG: $XRAY_CONFIG"
     echo "TEMPLATES_DIR: $TEMPLATES_DIR"
     echo "KEENSNAP_DIR: $KEENSNAP_DIR"
     echo "SCRIPT_BU: $SCRIPT_BU"
     echo "BOT_DIR: $BOT_DIR"
     echo "TOR_DIR: $TOR_DIR"
-    echo "SING_BOX_DIR: $SING_BOX_DIR"
+    echo "SINGBOX_DIR: $SINGBOX_DIR"
     echo "XRAY_DIR: $XRAY_DIR"
-    echo "INIT_SING-BOX: $INIT_SING-BOX"
+    echo "INIT_SINGBOX: $INIT_SINGBOX"
     echo "INIT_XRAY: $INIT_XRAY"
     echo "INIT_TOR: $INIT_TOR"
     echo "INIT_BOT: $INIT_BOT"
