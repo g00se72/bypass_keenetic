@@ -6,9 +6,9 @@ RESTART_DELAY = 60  # Задержка в секундах перед перез
 
 # Настройки Proxy
 proxy0port = 9050  # Локальный порт для Tor socks5 прокси
-proxy0interface = "Proxy0"  # Название интерфейса
+proxy0interface = Proxy0  # Название интерфейса
 proxy1port = 1080  # Локальный порт для xray/sing-box
-proxy1interface = "Proxy1"  # Название интерфейса
+proxy1interface = Proxy1  # Название интерфейса
 
 # Настройки клиента vless
 vless_client = "sing-box" # Клиент для установки sing-box или xray
@@ -56,7 +56,7 @@ services = {
     "tor_restart": [paths["init_tor"], "restart"],
     "sing-box_restart": [paths["init_sing-box"], "restart"],
     "xray_restart": [paths["init_xray"], "restart"],
-    "MR_restart": [paths["init_MT"], "restart"],
+    "MT_restart": [paths["init_MT"], "restart"],
     "service_script": [paths["init_bot"], "restart"]
 }
 
