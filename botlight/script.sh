@@ -23,7 +23,6 @@ if [ -f /proc/version ]; then
     keen_os_full=$(cat /proc/version | awk '{print $3}')
 else
     echo "❌ Ошибка: файл /proc/version не найден. Не удалось получить версию ОС"
-    exit 1
 fi
 
 # Функция для чтения путей из конфига
@@ -70,12 +69,12 @@ if [ "$1" = "-remove" ]; then
             echo "Удаляем пакет: $pkg"
             opkg remove "$pkg" --force-removal-of-dependent-packages
         else
-            echo "❕Пакет $pkg не установлен, пропускаем..."
+            echo "❕Пакет $pkg не был установлен, пропускаем..."
         fi
     done
-    echo "Все пакеты удалены. Начинаем удаление папок, файлов и настроек"
+    echo "Все пакеты удалены. Продолжаем удаление"
 
-    # Список для удаления того, что не удаляется через remove
+    # Удаления того, что не удаляется через remove
     for file in \
         "$TOR_DIR" \
         "$SINGBOX_DIR" \
@@ -135,7 +134,7 @@ if [ "$1" = "-install" ]; then
     # Создание шаблонов
     mkdir -p "$TEMPLATES_DIR"
     for template in tor_template.torrc xray_template.json sing-box1_template.json sing-box2_template.json; do
-        curl -s -o "$TEMPLATES_DIR/$template" "$BOT_URL/$template"
+        curl -s -o "$TEMPLATES_DIR/$template" "$BOT_URL/$template" || exit 1
     done
     echo "Загружены шаблоны конфигураций для Tor, Xray и Sing-box"
 
@@ -191,7 +190,7 @@ if [ "$1" = "-update" ]; then
     # Что нужно обновить
     # curl -s -o "$BOT_DIR/main.py" "$BOT_URL/main.py" || exit 1
     # curl -s -o "$BOT_DIR/menu.py" "$BOT_URL/menu.py" || exit 1
-	# curl -s -o "$TEMPLATES_DIR/tor_template.torrc" "$BOT_URL/tor_template.torrc"
+	# curl -s -o "$TEMPLATES_DIR/tor_template.torrc" "$BOT_URL/tor_template.torrc" || exit 1
     # cp "$TEMPLATES_DIR/tor_template.torrc" "$TOR_CONFIG" && echo "Базовые настройки Tor обновлены"
     # curl -s -o "$BOT_DIR/utils.py" "$BOT_URL/utils.py" || exit 1
     # curl -s -o "$BOT_DIR/handlers.py" "$BOT_URL/handlers.py" || exit 1
@@ -255,6 +254,7 @@ if [ "$1" = "-var" ]; then
 	echo "INIT_MT: $INIT_MT"
     echo -e "\n=== Пакеты ==="
     echo "PACKAGES: $PACKAGES"
+	exit 0
 fi
 
 
@@ -263,7 +263,9 @@ if [ "$1" = "-help" ]; then
     echo "-remove для удаления"
     echo "-update для обновления"
     echo "-var для проверки чтения переменных"
+	exit 0
 fi
 if [ -z "$1" ]; then
     echo "-help посмотреть список доступных аргументов"
+	exit 0
 fi
