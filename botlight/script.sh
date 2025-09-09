@@ -21,7 +21,6 @@ CLIENT_MODE=$(grep "client-mode" "$BOT_CONFIG" | awk -F'=' '{print $2}' | awk '{
 # Чтение версии прошивки
 if [ -f /proc/version ]; then
     keen_os_full=$(cat /proc/version | awk '{print $3}')
-    keen_os_short=$(echo "$keen_os_full" | cut -d'.' -f1)
 else
     echo "❌ Ошибка: файл /proc/version не найден. Не удалось получить версию ОС"
     exit 1
@@ -222,7 +221,7 @@ fi
 
 
 if [ "$1" = "-var" ]; then
-    echo -e "\n=== Путь до bot_config.py ==="
+    echo -e "\n=== Место расположения файла конфигурации ==="
     echo "BOT_CONFIG: $BOT_CONFIG"
     echo -e "\n=== URL-адреса для скачиваемых файлов ==="
     echo "BASE_URL: $BASE_URL"
@@ -230,7 +229,6 @@ if [ "$1" = "-var" ]; then
 	echo "MT_URL: $MT_URL"
     echo -e "\n=== Версия прошивки ==="
     echo "Ваша версия KeenOS" "${keen_os_full}"
-    echo "Ваша версия KeenOS" "${keen_os_short}"
     echo -e "\n=== Настройки прокси ==="
     echo "PROXY0PORT: $PROXY0PORT"
 	echo "PROXY0INTERFACE: $PROXY0INTERFACE"
