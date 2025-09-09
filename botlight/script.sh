@@ -49,7 +49,7 @@ INIT_MT=$(read_path "init_MT")
 
 # Чтение пакетов
 installed_packages=$(opkg list-installed | awk '{print $1}')
-PACKAGES=$(awk -v client="$VLESS_CLIENT" '
+PACKAGES=$(awk -v client=$VLESS_CLIENT '
 /^packages = \[/,/\]/ {
     if ($0 ~ /".*"/) {
         gsub(/^[[:space:]]*"|".*$/, "")
@@ -110,7 +110,7 @@ if [ "$1" = "-install" ]; then
     echo "Установка пакетов завершена. Продолжаем установку"
 	
     # Создадим прокси-подключение для Xray или Sing-box в режиме socks5
-    if [ "$VLESS_CLIENT" = "sing-box" ] && [ "$CLIENT_MODE" = "tun" ]; then
+    if [ $VLESS_CLIENT = "sing-box" ] && [ "$CLIENT_MODE" = "tun" ]; then
         echo "Прокси-подключение не будет создано так как выбран Sing-box в режиме tun"
     else
         ndmc -c interface "$PROXY1INTERFACE" && \
@@ -142,7 +142,7 @@ if [ "$1" = "-install" ]; then
     cp "$TEMPLATES_DIR/tor_template.torrc" "$TOR_CONFIG" && \
     echo "Установлены базовые настройки Tor"
 
-    if [ "$VLESS_CLIENT" = "xray" ]; then
+    if [ $VLESS_CLIENT = "xray" ]; then
         cp "$TEMPLATES_DIR/xray_template.json" "$XRAY_CONFIG" && \
         echo "Установлены базовые настройки Xray"
     else
