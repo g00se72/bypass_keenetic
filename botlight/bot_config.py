@@ -56,6 +56,7 @@ services = {
     "tor_restart": [paths["init_tor"], "restart"],
     "sing-box_restart": [paths["init_sing-box"], "restart"],
     "xray_restart": [paths["init_xray"], "restart"],
+    "MR_restart": [paths["init_MT"], "restart"],
     "service_script": [paths["init_bot"], "restart"]
 }
 
