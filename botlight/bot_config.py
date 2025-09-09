@@ -61,7 +61,7 @@ services = {
 
 # Базовые URL-адреса для скачиваемых файлов
 base_url = "https://raw.githubusercontent.com/g00se72/bypass_keenetic/main"
-bot_url = f"{base_url}/bot3light
+bot_url = f"{base_url}/botlight
 MT_url = "http://bin.magitrickle.dev/packages/add_repo.sh"
 
 # Настройка бэкапа
