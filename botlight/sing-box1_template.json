@@ -1,0 +1,78 @@
+{
+  "log": {
+    "disabled": true,
+    "level": "debug",
+    "output": "singbox.log"
+  },
+  "inbounds": [
+    {
+      "type": "socks",
+      "tag": "socks-in-socks0",
+      "listen": "127.0.0.1",
+      "listen_port": {{localportvless}},
+      "sniff": false
+    }
+  ],
+  "outbounds": [
+    {
+      "type": "selector",
+      "tag": "main-selector",
+      "outbounds": [
+        "default"
+      ],
+      "default": "default",
+      "interrupt_exist_connections": false
+    },
+    {
+      "type": "vless",
+      "tag": "default",
+      "server": "{{address}}",
+      "server_port": {{port}},
+      "uuid": "{{id}}",
+      "flow": "{{flow}}",
+      "packet_encoding": "xudp",
+      "tls": {
+        "enabled": true,
+        "server_name": "{{sni}}",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "{{fp}}"
+        },
+        "reality": {
+          "enabled": true,
+          "public_key": "{{pbk}}",
+          "short_id": "{{sid}}"
+        }
+      }
+    },
+    {
+      "type": "direct",
+      "tag": "direct"
+    },
+    {
+      "type": "block",
+      "tag": "blocked"
+    }
+  ],
+  "route": {
+    "rules": [
+      {
+        "inbound": "socks-in-socks0",
+        "outbound": "main-selector"
+      }
+    ],
+    "auto_detect_interface": false,
+    "final": "blocked"
+  },
+  "experimental": {
+    "cache_file": {
+      "enabled": true
+    },
+    "clash_api": {
+      "external_controller": "0.0.0.0:9090",
+      "external_ui": "ui",
+      "external_ui_download_detour": "direct",
+      "access_control_allow_private_network": true
+    }
+  }
+}
