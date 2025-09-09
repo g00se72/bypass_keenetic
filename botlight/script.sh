@@ -55,7 +55,7 @@ PACKAGES=$(awk -v client="$VLESS_CLIENT" '
         gsub(/^[[:space:]]*"|".*$/, "")
         package = $0
         if (package == "xray" && client != "xray") next
-        if (package == "singbox-go" && client != "singbox") next
+        if (package == "sing-box-go" && client != "singbox") next
         printf "%s ", package
     }
 }' "$BOT_CONFIG")
