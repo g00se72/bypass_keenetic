@@ -7,12 +7,12 @@ RESTART_DELAY = 60  # Задержка в секундах перед перез
 # Настройки Proxy
 proxy0port = 9050  # Локальный порт для Tor socks5 прокси
 proxy0interface = Proxy0  # Название интерфейса
-proxy1port = 1080  # Локальный порт для xray/sing-box
+proxy1port = 1080  # Локальный порт для xray/singbox
 proxy1interface = Proxy1  # Название интерфейса
 
 # Настройки клиента vless
-vless_client = "sing-box" # Клиент для установки sing-box или xray
-client_mode = "socks5" # Режим работы sing-box tun (с gvisor) или socks5, для xray - всегда socks5
+vless_client = "singbox" # Клиент для установки singbox или xray
+client_mode = "socks5" # Режим работы singbox tun (с gvisor) или socks5, для xray - всегда socks5
 
 # Список пакетов
 packages = [
@@ -30,7 +30,7 @@ packages = [
 paths = {
     "bot_config": "/opt/etc/bot/bot_config.py",
     "tor_config": "/opt/etc/tor/torrc",
-    "sing-box_config": "/opt/etc/sing-box/config.json",
+    "singbox_config": "/opt/etc/singbox/config.json",
     "xray_config": "/opt/etc/xray/config.json",
     "error_log": "/opt/etc/bot/error.log",
     "keensnap_log": "/opt/root/KeenSnap/backup.log",
@@ -38,7 +38,7 @@ paths = {
     "bot_path": "/opt/etc/bot/main.py",
     "script_sh": "/opt/root/script.sh",
     "chat_id_path": "/opt/var/run/bot_chat_id.txt",
-    "init_sing-box": "/opt/etc/init.d/S99sing-box",
+    "init_singbox": "/opt/etc/init.d/S99sing-box",
     "init_xray": "/opt/etc/init.d/S24xray",
     "init_tor": "/opt/etc/init.d/S35tor",
     "init_bot": "/opt/etc/init.d/S99telegram_bot",
@@ -47,14 +47,14 @@ paths = {
     "templates_dir": "/opt/etc/bot/templates",
     "keensnap_dir": "/opt/root/KeenSnap",
     "tor_dir": "/opt/etc/tor",
-    "sing-box_dir": "/opt/etc/sing-box",
+    "singbox_dir": "/opt/etc/sing-box",
     "xray_dir": "/opt/etc/xray"
 }
 
 # Команды для перезапуска сервисов
 services = {
     "tor_restart": [paths["init_tor"], "restart"],
-    "sing-box_restart": [paths["init_sing-box"], "restart"],
+    "singbox_restart": [paths["init_singbox"], "restart"],
     "xray_restart": [paths["init_xray"], "restart"],
     "MT_restart": [paths["init_MT"], "restart"],
     "service_script": [paths["init_bot"], "restart"]
@@ -71,7 +71,7 @@ backup_settings = {
     "MAX_SIZE_MB": 45,
     "CUSTOM_BACKUP_PATHS":" ".join([
         paths["bot_dir"],
-        paths["sing-box_config"],
+        paths["singbox_config"],
         paths["xray_config"],
         paths["tor_config"],
         paths["script_sh"]
