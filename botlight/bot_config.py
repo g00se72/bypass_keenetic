@@ -72,7 +72,7 @@ backup_settings = {
     "CUSTOM_BACKUP_PATHS":" ".join([
         paths["bot_dir"],
         paths["singbox_config"],
-        paths["xray_config"],
+        # paths["xray_config"],
         paths["tor_config"],
         paths["script_sh"]
     ])
