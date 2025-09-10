@@ -30,7 +30,7 @@ packages = [
 paths = {
     "bot_config": "/opt/etc/bot/bot_config.py",
     "tor_config": "/opt/etc/tor/torrc",
-    "singbox_config": "/opt/etc/singbox/config.json",
+    "singbox_config": "/opt/etc/sing-box/config.json",
     "xray_config": "/opt/etc/xray/config.json",
     "error_log": "/opt/etc/bot/error.log",
     "keensnap_log": "/opt/root/KeenSnap/backup.log",
