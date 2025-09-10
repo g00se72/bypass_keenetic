@@ -8,12 +8,12 @@ if [ ! -f "$BOT_CONFIG" ]; then
 fi
 
 # Чтение переменных
+MT_URL=$(grep "^MT_url" "$BOT_CONFIG" | awk -F'"' '{print $2}')
 BASE_URL=$(grep "^base_url" "$BOT_CONFIG" | awk -F'"' '{print $2}')
 BOT_URL="$BASE_URL/botlight"
-MT_URL=$(grep "^MT_url" "$BOT_CONFIG" | awk -F'"' '{print $2}')
 PROXY0PORT=$(grep "proxy0port" "$BOT_CONFIG" | awk -F'=' '{print $2}' | awk '{print $1}')
-PROXY0INTERFACE=$(grep "proxy0interface" "$BOT_CONFIG" | awk -F'=' '{print $2}' | awk '{gsub(/["'\'']/, ""); print $1}')
 PROXY1PORT=$(grep "proxy1port" "$BOT_CONFIG" | awk -F'=' '{print $2}' | awk '{print $1}')
+PROXY0INTERFACE=$(grep "proxy0interface" "$BOT_CONFIG" | awk -F'=' '{print $2}' | awk '{gsub(/["'\'']/, ""); print $1}')
 PROXY1INTERFACE=$(grep "proxy1interface" "$BOT_CONFIG" | awk -F'=' '{print $2}' | awk '{gsub(/["'\'']/, ""); print $1}')
 VLESS_CLIENT=$(grep "vless_client" "$BOT_CONFIG" | awk -F'=' '{print $2}' | awk '{gsub(/["'\'']/, ""); print $1}')
 CLIENT_MODE=$(grep "client_mode" "$BOT_CONFIG" | awk -F'=' '{print $2}' | awk '{gsub(/["'\'']/, ""); print $1}')
