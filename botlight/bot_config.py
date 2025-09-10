@@ -23,7 +23,8 @@ packages = [
     "webtunnel-client",
     "xray",
     "sing-box-go",
-    "magitrickle"
+    "magitrickle",
+    "coreutils-split"
 ]
 
 # Пути к конфигурационным файлам и директориям
