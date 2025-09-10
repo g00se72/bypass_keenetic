@@ -12,9 +12,9 @@ BASE_URL=$(grep "^base_url" "$BOT_CONFIG" | awk -F'"' '{print $2}')
 BOT_URL="$BASE_URL/botlight"
 MT_URL=$(grep "^MT_url" "$BOT_CONFIG" | awk -F'"' '{print $2}')
 PROXY0PORT=$(grep "proxy0port" "$BOT_CONFIG" | awk -F'=' '{print $2}' | awk '{print $1}')
-PROXY0INTERFACE=$(grep "proxy0interface" "$BOT_CONFIG" | awk -F'=' '{print $2}' | awk '{print $1}')
+PROXY0INTERFACE=$(grep "proxy0interface" "$BOT_CONFIG" | awk -F'=' '{print $2}' | awk '{gsub(/["'\'']/, ""); print $1}')
 PROXY1PORT=$(grep "proxy1port" "$BOT_CONFIG" | awk -F'=' '{print $2}' | awk '{print $1}')
-PROXY1INTERFACE=$(grep "proxy1interface" "$BOT_CONFIG" | awk -F'=' '{print $2}' | awk '{print $1}')
+PROXY1INTERFACE=$(grep "proxy1interface" "$BOT_CONFIG" | awk -F'=' '{print $2}' | awk '{gsub(/["'\'']/, ""); print $1}')
 VLESS_CLIENT=$(grep "vless_client" "$BOT_CONFIG" | awk -F'=' '{print $2}' | awk '{print $1}')
 CLIENT_MODE=$(grep "client_mode" "$BOT_CONFIG" | awk -F'=' '{print $2}' | awk '{print $1}')
 
@@ -111,21 +111,21 @@ elif [ "$1" = "-install" ]; then
     if [ "$VLESS_CLIENT" = "singbox" ] && [ "$CLIENT_MODE" = "tun" ]; then
         echo "Прокси-подключение не будет создано так как выбран Sing-box в режиме tun"
     else
-        ndmc -c interface "${PROXY1INTERFACE//[\"']}" && \
-        ndmc -c interface "${PROXY1INTERFACE//[\"']}" proxy protocol socks5 && \
-        ndmc -c interface "${PROXY1INTERFACE//[\"']}" proxy socks5-udp && \
-        ndmc -c interface "${PROXY1INTERFACE//[\"']}" proxy upstream 127.0.0.1 "$PROXY1PORT" && \
-        ndmc -c interface "${PROXY1INTERFACE//[\"']}" up && \
+        ndmc -c interface "$PROXY1INTERFACE" && \
+        ndmc -c interface "$$PROXY1INTERFACE" proxy protocol socks5 && \
+        ndmc -c interface "$$PROXY1INTERFACE" proxy socks5-udp && \
+        ndmc -c interface "$$PROXY1INTERFACE" proxy upstream 127.0.0.1 "$PROXY1PORT" && \
+        ndmc -c interface "$$PROXY1INTERFACE" up && \
 		ndmc -c system configuration save
         echo "Прокси-подключение для $VLESS_CLIENT создано"
     fi
 
     # Создадим прокси-подключение для Tor
-    ndmc -c interface "${PROXY0INTERFACE//[\"']}" && \
-    ndmc -c interface "${PROXY0INTERFACE//[\"']}" proxy protocol socks5 && \
-    ndmc -c interface "${PROXY0INTERFACE//[\"']}" proxy socks5-udp && \
-    ndmc -c interface "${PROXY0INTERFACE//[\"']}" proxy upstream 127.0.0.1 "$PROXY0PORT" && \
-    ndmc -c interface "${PROXY0INTERFACE//[\"']}" up && \
+    ndmc -c interface "$$PROXY0INTERFACE" && \
+    ndmc -c interface "$$PROXY0INTERFACE" proxy protocol socks5 && \
+    ndmc -c interface "$$PROXY0INTERFACE" proxy socks5-udp && \
+    ndmc -c interface "$$PROXY0INTERFACE" proxy upstream 127.0.0.1 "$PROXY0PORT" && \
+    ndmc -c interface "$$PROXY0INTERFACE" up && \
     ndmc -c system configuration save
     echo "Прокси-подключение для Tor создано"
 
