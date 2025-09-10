@@ -85,7 +85,6 @@ if [ "$1" = "-remove" ]; then
     done
     echo "Созданные папки, файлы и настройки удалены"
     exit 0
-fi
 
 
 elif [ "$1" = "-install" ]; then
