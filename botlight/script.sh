@@ -86,7 +86,6 @@ if [ "$1" = "-remove" ]; then
     echo "Созданные папки, файлы и настройки удалены"
     exit 0
 
-
 elif [ "$1" = "-install" ]; then
     # echo "ℹ️ Ваша версия KeenOS" "${keen_os_full}"
     
@@ -179,7 +178,6 @@ elif [ "$1" = "-install" ]; then
 	
     exit 0
 
-
 elif [ "$1" = "-update" ]; then
     # echo "ℹ️ Ваша версия KeenOS" "${keen_os_full}"
     # opkg update > /dev/null 2>&1 && echo "Пакеты обновлены"
@@ -214,7 +212,6 @@ elif [ "$1" = "-update" ]; then
     # "$INIT_BOT" restart
 
     exit 0
-
 
 elif [ "$1" = "-var" ]; then
     echo -e "\n=== Место расположения файла конфигурации ==="
@@ -252,7 +249,6 @@ elif [ "$1" = "-var" ]; then
     echo -e "\n=== Пакеты ==="
     echo "PACKAGES: $PACKAGES"
 	exit 0
-
 
 elif [ "$1" = "-help" ]; then
     echo "-install для установки"
