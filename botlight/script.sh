@@ -113,21 +113,21 @@ if [ "$1" = "-install" ]; then
     if [ "$VLESS_CLIENT" = "singbox" ] && [ "$CLIENT_MODE" = "tun" ]; then
         echo "Прокси-подключение не будет создано так как выбран Sing-box в режиме tun"
     else
-        ndmc -c interface "$PROXY1INTERFACE" && \
-        ndmc -c interface "$PROXY1INTERFACE" proxy protocol socks5 && \
-        ndmc -c interface "$PROXY1INTERFACE" proxy socks5-udp && \
-        ndmc -c interface "$PROXY1INTERFACE" proxy upstream 127.0.0.1 "$PROXY1PORT" && \
-        ndmc -c interface "$PROXY1INTERFACE" up && \
+        ndmc -c interface "${PROXY1INTERFACE//\"/}" && \
+        ndmc -c interface "${PROXY1INTERFACE//\"/}" proxy protocol socks5 && \
+        ndmc -c interface "${PROXY1INTERFACE//\"/}" proxy socks5-udp && \
+        ndmc -c interface "${PROXY1INTERFACE//\"/}" proxy upstream 127.0.0.1 "$PROXY1PORT" && \
+        ndmc -c interface "${PROXY1INTERFACE//\"/}" up && \
 		ndmc -c system configuration save
         echo "Прокси-подключение для $VLESS_CLIENT создано"
     fi
 
     # Создадим прокси-подключение для Tor
-    ndmc -c interface "$PROXY0INTERFACE" && \
-    ndmc -c interface "$PROXY0INTERFACE" proxy protocol socks5 && \
-    ndmc -c interface "$PROXY0INTERFACE" proxy socks5-udp && \
-    ndmc -c interface "$PROXY0INTERFACE" proxy upstream 127.0.0.1 "$PROXY0PORT" && \
-    ndmc -c interface "$PROXY0INTERFACE" up && \
+    ndmc -c interface "${PROXY0INTERFACE//\"/}" && \
+    ndmc -c interface "${PROXY0INTERFACE//\"/}" proxy protocol socks5 && \
+    ndmc -c interface "${PROXY0INTERFACE//\"/}" proxy socks5-udp && \
+    ndmc -c interface "${PROXY0INTERFACE//\"/}" proxy upstream 127.0.0.1 "$PROXY0PORT" && \
+    ndmc -c interface "${PROXY0INTERFACE//\"/}" up && \
     ndmc -c system configuration save
     echo "Прокси-подключение для Tor создано"
 
