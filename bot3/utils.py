@@ -165,9 +165,8 @@ def parse_shadowsocks_key(key, bot=None, chat_id=None):
         raise ValueError("Неверный формат ключа Shadowsocks. Ожидается: ss://<base64(метод:пароль)>@<IP>:<порт>#имя")
 
     encodedkey = key.split('//')[1].split('@')[0] + '=='
-    decoded = base64.b64decode(encodedkey)
-    method = str(decoded.split(b':')[0])[2:]
-    password = str(decoded[2:].split(b':')[1])[:-1]
+    decoded = base64.b64decode(encodedkey).decode('utf-8') 
+    method, password = decoded.split(':', 1)
     server = key.split('@')[1].split('/')[0].split(':')[0]
     port = key.split('@')[1].split('/')[0].split(':')[1].split('#')[0]
     if not server or not port.isdigit() or not method or not password:
@@ -394,3 +393,4 @@ def get_available_drives():
         drives.append(current_drive)
 
     return drives
+
