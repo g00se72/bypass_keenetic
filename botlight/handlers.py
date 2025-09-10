@@ -22,6 +22,8 @@ def setup_handlers(bot):
     state = BotState()
     backup_state = BackupState()
     
+    vless_restart = config.services["singbox_restart"] if config.vless_client == "singbox" else config.services["xray_restart"]
+    
     def set_menu_and_reply(chat_id, new_menu, text=None, markup=None):
         state.current_menu = new_menu
         if not text:
@@ -53,14 +55,14 @@ def setup_handlers(bot):
         if success:
             set_menu_and_reply(message.chat.id, MENU_KEYS_BRIDGES)
         else:
-            bot.send_message(message.chat.id, "❕Попробуйте ввести мосты заново", reply_markup=state.current_menu.markup)
+            bot.send_message(message.chat.id,f"❌ Ошибка: {error}\n\n❕Устраните и попробуйте ввести мосты заново", reply_markup=state.current_menu.markup)
 
     def handle_vless(message):
-        success, error = update_service(message.chat.id, "Vless", lambda: vless_config(message.text, bot, message.chat.id), config.services["singbox_restart"] if config.vless_client == "sing-box" else config.services["xray_restart"])
+        success, error = update_service(message.chat.id, "Vless", lambda: vless_config(message.text, bot, message.chat.id), vless_restart)
         if success:
             set_menu_and_reply(message.chat.id, MENU_KEYS_BRIDGES)
         else:
-            bot.send_message(message.chat.id, "❕Попробуйте ввести ключ заново", reply_markup=state.current_menu.markup)
+            bot.send_message(message.chat.id,f"❌ Ошибка: {error}\n\n❕Устраните и попробуйте ввести ключ заново",reply_markup=state.current_menu.markup)
         
     def handle_restart(chat_id):
         bot.send_message(chat_id, "⏳ Бот будет перезапущен!\nЭто займет около 15-30 секунд", reply_markup=MENU_SERVICE.markup)
@@ -122,7 +124,7 @@ def setup_handlers(bot):
         '🔁 Перезапуск сервисов': lambda chat_id: (
             bot.send_message(chat_id, '⏳ Сервисы будут перезапущены!\nЭто займет около 10-15 секунд'),
             update_service(chat_id, "Tor", lambda: None, config.services["tor_restart"]),
-            update_service(chat_id, "Vless", lambda: None, config.services["singbox_restart"] if config.vless_client == "sing-box" else config.services["xray_restart"]),
+            update_service(chat_id, "Vless", lambda: None, vless_restart),
             bot.send_message(chat_id, '❕ Перезапуск сервисов завершен', reply_markup=MENU_MAIN.markup)
         ),
         '🆕 Обновления': lambda chat_id: handle_updates(chat_id),
