@@ -88,7 +88,7 @@ if [ "$1" = "-remove" ]; then
 fi
 
 
-if [ "$1" = "-install" ]; then
+elif [ "$1" = "-install" ]; then
     # echo "ℹ️ Ваша версия KeenOS" "${keen_os_full}"
     
     wget -qO- "$MT_URL" && echo "Репозиторий MagiTrickle добавлен в пакетный менеджер"
@@ -179,10 +179,9 @@ if [ "$1" = "-install" ]; then
     echo "Через MagiTrickle (:8080) настройте маршрутизацию через нужные интерфейсы"
 	
     exit 0
-fi
 
 
-if [ "$1" = "-update" ]; then
+elif [ "$1" = "-update" ]; then
     # echo "ℹ️ Ваша версия KeenOS" "${keen_os_full}"
     # opkg update > /dev/null 2>&1 && echo "Пакеты обновлены"
     # opkg install magitrickle && echo "MagiTrickle обновлен"
@@ -216,10 +215,9 @@ if [ "$1" = "-update" ]; then
     # "$INIT_BOT" restart
 
     exit 0
-fi
 
 
-if [ "$1" = "-var" ]; then
+elif [ "$1" = "-var" ]; then
     echo -e "\n=== Место расположения файла конфигурации ==="
     echo "BOT_CONFIG: $BOT_CONFIG"
     echo -e "\n=== URL-адреса для скачиваемых файлов ==="
@@ -255,17 +253,16 @@ if [ "$1" = "-var" ]; then
     echo -e "\n=== Пакеты ==="
     echo "PACKAGES: $PACKAGES"
 	exit 0
-fi
 
 
-if [ "$1" = "-help" ]; then
+elif [ "$1" = "-help" ]; then
     echo "-install для установки"
     echo "-remove для удаления"
     echo "-update для обновления"
     echo "-var для проверки чтения переменных"
 	exit 0
-fi
-if [ -z "$1" ]; then
+
+else
     echo "-help посмотреть список доступных аргументов"
 	exit 0
 fi
