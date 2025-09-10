@@ -280,12 +280,12 @@ fi
 if [ "$1" = "-update" ]; then
     echo "ℹ️ Ваша версия KeenOS" "${keen_os_full}"
     opkg update > /dev/null 2>&1 && echo "Пакеты обновлены"
-	(opkg install webtunnel-client && echo "Webtunnel-client установлен") || echo "❌ Ошибка при установке Webtunnel-client"
+	(opkg install webtunnel-client && echo "Webtunnel-client установлен") || echo "Webtunnel-client не был установлен"
     
-    #"$INIT_SHADOWSOCKS" stop > /dev/null 2>&1 || echo "❕S22shadowsocks не найден, пропускаем остановку"
-    #"$INIT_XRAY" stop > /dev/null 2>&1 || echo "S❕24xray не найден, пропускаем остановку"
-    #"$INIT_TROJAN" stop > /dev/null 2>&1 || echo "❕S22trojan не найден, пропускаем остановку"
-    "$INIT_TOR" stop > /dev/null 2>&1 || echo "❕S35tor не найден, пропускаем остановку"
+    #"$INIT_SHADOWSOCKS" stop > /dev/null 2>&1
+    #"$INIT_XRAY" stop > /dev/null 2>&1
+    #"$INIT_TROJAN" stop > /dev/null 2>&1
+    "$INIT_TOR" stop > /dev/null 2>&1
     echo "S35 tor остановлен"
     #rm -rf "$TOR_TMP_DIR"/* при пустой переменной будет катастрофа так что лучше ручками
 	
