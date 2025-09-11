@@ -13,6 +13,6 @@ VirtualAddrNetwork 10.254.0.0/16
 DNSPort 127.0.0.1:{{dnsporttor}}
 AutomapHostsOnResolve 1
 UseBridges 1
-ClientTransportPlugin obfs4 exec /opt/sbin/obfs4proxy managed
-ClientTransportPlugin webtunnel exec /opt/sbin/webtunnel-client
+#ClientTransportPlugin obfs4 exec /opt/sbin/obfs4proxy managed
+#ClientTransportPlugin webtunnel exec /opt/sbin/webtunnel-client
 {{bridges}}
