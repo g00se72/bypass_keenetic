@@ -264,6 +264,6 @@ GeoIPFile /opt/share/tor/geoip
 GeoIPv6File /opt/share/tor/geoip6
 DataDirectory /opt/var/lib/tor
 UseBridges 1
-ClientTransportPlugin obfs4 exec /opt/sbin/obfs4proxy managed
-ClientTransportPlugin webtunnel exec /opt/sbin/webtunnel-client
+#ClientTransportPlugin obfs4 exec /opt/sbin/obfs4proxy managed
+#ClientTransportPlugin webtunnel exec /opt/sbin/webtunnel-client
 {{bridges}}
