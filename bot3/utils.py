@@ -262,7 +262,8 @@ def tor_config(bridges, bot=None, chat_id=None):
 
     with open(os.path.join(config.paths["templates_dir"], "tor_template.torrc"), 'r', encoding='utf-8') as f:
         config_data = f.read()
-        config_data = config_data.replace("{{localporttor}}", str(config.dnsporttor))
+        config_data = config_data.replace("{{localporttor}}", str(config.localporttor))
+        config_data = config_data.replace("{{dnsporttor}}", str(config.dnsporttor))
         bridges_out = bridges.strip()
         transports = ["obfs4", "webtunnel"]
 
@@ -405,6 +406,7 @@ def get_available_drives():
         drives.append(current_drive)
 
     return drives
+
 
 
 
