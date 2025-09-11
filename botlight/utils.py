@@ -185,7 +185,20 @@ def tor_config(bridges, bot=None, chat_id=None):
     with open(os.path.join(config.paths["templates_dir"], "tor_template.torrc"), 'r', encoding='utf-8') as f:
         config_data = f.read()
         config_data = config_data.replace("{{localporttor}}", str(config.proxy0port))
-        config_data = config_data.replace("{{bridges}}", bridges.replace("obfs4", "Bridge obfs4").replace("webtunnel", "Bridge webtunnel"))
+        bridges_out = bridges.strip()
+        transports = ["obfs4", "webtunnel"]
+
+        found = False
+        for t in transports:
+            if t in bridges_out:
+                bridges_out = "\n".join(
+                line.replace(t, f"Bridge {t}", 1) if line.startswith(t) else line
+                for line in bridges_out.splitlines()
+                )
+                config_data = config_data.replace(f"#ClientTransportPlugin {t}", f"ClientTransportPlugin {t}", 1)
+                found = True
+        config_data = config_data.replace("{{bridges}}", bridges_out if found else "")
+            
     ConfigWriter.write_config(config.paths["tor_config"], config_data, format='text')
 
 def create_backup_with_params(bot, chat_id, backup_state, selected_drive, progress_msg_id):
