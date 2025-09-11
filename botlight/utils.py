@@ -197,7 +197,11 @@ def tor_config(bridges, bot=None, chat_id=None):
                 )
                 config_data = config_data.replace(f"#ClientTransportPlugin {t}", f"ClientTransportPlugin {t}", 1)
                 found = True
-        config_data = config_data.replace("{{bridges}}", bridges_out if found else "")
+        if found:
+            config_data = config_data.replace("{{bridges}}", bridges_out)
+        else:
+            config_data = re.sub(r'^\s*UseBridges 1\s*$', '', config_data, flags=re.MULTILINE)
+            config_data = re.sub(r'^\s*{{bridges}}\s*$', '', config_data, flags=re.MULTILINE)
             
     ConfigWriter.write_config(config.paths["tor_config"], config_data, format='text')
 
