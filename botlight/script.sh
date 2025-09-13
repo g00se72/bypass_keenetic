@@ -89,7 +89,7 @@ if [ "$1" = "-remove" ]; then
 elif [ "$1" = "-install" ]; then
     # echo "ℹ️ Ваша версия KeenOS" "${keen_os_full}"
     
-    wget -qO- "$MT_URL" && echo "Репозиторий MagiTrickle добавлен в пакетный менеджер"
+    wget -qO- "$MT_URL"  | sh && echo "Репозиторий MagiTrickle добавлен в пакетный менеджер"
 	
     # Установка пакетов
     opkg update > /dev/null 2>&1 && echo "Пакеты обновлены"
