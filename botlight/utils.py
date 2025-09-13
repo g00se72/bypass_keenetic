@@ -148,7 +148,7 @@ def vless_config(key, bot=None, chat_id=None):
 @notify_on_error()
 def tor_config(bridges, bot=None, chat_id=None):
     bridge_lines = bridges.strip().split('\n')
-    valid_transports = {"obfs4", "webtunnel"}
+    transports = {"obfs4", "webtunnel"}
     ip_port_pattern = re.compile(r"^(?:(?:\d{1,3}\.){3}\d{1,3}|\[[0-9a-fA-F:]*\]):\d{1,5}$")
     url_pattern = re.compile(r"^https?://[^\s/$.?#].\S*$")
     
@@ -160,7 +160,7 @@ def tor_config(bridges, bot=None, chat_id=None):
         if not parts:
             raise ValueError(f"Некорректный мост: '{line}'")
             
-        transport_type = parts[0] if parts[0] in valid_transports else None
+        transport_type = parts[0] if parts[0] in transports else None
         
         if transport_type:
             if len(parts) < 2:
@@ -186,14 +186,13 @@ def tor_config(bridges, bot=None, chat_id=None):
         config_data = f.read()
         config_data = config_data.replace("{{localporttor}}", str(config.proxy0port))
         bridges_out = bridges.strip()
-        transports = ["obfs4", "webtunnel"]
 
         found = False
         for t in transports:
             if t in bridges_out:
                 bridges_out = "\n".join(
-                line.replace(t, f"Bridge {t}", 1) if line.startswith(t) else line
-                for line in bridges_out.splitlines()
+                    line.replace(t, f"Bridge {t}", 1) if line.startswith(t) else line
+                    for line in bridges_out.splitlines()
                 )
                 config_data = config_data.replace(f"#ClientTransportPlugin {t}", f"ClientTransportPlugin {t}", 1)
                 found = True
