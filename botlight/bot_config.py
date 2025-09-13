@@ -18,7 +18,6 @@ client_mode = "socks5" # Режим работы singbox tun (с gvisor) или 
 packages = [
     "tor",
     "tor-geoip",
-    "bind-dig",
     "obfs4",
     "webtunnel-client",
     "xray",
