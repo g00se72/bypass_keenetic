@@ -7,8 +7,8 @@ RESTART_DELAY = 60  # Задержка в секундах перед перез
 # Настройки Proxy
 proxy0port = 9050  # Локальный порт для Tor socks5 прокси
 proxy0interface = "Proxy0"  # Название интерфейса
-proxy1port = 1080  # Локальный порт для xray/singbox (кроме singbox в режиме tun)
-proxy1interface = "Proxy1"  # Название интерфейса (кроме singbox в режиме tun)
+proxy1port = 1080  # Локальный порт для xray/singbox
+proxy1interface = "Proxy1"  # Название интерфейса (для xray и singbox в режиме socks5)
 
 # Настройки клиента vless
 vless_client = "singbox" # Клиент для установки singbox или xray
