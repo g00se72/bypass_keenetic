@@ -1,6 +1,6 @@
 {
   "log": {
-    "disabled": true,
+    "disabled": false,
     "level": "error",
     "output": "/opt/etc/sing-box/singbox.log"
   },
