@@ -1,8 +1,8 @@
 {
   "log": {
     "disabled": true,
-    "level": "debug",
-    "output": "singbox.log"
+    "level": "error",
+    "output": "/opt/etc/sing-box/singbox.log"
   },
   "inbounds": [
     {
