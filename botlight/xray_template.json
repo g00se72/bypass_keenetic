@@ -2,7 +2,7 @@
   "log": {
     "error": "/opt/etc/xray/error.log",
 	"access": "/opt/etc/xray/access.log",
-    "loglevel": "error"
+    "loglevel": "none"
   },
   "inbounds": [
     {
