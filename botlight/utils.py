@@ -5,6 +5,8 @@ import subprocess
 import json
 import re
 import tarfile
+import requests
+import urllib3
 from urllib.parse import urlparse, parse_qs
 import bot_config as config
 
@@ -243,20 +245,29 @@ def create_backup_with_params(bot, chat_id, backup_state, selected_drive, progre
             archive_size = os.path.getsize(archive_path)
             if archive_size <= max_size:
                 bot.edit_message_text("✅ Бэкап создан, отправляю файл...", chat_id, progress_msg_id)
-                with open(archive_path, "rb") as f:
-                    bot.send_document(chat_id, f, caption=f"✅ Бэкап создан:\n{', '.join(backup_state.get_selected_types())}")
-                bot.edit_message_text(f"✅ Бэкап успешно завершен: {', '.join(backup_state.get_selected_types())}", chat_id, progress_msg_id)
+                try:
+                    with open(archive_path, "rb") as f:
+                        bot.send_document(chat_id, f, caption=f"✅ Бэкап создан:\n{', '.join(backup_state.get_selected_types())}")
+                    bot.edit_message_text(f"✅ Бэкап успешно завершен: {', '.join(backup_state.get_selected_types())}", chat_id, progress_msg_id)
+                except (requests.exceptions.ReadTimeout, requests.exceptions.ConnectionError, urllib3.exceptions.MaxRetryError):
+                    bot.send_message(chat_id, "❌ Не удалось отправить архив, проверьте интернет соединение")
+                    return
             else:
-                bot.edit_message_text(f"❕ Архив слишком большой ({archive_size // 1024 // 1024} MB), разбиваю на части...", chat_id, progress_msg_id)
+                bot.edit_message_text(f"❕ Бэкап создан, файл архива слишком большой ({archive_size // 1024 // 1024} MB), разбиваю на части...", chat_id, progress_msg_id)
                 split_prefix = f"{archive_path}_part_"
                 try:
                     subprocess.run(["split", "-b", str(max_size), archive_path, split_prefix], check=True)
                     part_files = [f for f in os.listdir(os.path.dirname(archive_path)) if f.startswith(os.path.basename(split_prefix))]
                     for part_file in sorted(part_files):
                         part_path = os.path.join(os.path.dirname(archive_path), part_file)
-                        with open(part_path, "rb") as f:
-                            bot.send_document(chat_id, f, caption=f"⏳ Часть бэкапа ({part_file})")
-                        os.remove(part_path)
+                        try:
+                            with open(part_path, "rb") as f:
+                                bot.send_document(chat_id, f, caption=f"⏳ Часть бэкапа ({part_file})")
+                            os.remove(part_path)
+                        except (requests.exceptions.ReadTimeout, requests.exceptions.ConnectionError, urllib3.exceptions.MaxRetryError):
+                            bot.send_message(chat_id, "❌ Не удалось отправить архив, проверьте интернет соединение")
+                            os.remove(part_path)
+                            return
                     bot.edit_message_text(f"✅ Бэкап создан и разбит на части:\n{', '.join(backup_state.get_selected_types())}\n"
                                         f"Для восстановления объедините части:\n"
                                         f"cat {os.path.basename(archive_path)}_part_* > {os.path.basename(archive_path)}", 
