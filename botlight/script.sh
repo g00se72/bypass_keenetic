@@ -207,7 +207,7 @@ elif [ "$1" = "-update" ]; then
     echo "Версия бота \"${bot_old_version}\" обновлена до \"${bot_new_version}\""
     sleep 2
     echo "✅ Обновление выполнено"
-    echo "Бот будет перезапущен, после запуска введите ключи Tor! Теперь поддерживаются obfs4 и webtunnel ключи!"
+    # echo "Бот будет перезапущен, после запуска введите ключи Tor! Теперь поддерживаются obfs4 и webtunnel ключи!"
     sleep 2
     "$INIT_BOT" restart
 
