@@ -5,6 +5,7 @@ import signal
 import time
 import telebot
 import subprocess
+import requests.exceptions
 from handlers import setup_handlers
 from utils import log_error, clean_log, check_restart, signal_handler
 import bot_config as config
@@ -32,11 +33,12 @@ if __name__ == "__main__":
     setup_handlers(bot)
     check_restart(bot)
     
+    restart_count = 0
     while restart_count < config.MAX_RESTARTS:
         try:
             bot.infinity_polling()
-        except telebot.apihelper.ApiException as err:
-            log_error(f"Ошибка Telegram API: {str(err)}")
+        except (telebot.apihelper.ApiException, requests.exceptions.RequestException) as err:
+            log_error(f"Ошибка соединения или Telegram API: {str(err)}")
             restart_count += 1
             time.sleep(config.RESTART_DELAY)
         except Exception as err:
