@@ -184,16 +184,16 @@ elif [ "$1" = "-update" ]; then
     # opkg install magitrickle && echo "MagiTrickle обновлен"
 	
     # Что нужно обновить
-    # curl -s -o "$BOT_DIR/main.py" "$BOT_URL/main.py" || exit 1
+    curl -s -o "$BOT_DIR/main.py" "$BOT_URL/main.py" || exit 1
     # curl -s -o "$BOT_DIR/menu.py" "$BOT_URL/menu.py" || exit 1
 	# curl -s -o "$TEMPLATES_DIR/tor_template.torrc" "$BOT_URL/tor_template.torrc" || exit 1
     # cp "$TEMPLATES_DIR/tor_template.torrc" "$TOR_CONFIG" && echo "Базовые настройки Tor обновлены"
-    # curl -s -o "$BOT_DIR/utils.py" "$BOT_URL/utils.py" || exit 1
+    curl -s -o "$BOT_DIR/utils.py" "$BOT_URL/utils.py" || exit 1
     # curl -s -o "$BOT_DIR/handlers.py" "$BOT_URL/handlers.py" || exit 1
     # curl -s -o "$SCRIPT_BU" "$BASE_URL/KeenSnap/keensnap.sh" || exit 1
     # echo "Обновления для бота загружены, применяем права"
     # chmod 755 "$BOT_DIR"
-    # chmod 644 "$BOT_DIR"/*.py
+    chmod 644 "$BOT_DIR"/*.py
     # chmod 755 "$SCRIPT_BU"
 
     # "$INIT_SINGBOX" restart > /dev/null 2>&1 || echo "❕Sing-box не запустился, проверьте конфигурацию"
@@ -207,9 +207,9 @@ elif [ "$1" = "-update" ]; then
     echo "Версия бота \"${bot_old_version}\" обновлена до \"${bot_new_version}\""
     sleep 2
     echo "✅ Обновление выполнено"
-    # echo "Бот будет перезапущен, после запуска введите ключи Tor! Теперь поддерживаются obfs4 и webtunnel ключи!"
-    # sleep 2
-    # "$INIT_BOT" restart
+    echo "Бот будет перезапущен, после запуска введите ключи Tor! Теперь поддерживаются obfs4 и webtunnel ключи!"
+    sleep 2
+    "$INIT_BOT" restart
 
     exit 0
 
