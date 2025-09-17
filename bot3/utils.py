@@ -284,7 +284,7 @@ def tor_config(bridges, bot=None, chat_id=None):
 
 def create_backup_with_params(bot, chat_id, backup_state, selected_drive, progress_msg_id):
     # Функция создания бекапа
-    args = [config.paths["keensnap"]]
+    args = [config.paths["script_bu"]]
     max_size = config.backup_settings.get("MAX_SIZE_MB") * 1024 * 1024
     args.extend([
         f"LOG_FILE={config.backup_settings['LOG_FILE']}",
@@ -417,3 +417,4 @@ def get_available_drives():
         drives.append(current_drive)
 
     return drives
+
