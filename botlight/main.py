@@ -24,7 +24,6 @@ if running_pids:
     sys.exit(1)
 
 bot = telebot.TeleBot(config.token)
-restart_count = 0
 signal.signal(signal.SIGINT, signal_handler)
 signal.signal(signal.SIGTERM, signal_handler)
 
