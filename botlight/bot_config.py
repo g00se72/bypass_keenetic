@@ -6,9 +6,9 @@ RESTART_DELAY = 60  # Задержка в секундах перед перез
 
 # Настройки Proxy
 proxy0port = 9050  # Локальный порт для Tor socks5 прокси
-proxy0interface = "Proxy0"  # Название интерфейса
+proxy0interface = "Proxy0"  # Название интерфейса для Tor
 proxy1port = 1080  # Локальный порт для xray/singbox
-proxy1interface = "Proxy1"  # Название интерфейса (для xray и singbox в режиме socks5)
+proxy1interface = "Proxy1"  # Название интерфейса для xray и singbox в режиме socks5
 
 # Настройки клиента vless
 vless_client = "singbox" # Клиент для установки singbox или xray
@@ -70,10 +70,10 @@ backup_settings = {
     "LOG_FILE": paths["keensnap_log"],
     "MAX_SIZE_MB": 45,
     "CUSTOM_BACKUP_PATHS":" ".join([
-        paths["bot_dir"],
-        paths["singbox_config"],
+        # paths["singbox_config"],
         # paths["xray_config"],
-        paths["tor_config"],
-        paths["script_sh"]
+        # paths["tor_config"],
+        # paths["script_sh"],
+        paths["bot_dir"]
     ])
 }
