@@ -2,6 +2,7 @@
 
 BOT_DIR="/opt/etc/bot"
 MAIN_SCRIPT="$BOT_DIR/main.py"
+LOG_FILE="$BOT_DIR/error.log"
 
 # Проверка существования директории и скрипта
 if [ ! -d "$BOT_DIR" ] || [ ! -f "$MAIN_SCRIPT" ]; then
@@ -21,7 +22,7 @@ case "$1" in
             exit 0
         fi
         
-        python3 "$MAIN_SCRIPT" >/dev/null 2>&1 &
+        python3 "$MAIN_SCRIPT" >> "$LOG_FILE" 2>&1 &
         pid=$!
         sleep 2
         
