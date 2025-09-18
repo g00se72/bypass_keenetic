@@ -3,12 +3,14 @@ import os
 import sys
 import signal
 import time
-import telebot
 import subprocess
+
+import telebot
 import requests.exceptions
+
+import bot_config as config
 from handlers import setup_handlers
 from utils import log_error, clean_log, check_restart, signal_handler
-import bot_config as config
 
 if not config.token or config.token.strip() == "" or ":" not in config.token or len(config.token) < 10:
     log_error("Ошибка: Токен не указан или имеет неверный формат в bot_config.py")
