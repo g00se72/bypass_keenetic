@@ -56,11 +56,11 @@ paths["init_MT"] = paths["init_dir"] + "/S99magitrickle"
 
 # Команды для перезапуска сервисов
 services = {
+    "service_script": [paths["init_bot"], "restart"],
     "tor_restart": [paths["init_tor"], "restart"],
     "singbox_restart": [paths["init_singbox"], "restart"],
     "xray_restart": [paths["init_xray"], "restart"],
-    "MT_restart": [paths["init_MT"], "restart"],
-    "service_script": [paths["init_bot"], "restart"]
+    "MT_restart": [paths["init_MT"], "restart"]
 }
 
 # Базовые URL-адреса для скачиваемых файлов
