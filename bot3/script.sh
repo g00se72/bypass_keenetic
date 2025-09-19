@@ -287,17 +287,17 @@ if [ "$1" = "-update" ]; then
     #"$INIT_TROJAN" stop > /dev/null 2>&1
     "$INIT_TOR" stop > /dev/null 2>&1
     echo "S35 tor остановлен"
-    #rm -rf "$TOR_TMP_DIR"/* при пустой переменной будет катастрофа так что лучше ручками
 	
     # Что нужно обновить
-    #curl -s -o "$BOT_DIR/main.py" "$BOT_URL/main.py" || exit 1
+    curl -s -o "$BOT_DIR/main.py" "$BOT_URL/main.py" || exit 1
     #curl -s -o "$BOT_DIR/menu.py" "$BOT_URL/menu.py" || exit 1
+	curl -s -o "$BOT_DIR/utils.py" "$BOT_URL/utils.py" || exit 1
+    #curl -s -o "$BOT_DIR/handlers.py" "$BOT_URL/handlers.py" || exit 1
 	curl -s -o "$TEMPLATES_DIR/tor_template.torrc" "$BASE_URL/tor_template.torrc"
     cp "$TEMPLATES_DIR/tor_template.torrc" "$TOR_CONFIG" && echo "Базовые настройки Tor обновлены"
-    curl -s -o "$BOT_DIR/utils.py" "$BOT_URL/utils.py" || exit 1
-    #curl -s -o "$BOT_DIR/handlers.py" "$BOT_URL/handlers.py" || exit 1
     #curl -s -o "$SCRIPT_BU" "$BASE_URL/KeenSnap/keensnap.sh" || exit 1
 	curl -s -o "$REDIRECT_SCRIPT" "$BASE_URL/100-redirect.sh" || exit 1
+    curl -s -o "$INIT_BOT" "$BOT_URL/S99telegram_bot" || exit 1
     echo "Обновления для бота загружены, применяем права"
     chmod 755 "$BOT_DIR"
     chmod 644 "$BOT_DIR"/*.py
