@@ -254,7 +254,7 @@
 #Log notice file /opt/var/log/tor.log
 User root
 PidFile /opt/var/run/tor.pid
-ExcludeExitNodes {RU},{UA},{AM},{KG},{BY}
+ExcludeExitNodes {RU},{UA},{AM},{KG},{BY},{MD},{TM}
 StrictNodes 1
 SOCKSPort {{localporttor}}
 ExitRelay 0
