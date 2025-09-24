@@ -82,14 +82,6 @@ def notify_on_error():
 @notify_on_error()
 def parse_vless_key(key, bot=None, chat_id=None):
     # Парсинг vless
-    vless_pattern = re.compile(
-        r"^vless://[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}"
-        r"@(?:\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|\[[0-9a-fA-F:]*\]|[a-zA-Z0-9.-]+)"
-        r":\d{1,5}(?:\?.*)?(?:#.*)?$"
-    )
-    if not vless_pattern.match(key):
-        raise ValueError("Неверный формат ключа VLESS. Ожидается: vless://<UUID>@<IP>:<порт>?параметры#имя")
-
     url = key[6:]
     parsed_url = urlparse(url)
     params = parse_qs(parsed_url.query)
