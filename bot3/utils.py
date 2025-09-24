@@ -99,13 +99,13 @@ def notify_on_error():
 @notify_on_error()
 def parse_vless_key(key, bot=None, chat_id=None):
     # Парсинг vless
-    vless_pattern = re.compile(
-        r"^vless://[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}"
-        r"@(?:\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|\[[0-9a-fA-F:]*\]|[a-zA-Z0-9.-]+)"
-        r":\d{1,5}(?:\?.*)?(?:#.*)?$"
-    )
-    if not vless_pattern.match(key):
-        raise ValueError("Неверный формат ключа VLESS. Ожидается: vless://<UUID>@<IP>:<порт>?параметры#имя")
+    #vless_pattern = re.compile(
+    #    r"^vless://([^@]+)@"
+    #    r"(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|\[[0-9a-fA-F:]*\]|[a-zA-Z0-9.-]+)"
+    #    r":(\d{1,5})(?:\?.*)?(?:#.*)?$"
+    #)
+    #if not vless_pattern.match(key):
+    #    raise ValueError("Неверный формат ключа VLESS. Ожидается: vless://<UUID>@<IP>:<порт>?параметры#имя")
 
     url = key[6:]
     parsed_url = urlparse(url)
@@ -134,12 +134,12 @@ def parse_vless_key(key, bot=None, chat_id=None):
 @notify_on_error()
 def parse_trojan_key(key, bot=None, chat_id=None):
     # Парсинг trojan
-    trojan_pattern = re.compile(
-        r"^trojan://[^@]+@(?:\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|\[[0-9a-fA-F:]*\]|[a-zA-Z0-9.-]+)"
-        r":\d{1,5}(?:\?.*)?(?:#.*)?$"
-    )
-    if not trojan_pattern.match(key):
-        raise ValueError("Неверный формат ключа Trojan. Ожидается: trojan://<пароль>@<IP>:<порт>?параметры#имя")
+    #trojan_pattern = re.compile(
+    #    r"^trojan://[^@]+@(?:\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|\[[0-9a-fA-F:]*\]|[a-zA-Z0-9.-]+)"
+    #    r":\d{1,5}(?:\?.*)?(?:#.*)?$"
+    #)
+    #if not trojan_pattern.match(key):
+    #    raise ValueError("Неверный формат ключа Trojan. Ожидается: trojan://<пароль>@<IP>:<порт>?параметры#имя")
 
     key = key.split('//')[1]
     pw = key.split('@')[0]
@@ -160,12 +160,12 @@ def parse_trojan_key(key, bot=None, chat_id=None):
 @notify_on_error()
 def parse_shadowsocks_key(key, bot=None, chat_id=None):
     # Парсинг ss
-    ss_pattern = re.compile(
-        r"^ss://[A-Za-z0-9+/=]+@(?:\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|\[[0-9a-fA-F:]*\]|[a-zA-Z0-9.-]+)"
-        r":\d{1,5}(?:[/?#].*)?$"
-    )
-    if not ss_pattern.match(key):
-        raise ValueError("Неверный формат ключа Shadowsocks. Ожидается: ss://<base64(метод:пароль)>@<IP>:<порт>#имя")
+    #ss_pattern = re.compile(
+    #    r"^ss://[A-Za-z0-9+/=]+@(?:\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|\[[0-9a-fA-F:]*\]|[a-zA-Z0-9.-]+)"
+    #    r":\d{1,5}(?:[/?#].*)?$"
+    #)
+    #if not ss_pattern.match(key):
+    #    raise ValueError("Неверный формат ключа Shadowsocks. Ожидается: ss://<base64(метод:пароль)>@<IP>:<порт>#имя")
 
     encodedkey = key.split('//')[1].split('@')[0] + '=='
     decoded = base64.b64decode(encodedkey).decode('utf-8') 
@@ -459,5 +459,6 @@ def get_available_drives():
         drives.append(current_drive)
 
     return drives
+
 
 
