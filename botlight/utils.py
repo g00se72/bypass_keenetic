@@ -244,7 +244,7 @@ def split_and_send_archive(bot, chat_id, archive_path, max_size, backup_state, p
 
 def create_backup_with_params(bot, chat_id, backup_state, selected_drive, progress_msg_id):
     archive_path = None
-    args = [config.paths["keensnap"]]
+    args = [config.paths["keensnap_path"]]
     max_size = config.backup_settings.get("MAX_SIZE_MB") * 1024 * 1024
 
     params = {
