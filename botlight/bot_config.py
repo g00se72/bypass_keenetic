@@ -7,12 +7,14 @@ RESTART_DELAY = 60  # Задержка в секундах перед перез
 # Настройки Proxy
 proxy0port = 9050  # Локальный порт для Tor socks5 прокси
 proxy0interface = "Proxy0"  # Название интерфейса
-proxy1port = 1080  # Локальный порт для xray/singbox
-proxy1interface = "Proxy1"  # Название интерфейса (для xray и singbox в режиме socks5)
+proxy1port = 1080  # Локальный порт для xray
+proxy1interface = "Proxy1"  # Название интерфейса для xray
+proxy2port = 2080  # Локальный порт для singbox
+proxy2interface = "Proxy2"  # Название интерфейса для singbox в режиме socks5
 
 # Настройки клиента vless
 vless_client = "singbox" # Клиент для установки singbox или xray
-client_mode = "tun" # Режим работы singbox tun/socks5 (для xray - всегда socks5)
+client_mode = "socks5" # Режим работы singbox tun/socks5 (для xray - всегда socks5)
 
 # Список пакетов
 packages = [
@@ -72,7 +74,7 @@ backup_settings = {
     "CUSTOM_BACKUP_PATHS":" ".join([
         paths["bot_dir"],
         paths["singbox_config"],
-        # paths["xray_config"],
+        paths["xray_config"],
         paths["tor_config"],
         paths["script_sh"]
     ])
